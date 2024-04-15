@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
@@ -13,11 +12,18 @@ class DatabaseProvider {
     return path;
   }
 
-  DatabaseProvider();
+  DatabaseProvider() {
+    if (kIsWeb) {
+      databaseFactory = databaseFactoryFfiWeb;
+    } else if (Platform.isWindows) {
+      sqfliteFfiInit();
+      databaseFactory = databaseFactoryFfi;
+    }
+  }
 
   Database? database;
 
-  Future<Database> importDb(String from) async {
+  Future<Database> importDb(File from) async {
     await database?.close();
     await _copyDb(from);
     database = await _openDb();
@@ -25,18 +31,11 @@ class DatabaseProvider {
   }
 
   Future<Database> _openDb() async {
-    if (kIsWeb) {
-      databaseFactory = databaseFactoryFfiWeb;
-    } else if (Platform.isWindows) {
-      sqfliteFfiInit();
-      databaseFactory = databaseFactoryFfi;
-    }
-
     final path = await _getDbPath();
     return await openDatabase(path, version: 1, readOnly: true);
   }
 
-  Future<void> _copyDb(String from) async {
+  Future<void> _copyDb(File from) async {
     final path = await _getDbPath();
 
     final exists = await databaseExists(path);
@@ -50,7 +49,7 @@ class DatabaseProvider {
       await Directory(dirname(path)).create(recursive: true);
     } catch (_) {}
 
-    ByteData data = await rootBundle.load(from);
+    final data = await from.readAsBytes();
     List<int> bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
 
     await File(path).writeAsBytes(bytes, flush: true);
