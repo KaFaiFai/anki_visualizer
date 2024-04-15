@@ -18,7 +18,7 @@ Future<void> main() async {
   });
 }
 
-Future<Database> openExampleDatabase() async {
+Future<Database> copyExampleDatabase() async {
   // reference: https://github.com/tekartik/sqflite/blob/master/sqflite/doc/opening_asset_db.md
 
   final databasesPath = await getDatabasesPath();
@@ -50,19 +50,15 @@ Future<Database> openExampleDatabase() async {
 
 Future<void> readAnkiDatabase() async {
   // see https://github.com/ankidroid/Anki-Android/wiki/Database-Structure for references for each table
-  final db = await openExampleDatabase();
+  final db = await copyExampleDatabase();
 
-  final cards = await db.query("cards");
-  print(cards.length);
-  print(cards.firstOrNull);
-
-  final revlog = await db.query("revlog");
-  print(revlog.length);
-  print(revlog.firstOrNull);
-
-  final decks = await db.query("decks");
-  print(decks.length);
-  print(decks.firstOrNull);
+  final fields = ["cards", "notes", "notetypes", "fields", "revlog", "decks"];
+  for (final f in fields) {
+    final table = await db.query(f);
+    print("----- $f -----");
+    print(table.length);
+    print(table.firstOrNull);
+  }
 
   await db.close();
 }
