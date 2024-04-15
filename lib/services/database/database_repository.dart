@@ -3,7 +3,7 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import 'deck.dart';
 
-class DatabaseDao {
+class DatabaseRepository {
   Future<List<Card>> getAllCards(Database db) async {
     final List<Map<String, dynamic>> maps = await db.query('cards');
     return List.generate(maps.length, (i) {

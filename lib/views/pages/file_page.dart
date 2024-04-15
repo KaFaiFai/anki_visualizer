@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:anki_progress/services/database/database_dao.dart';
 import 'package:anki_progress/services/database/database_provider.dart';
+import 'package:anki_progress/services/database/database_repository.dart';
 import 'package:anki_progress/views/run_with_app_container.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -50,7 +50,7 @@ class _FilePageState extends State<FilePage> {
           future: database,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              final decks = DatabaseDao().getAllDecks(snapshot.requireData);
+              final decks = DatabaseRepository().getAllDecks(snapshot.requireData);
               return FutureBuilder(
                 future: decks,
                 builder: (context, snapshot) {
