@@ -1,9 +1,10 @@
 import 'dart:io';
 
+import 'package:anki_progress/services/database/card.dart';
 import 'package:anki_progress/viewmodels/viewmodel.dart';
 import 'package:anki_progress/views/run_with_app_container.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Card;
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -64,6 +65,28 @@ class _FilePageState extends State<FilePage> {
             },
           ),
         ),
+        Container(
+          color: Colors.green.withAlpha(50),
+          height: 100,
+        ),
+        Selector<Viewmodel, Future<List<Card>>?>(
+          selector: (_, vm) => vm.cards,
+          builder: (_, cards, __) => FutureBuilder(
+            future: cards,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Wrap(
+                  spacing: 30,
+                  runSpacing: 10,
+                  children: snapshot.requireData.map((e) => Text("${e.id}")).toList(),
+                );
+              } else if (snapshot.hasError) {
+                return Text("Please select a file again");
+              }
+              return Text("${snapshot.hasData}");
+            },
+          ),
+        )
       ],
     );
   }
