@@ -1,3 +1,7 @@
+import 'package:anki_progress/controller/setup_other.dart'
+    if (dart.library.html) 'package:anki_progress/controller/setup_web.dart'
+    if (dart.library.io) 'package:anki_progress/controller/setup_other.dart'
+    as setup; // so that other platforms won't load web specific plugins
 import 'package:anki_progress/view_models/view_model.dart';
 import 'package:anki_progress/views/pages/cards_page.dart';
 import 'package:anki_progress/views/pages/file_page.dart';
@@ -8,7 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  setup.setup();
   runWithAppContainer(const AnkiProgress(), includeMaterialApp: false);
 }
 

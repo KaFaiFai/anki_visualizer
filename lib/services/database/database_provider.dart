@@ -1,24 +1,13 @@
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
 
 class DatabaseProvider {
   static Future<String> _getDbPath() async {
     String folderPath = await getDatabasesPath();
     final path = join(folderPath, 'anki_progress.db');
     return path;
-  }
-
-  DatabaseProvider() {
-    if (kIsWeb) {
-      databaseFactory = databaseFactoryFfiWeb;
-    } else if (Platform.isWindows) {
-      sqfliteFfiInit();
-      databaseFactory = databaseFactoryFfi;
-    }
   }
 
   Database? database;
