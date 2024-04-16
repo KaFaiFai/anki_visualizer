@@ -32,7 +32,10 @@ class AnkiProgress extends StatelessWidget {
             case Routes.filePage:
               return PageRouteBuilder(
                 settings: settings,
-                pageBuilder: (context, __, ___) => const FilePage(),
+                pageBuilder: (context, __, ___) => Scaffold(
+                  backgroundColor: Theme.of(context).colorScheme.background,
+                  body: const FilePage(),
+                ),
                 transitionsBuilder: (_, a, __, c) => FadeTransition(opacity: a, child: c),
               );
           }
