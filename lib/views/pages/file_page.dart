@@ -61,28 +61,6 @@ class FilePage extends StatelessWidget {
           color: Colors.green.withAlpha(50),
           height: 20,
         ),
-        Expanded(
-          child: Selector<ViewModel, Future<List<Card>>?>(
-            selector: (_, vm) => vm.cards,
-            builder: (_, cards, __) => FutureBuilder(
-              future: cards,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return SingleChildScrollView(
-                    child: Wrap(
-                      spacing: 30,
-                      runSpacing: 10,
-                      children: snapshot.requireData.map((e) => Text("${e.id}")).toList(),
-                    ),
-                  );
-                } else if (snapshot.hasError) {
-                  return Text("Please select a file again");
-                }
-                return Text("${snapshot.hasData}");
-              },
-            ),
-          ),
-        )
       ],
     );
   }

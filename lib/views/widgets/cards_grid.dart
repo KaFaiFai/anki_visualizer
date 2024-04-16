@@ -1,10 +1,10 @@
-import 'package:anki_progress/services/database/card.dart';
+import 'package:anki_progress/models/card_log.dart';
 import 'package:flutter/material.dart' hide Card;
 
 class CardsGrid extends StatefulWidget {
-  final List<Card> cards;
+  final List<CardLog> cardLogs;
 
-  const CardsGrid({super.key, required this.cards});
+  const CardsGrid({super.key, required this.cardLogs});
 
   @override
   State<CardsGrid> createState() => _CardsGridState();
@@ -26,7 +26,7 @@ class _CardsGridState extends State<CardsGrid> {
   void _scrollToEnd() {
     _controller.animateTo(
       _controller.position.maxScrollExtent,
-      duration: Duration(seconds: 5),
+      duration: Duration(milliseconds: widget.cardLogs.length * 10),
       curve: Curves.linear,
     );
   }
@@ -42,8 +42,8 @@ class _CardsGridState extends State<CardsGrid> {
         // crossAxisSpacing: 10,
         childAspectRatio: 1,
       ),
-      itemCount: widget.cards.length,
-      itemBuilder: (BuildContext context, int index) => Text("${widget.cards[index].id}"),
+      itemCount: widget.cardLogs.length,
+      itemBuilder: (BuildContext context, int index) => Text(widget.cardLogs[index].text),
     );
   }
 }

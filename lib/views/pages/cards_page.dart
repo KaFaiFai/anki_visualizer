@@ -10,12 +10,12 @@ class CardsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<ViewModel>(
       builder: (_, vm, __) => FutureBuilder(
-        future: vm.cards,
+        future: vm.cardLogs,
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return const AspectRatio(aspectRatio: 1.0, child: CircularProgressIndicator());
           }
-          return CardsGrid(cards: snapshot.requireData);
+          return CardsGrid(cardLogs: snapshot.requireData);
         },
       ),
     );
