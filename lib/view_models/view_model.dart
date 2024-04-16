@@ -14,7 +14,7 @@ class ViewModel extends ChangeNotifier {
     DatabaseProvider().importDb(file).then((db) {
       final decks = DatabaseRepository().getAllDecks(db);
       deckNames = decks.then((ds) {
-        cards = DatabaseRepository().getAllCardsInDeck(db, ds[2].id);
+        cards = DatabaseRepository().getAllCardsInDeck(db, ds.last.id);
         return ds.map((e) => e.name).toList();
       });
       notifyListeners();
