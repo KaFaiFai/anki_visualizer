@@ -30,6 +30,18 @@ class DatabaseProvider {
     return database!;
   }
 
+  Future<Database?> openDbIfExist() async {
+    if (database != null) {
+      return database;
+    }
+    final path = await _getDbPath();
+    final exists = await databaseExists(path);
+    if (exists) {
+      return await _openDb();
+    }
+    return null;
+  }
+
   Future<Database> _openDb() async {
     final path = await _getDbPath();
     return await openDatabase(path, version: 1, readOnly: true);
