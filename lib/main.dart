@@ -1,4 +1,4 @@
-import 'package:anki_progress/viewmodels/viewmodel.dart';
+import 'package:anki_progress/view_models/view_model.dart';
 import 'package:anki_progress/views/pages/file_page.dart';
 import 'package:anki_progress/views/run_with_app_container.dart';
 import 'package:anki_progress/views/theme/theme_data.dart';
@@ -19,7 +19,7 @@ class AnkiProgress extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => Viewmodel(),
+      create: (context) => ViewModel(),
       child: MaterialApp(
         title: "Anki Progress",
         theme: themeData,

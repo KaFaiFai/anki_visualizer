@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:anki_progress/services/database/card.dart';
-import 'package:anki_progress/viewmodels/viewmodel.dart';
+import 'package:anki_progress/view_models/view_model.dart';
 import 'package:anki_progress/views/run_with_app_container.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart' hide Card;
@@ -11,7 +11,7 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 void main() {
   runWithAppContainer(ChangeNotifierProvider(
-    create: (BuildContext context) => Viewmodel(),
+    create: (BuildContext context) => ViewModel(),
     child: FilePage(),
   ));
 }
@@ -41,13 +41,13 @@ class _FilePageState extends State<FilePage> {
             FilePicker.platform.pickFiles(initialDirectory: initialDirectory).then((value) {
               if (value != null) {
                 File file = File(value.files.single.path!);
-                Provider.of<Viewmodel>(context, listen: false).loadDeckNamesFromFile(file);
+                Provider.of<ViewModel>(context, listen: false).loadDeckNamesFromFile(file);
               }
             });
           },
           child: Text("Pick a file"),
         ),
-        Selector<Viewmodel, Future<List<String>>?>(
+        Selector<ViewModel, Future<List<String>>?>(
           selector: (_, vm) => vm.deckNames,
           builder: (_, deckNames, __) => FutureBuilder(
             future: deckNames,
@@ -69,7 +69,7 @@ class _FilePageState extends State<FilePage> {
           color: Colors.green.withAlpha(50),
           height: 100,
         ),
-        Selector<Viewmodel, Future<List<Card>>?>(
+        Selector<ViewModel, Future<List<Card>>?>(
           selector: (_, vm) => vm.cards,
           builder: (_, cards, __) => FutureBuilder(
             future: cards,

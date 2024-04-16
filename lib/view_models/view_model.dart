@@ -6,7 +6,7 @@ import '../services/database/card.dart';
 import '../services/database/database_provider.dart';
 import '../services/database/database_repository.dart';
 
-class Viewmodel extends ChangeNotifier {
+class ViewModel extends ChangeNotifier {
   Future<List<String>>? deckNames;
   Future<List<Card>>? cards;
 
