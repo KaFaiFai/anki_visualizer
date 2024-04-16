@@ -7,7 +7,7 @@ import 'package:flutter/material.dart' hide Card;
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 
-import '../../services/database/deck.dart';
+import '../../services/database/entities/deck.dart';
 
 void main() {
   runWithAppContainer(ChangeNotifierProvider(

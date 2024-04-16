@@ -6,8 +6,8 @@ import 'package:sqflite/sqflite.dart';
 
 import '../services/database/database_provider.dart';
 import '../services/database/database_repository.dart';
-import '../services/database/deck.dart';
-import '../services/database/field.dart';
+import '../services/database/entities/deck.dart';
+import '../services/database/entities/field.dart';
 
 class SelectionModel extends ChangeNotifier {
   String? selectedFile;

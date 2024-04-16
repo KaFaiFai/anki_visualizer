@@ -1,10 +1,10 @@
-import 'package:anki_progress/services/database/card.dart';
-import 'package:anki_progress/services/database/field.dart';
-import 'package:anki_progress/services/database/notetype.dart';
-import 'package:anki_progress/services/database/review.dart';
+import 'package:anki_progress/services/database/entities/card.dart';
+import 'package:anki_progress/services/database/entities/field.dart';
+import 'package:anki_progress/services/database/entities/notetype.dart';
+import 'package:anki_progress/services/database/entities/review.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
-import 'deck.dart';
+import 'entities/deck.dart';
 
 class DatabaseRepository {
   Future<List<Deck>> getAllDecks(Database db) async {
