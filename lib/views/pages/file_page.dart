@@ -1,13 +1,13 @@
 import 'dart:io';
 
+import 'package:anki_progress/services/database/entities/field.dart';
 import 'package:anki_progress/view_models/selection_model.dart';
+import 'package:anki_progress/views/basic/padded_column.dart';
 import 'package:anki_progress/views/run_with_app_container.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart' hide Card;
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
-
-import '../../services/database/entities/deck.dart';
 
 void main() {
   runWithAppContainer(ChangeNotifierProvider(
@@ -38,21 +38,81 @@ class FilePage extends StatelessWidget {
           },
           child: Text("Pick a file"),
         ),
-        Selector<SelectionModel, Future<List<Deck>>?>(
-          selector: (_, vm) => vm.decks,
-          builder: (_, deckNames, __) => FutureBuilder(
-            future: deckNames,
+        Consumer<SelectionModel>(
+          builder: (_, vm, __) => FutureBuilder(
+            future: vm.database,
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return Text("Error loading database");
+              } else if (snapshot.hasData) {
+                return Text("Successfully loaded database");
+              } else {
+                return Text("Please choose a database");
+              }
+            },
+          ),
+        ),
+        Consumer<SelectionModel>(
+          builder: (_, vm, __) => FutureBuilder(
+            future: vm.decks,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return Wrap(
                   spacing: 30,
                   runSpacing: 10,
-                  children: snapshot.requireData.map((e) => Text(e.name)).toList(),
+                  children: snapshot.requireData.map((deck) {
+                    if (vm.selectedDeck == deck) {
+                      return ElevatedButton(onPressed: () => vm.toggleDeck(deck), child: Text(deck.name));
+                    } else {
+                      return OutlinedButton(onPressed: () => vm.toggleDeck(deck), child: Text(deck.name));
+                    }
+                  }).toList(),
                 );
               } else if (snapshot.hasError) {
                 return Text("Please select a file again");
               }
               return Text("${snapshot.hasData}");
+            },
+          ),
+        ),
+        Consumer<SelectionModel>(
+          builder: (_, vm, __) => FutureBuilder(
+            future: vm.fieldsInDeck,
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return Text("Error getting fields in deck");
+              } else if (snapshot.hasData) {
+                return Row(
+                  children: snapshot.requireData.entries.map(
+                    (e) {
+                      final notetypeId = e.key;
+                      final fields = e.value;
+                      return PaddedColumn(
+                        padding: 10,
+                        children: [
+                          Text("$notetypeId"),
+                          DropdownButton<Field>(
+                            value: vm.selectedFields?[notetypeId],
+                            onChanged: (field) => vm.selectField(notetypeId, field),
+                            items: fields
+                                .map(
+                                  (e) => DropdownMenuItem<Field>(
+                                    value: e,
+                                    child: Text(
+                                      "${e.ord}: ${e.name}",
+                                      style: Theme.of(context).textTheme.bodyMedium,
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                          ),
+                        ],
+                      );
+                    },
+                  ).toList(),
+                );
+              }
+              return Container();
             },
           ),
         ),

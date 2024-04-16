@@ -33,7 +33,7 @@ class AnkiProgress extends StatelessWidget {
           child: Scaffold(
             backgroundColor: themeData.colorScheme.background,
             appBar: AppBar(
-              bottom: const TabBar(
+              title: const TabBar(
                 tabs: [Tab(text: "File"), Tab(text: "Cards")],
               ),
             ),

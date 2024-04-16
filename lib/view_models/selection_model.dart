@@ -22,34 +22,42 @@ class SelectionModel extends ChangeNotifier {
   void selectFile(String path) {
     selectedFile = path;
     database = DatabaseProvider().importDb(File(path));
-    _loadDeckNames();
+    _loadDecks();
     notifyListeners();
   }
 
-  Future<void> _loadDeckNames() async {
+  Future<void> _loadDecks() async {
     final db = await database;
     if (db == null) return;
     decks = DatabaseRepository().getAllDecks(db);
     notifyListeners();
   }
 
-  void loadDeckNamesFromFile(File file) {
-    DatabaseProvider().importDb(file).then((db) {
-      decks = DatabaseRepository().getAllDecks(db).then((ds) {
-        DatabaseRepository().getAllCardsInDeck(db, ds.last.id).then((cards) {
-          cardLogs = Future(() async {
-            final logs = <CardLog>[];
-            for (final c in cards) {
-              final text = await DatabaseRepository().getCardField(db, c.id, 1);
-              final reviews = await DatabaseRepository().getCardReviews(db, c.id);
-              logs.add(CardLog(text, reviews));
-            }
-            return logs;
-          });
-        });
-        return ds;
-      });
-      notifyListeners();
-    });
+  void toggleDeck(Deck deck) {
+    selectedDeck = selectedDeck == deck ? null : deck;
+    selectedFields = null;
+    _loadFieldsInDeck();
+    notifyListeners();
+  }
+
+  Future<void> _loadFieldsInDeck() async {
+    final db = await database;
+    if (db == null) return;
+
+    final deckId = selectedDeck?.id;
+    if (deckId == null) {
+      fieldsInDeck = Future(() => {});
+    } else {
+      fieldsInDeck = DatabaseRepository().getAllFieldsInDeck(db, deckId);
+    }
+    // fieldsInDeck?.then((value) => print(value));
+    notifyListeners();
+  }
+
+  void selectField(int notetypeId, Field? field) {
+    selectedFields ??= {};
+    if (field != null) selectedFields?[notetypeId] = field;
+    print(selectedFields);
+    notifyListeners();
   }
 }
