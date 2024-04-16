@@ -19,5 +19,15 @@ void main() async {
       final result = await DatabaseRepository().getAllFieldsInDeck(db, decks.last.id);
       print(result);
     });
+
+    test('getCardField', () async {
+      final result = await DatabaseRepository().getCardField(db, 1339252520793, 0);
+      print(result);
+    });
+
+    test('getCardField', () async {
+      final result = await DatabaseRepository().getCardReviews(db, 1339252520793);
+      print(result);
+    });
   });
 }

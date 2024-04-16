@@ -1,5 +1,6 @@
 import 'package:anki_progress/services/database/card.dart';
 import 'package:anki_progress/services/database/field.dart';
+import 'package:anki_progress/services/database/review.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import 'deck.dart';
@@ -7,9 +8,7 @@ import 'deck.dart';
 class DatabaseRepository {
   Future<List<Deck>> getAllDecks(Database db) async {
     final List<Map<String, dynamic>> maps = await db.query('decks');
-    return List.generate(maps.length, (i) {
-      return Deck.fromMap(maps[i]);
-    });
+    return maps.map((e) => Deck.fromMap(e)).toList();
   }
 
   Future<List<Card>> getAllCardsInDeck(Database db, int deckId) async {
@@ -19,9 +18,7 @@ class DatabaseRepository {
       whereArgs: [deckId],
       orderBy: "ord",
     );
-    return List.generate(maps.length, (i) {
-      return Card.fromMap(maps[i]);
-    });
+    return maps.map((e) => Card.fromMap(e)).toList();
   }
 
   Future<Map<int, List<Field>>> getAllFieldsInDeck(Database db, int deckId) async {
@@ -57,5 +54,28 @@ class DatabaseRepository {
       whereArgs: [notetypeId],
     );
     return maps.single["name"];
+  }
+
+  Future<String> getCardField(Database db, int cardId, int fieldOrd) async {
+    final sqlGetNotetypeId = """
+        SELECT flds
+				FROM cards
+				LEFT JOIN notes ON cards.nid = notes.id
+				WHERE cards.id = $cardId
+				GROUP BY notes.mid
+				""";
+    final List<Map<String, dynamic>> maps = await db.rawQuery(sqlGetNotetypeId);
+    final fields = (maps.single["flds"] as String).split(String.fromCharCode(31));
+    return fields[fieldOrd];
+  }
+
+  Future<List<Review>> getCardReviews(Database db, int cardId) async {
+    final List<Map<String, dynamic>> maps = await db.query(
+      'revlog',
+      where: 'cid = ?',
+      whereArgs: [cardId],
+      orderBy: "id",
+    );
+    return maps.map((e) => Review.fromMap(e)).toList();
   }
 }
