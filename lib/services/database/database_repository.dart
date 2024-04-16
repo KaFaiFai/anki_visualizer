@@ -1,5 +1,6 @@
 import 'package:anki_progress/services/database/card.dart';
 import 'package:anki_progress/services/database/field.dart';
+import 'package:anki_progress/services/database/notetype.dart';
 import 'package:anki_progress/services/database/review.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
@@ -47,13 +48,13 @@ class DatabaseRepository {
     return notetypeIdToFields;
   }
 
-  Future<String> getNotetypeName(Database db, int notetypeId) async {
+  Future<Notetype> getNotetype(Database db, int notetypeId) async {
     final List<Map<String, dynamic>> maps = await db.query(
       'notetypes',
       where: 'id = ?',
       whereArgs: [notetypeId],
     );
-    return maps.single["name"];
+    return Notetype.fromMap(maps.single);
   }
 
   Future<String> getCardField(Database db, int cardId, int fieldOrd) async {

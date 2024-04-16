@@ -26,7 +26,7 @@ class _CardsGridState extends State<CardsGrid> {
   void _scrollToEnd() {
     _controller.animateTo(
       _controller.position.maxScrollExtent,
-      duration: Duration(milliseconds: widget.cardLogs.length * 10),
+      duration: Duration(milliseconds: widget.cardLogs.length * 30),
       curve: Curves.linear,
     );
   }

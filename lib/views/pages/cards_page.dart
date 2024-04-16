@@ -1,4 +1,4 @@
-import 'package:anki_progress/view_models/view_model.dart';
+import 'package:anki_progress/view_models/selection_model.dart';
 import 'package:anki_progress/views/widgets/cards_grid.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -8,12 +8,18 @@ class CardsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ViewModel>(
+    return Consumer<SelectionModel>(
       builder: (_, vm, __) => FutureBuilder(
         future: vm.cardLogs,
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return const AspectRatio(aspectRatio: 1.0, child: CircularProgressIndicator());
+            return const FractionallySizedBox(
+              widthFactor: 0.5,
+              heightFactor: 0.5,
+              child: Center(
+                child: AspectRatio(aspectRatio: 1.0, child: CircularProgressIndicator()),
+              ),
+            );
           }
           return CardsGrid(cardLogs: snapshot.requireData);
         },

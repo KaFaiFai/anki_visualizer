@@ -2,20 +2,40 @@ import 'dart:io';
 
 import 'package:anki_progress/models/card_log.dart';
 import 'package:flutter/material.dart' hide Card;
+import 'package:sqflite/sqflite.dart';
 
 import '../services/database/database_provider.dart';
 import '../services/database/database_repository.dart';
+import '../services/database/deck.dart';
 import '../services/database/field.dart';
 
-class ViewModel extends ChangeNotifier {
-  Future<List<String>>? deckNames;
+class SelectionModel extends ChangeNotifier {
+  String? selectedFile;
+  Deck? selectedDeck;
+  Map<int, Field>? selectedFields;
+
+  Future<Database>? database;
+  Future<List<Deck>>? decks;
   Future<Map<int, List<Field>>>? fieldsInDeck;
   Future<List<CardLog>>? cardLogs;
 
+  void selectFile(String path) {
+    selectedFile = path;
+    database = DatabaseProvider().importDb(File(path));
+    _loadDeckNames();
+    notifyListeners();
+  }
+
+  Future<void> _loadDeckNames() async {
+    final db = await database;
+    if (db == null) return;
+    decks = DatabaseRepository().getAllDecks(db);
+    notifyListeners();
+  }
+
   void loadDeckNamesFromFile(File file) {
     DatabaseProvider().importDb(file).then((db) {
-      final decks = DatabaseRepository().getAllDecks(db);
-      deckNames = decks.then((ds) {
+      decks = DatabaseRepository().getAllDecks(db).then((ds) {
         DatabaseRepository().getAllCardsInDeck(db, ds.last.id).then((cards) {
           cardLogs = Future(() async {
             final logs = <CardLog>[];
@@ -27,7 +47,7 @@ class ViewModel extends ChangeNotifier {
             return logs;
           });
         });
-        return ds.map((e) => e.name).toList();
+        return ds;
       });
       notifyListeners();
     });
