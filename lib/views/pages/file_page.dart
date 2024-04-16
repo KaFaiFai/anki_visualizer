@@ -7,7 +7,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart' hide Card;
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
-import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 void main() {
   runWithAppContainer(ChangeNotifierProvider(
@@ -16,15 +15,8 @@ void main() {
   ));
 }
 
-class FilePage extends StatefulWidget {
+class FilePage extends StatelessWidget {
   const FilePage({super.key});
-
-  @override
-  State<FilePage> createState() => _FilePageState();
-}
-
-class _FilePageState extends State<FilePage> {
-  Future<Database>? database;
 
   @override
   Widget build(BuildContext context) {
@@ -67,24 +59,28 @@ class _FilePageState extends State<FilePage> {
         ),
         Container(
           color: Colors.green.withAlpha(50),
-          height: 100,
+          height: 20,
         ),
-        Selector<ViewModel, Future<List<Card>>?>(
-          selector: (_, vm) => vm.cards,
-          builder: (_, cards, __) => FutureBuilder(
-            future: cards,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return Wrap(
-                  spacing: 30,
-                  runSpacing: 10,
-                  children: snapshot.requireData.map((e) => Text("${e.id}")).toList(),
-                );
-              } else if (snapshot.hasError) {
-                return Text("Please select a file again");
-              }
-              return Text("${snapshot.hasData}");
-            },
+        Expanded(
+          child: Selector<ViewModel, Future<List<Card>>?>(
+            selector: (_, vm) => vm.cards,
+            builder: (_, cards, __) => FutureBuilder(
+              future: cards,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return SingleChildScrollView(
+                    child: Wrap(
+                      spacing: 30,
+                      runSpacing: 10,
+                      children: snapshot.requireData.map((e) => Text("${e.id}")).toList(),
+                    ),
+                  );
+                } else if (snapshot.hasError) {
+                  return Text("Please select a file again");
+                }
+                return Text("${snapshot.hasData}");
+              },
+            ),
           ),
         )
       ],
