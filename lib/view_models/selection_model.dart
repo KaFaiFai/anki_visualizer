@@ -46,18 +46,16 @@ class SelectionModel extends ChangeNotifier {
 
     final deckId = selectedDeck?.id;
     if (deckId == null) {
-      fieldsInDeck = Future(() => {});
+      fieldsInDeck = null;
     } else {
       fieldsInDeck = DatabaseRepository().getAllFieldsInDeck(db, deckId);
     }
-    // fieldsInDeck?.then((value) => print(value));
     notifyListeners();
   }
 
   void selectField(int notetypeId, Field? field) {
     selectedFields ??= {};
     if (field != null) selectedFields?[notetypeId] = field;
-    print(selectedFields);
     notifyListeners();
   }
 }

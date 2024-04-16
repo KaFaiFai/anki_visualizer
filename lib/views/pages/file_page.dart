@@ -116,6 +116,7 @@ class FilePage extends StatelessWidget {
             },
           ),
         ),
+        ElevatedButton(onPressed: () {}, child: Text("Next")),
       ],
     );
   }
