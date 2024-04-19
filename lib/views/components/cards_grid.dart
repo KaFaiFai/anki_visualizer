@@ -18,7 +18,7 @@ class _CardsGridState extends State<CardsGrid> with SingleTickerProviderStateMix
   late final AnimationController animationController;
   late final Animation<double> animation;
   late final Duration animationDuration;
-  late final Date start;
+  late final Date begin;
   late final Date end;
 
   @override
@@ -32,7 +32,7 @@ class _CardsGridState extends State<CardsGrid> with SingleTickerProviderStateMix
       ..addListener(() {
         setState(() {});
       });
-    _calStartAndEndDate();
+    _calBeginAndEndDate();
 
     // resetState();
 
@@ -65,8 +65,8 @@ class _CardsGridState extends State<CardsGrid> with SingleTickerProviderStateMix
   }
 
   Date get current {
-    final diff = end.difference(start);
-    return start.add((diff * animation.value).floor());
+    final diff = end.difference(begin);
+    return begin.add((diff * animation.value).floor());
   }
 
   void resetState() {
@@ -83,21 +83,21 @@ class _CardsGridState extends State<CardsGrid> with SingleTickerProviderStateMix
     animationController.forward();
   }
 
-  void _calStartAndEndDate() {
-    Date startDate = Date.fromTimestamp(milliseconds: widget.cardLogs.first.reviews.first.id);
+  void _calBeginAndEndDate() {
+    Date beginDate = Date.fromTimestamp(milliseconds: widget.cardLogs.first.reviews.first.id);
     Date endDate = Date.fromTimestamp(milliseconds: widget.cardLogs.first.reviews.first.id);
     for (final cl in widget.cardLogs) {
       for (final r in cl.reviews) {
         final curDate = Date.fromTimestamp(milliseconds: r.id);
-        if (curDate.difference(startDate) < 0) {
-          startDate = curDate;
+        if (curDate.difference(beginDate) < 0) {
+          beginDate = curDate;
         }
         if (curDate.difference(endDate) > 0) {
           endDate = curDate;
         }
       }
     }
-    start = startDate;
+    begin = beginDate;
     end = endDate;
   }
 }
