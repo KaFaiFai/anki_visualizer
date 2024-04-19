@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:anki_progress/services/database/entities/field.dart';
-import 'package:anki_progress/view_models/selection_model.dart';
+import 'package:anki_progress/view_models/data_source_model.dart';
 import 'package:anki_progress/views/basic/padded_column.dart';
 import 'package:anki_progress/views/run_with_app_container.dart';
 import 'package:file_picker/file_picker.dart';
@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 
 void main() {
   runWithAppContainer(ChangeNotifierProvider(
-    create: (BuildContext context) => SelectionModel(),
+    create: (BuildContext context) => DataSourceModel(),
     child: FilePage(),
   ));
 }
@@ -34,12 +34,12 @@ class FilePage extends StatelessWidget {
             onPressed: () {
               FilePicker.platform.pickFiles(initialDirectory: initialDirectory).then((value) {
                 if (value == null) return;
-                Provider.of<SelectionModel>(context, listen: false).selectFile(value.files.single.path!);
+                Provider.of<DataSourceModel>(context, listen: false).selectFile(value.files.single.path!);
               });
             },
             child: Text("Pick a file"),
           ),
-          Consumer<SelectionModel>(
+          Consumer<DataSourceModel>(
             builder: (_, vm, __) => FutureBuilder(
               future: vm.database,
               builder: (context, snapshot) {
@@ -53,7 +53,7 @@ class FilePage extends StatelessWidget {
               },
             ),
           ),
-          Consumer<SelectionModel>(
+          Consumer<DataSourceModel>(
             builder: (_, vm, __) => FutureBuilder(
               future: vm.decks,
               builder: (context, snapshot) {
@@ -76,7 +76,7 @@ class FilePage extends StatelessWidget {
               },
             ),
           ),
-          Consumer<SelectionModel>(
+          Consumer<DataSourceModel>(
             builder: (_, vm, __) => FutureBuilder(
               future: vm.fieldsInDeck,
               builder: (context, snapshot) {
@@ -117,7 +117,7 @@ class FilePage extends StatelessWidget {
               },
             ),
           ),
-          Consumer<SelectionModel>(
+          Consumer<DataSourceModel>(
             builder: (_, vm, __) => FutureBuilder(
               future: vm.getCardLogs(),
               builder: (context, snapshot) {

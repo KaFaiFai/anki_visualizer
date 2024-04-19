@@ -1,4 +1,4 @@
-import 'package:anki_progress/view_models/selection_model.dart';
+import 'package:anki_progress/view_models/data_source_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -9,7 +9,7 @@ class CardsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<SelectionModel>(
+    return Consumer<DataSourceModel>(
       builder: (_, vm, __) => FutureBuilder(
         future: vm.cardLogs,
         builder: (context, snapshot) {

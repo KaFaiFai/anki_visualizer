@@ -2,7 +2,7 @@ import 'package:anki_progress/controller/setup_other.dart'
     if (dart.library.html) 'package:anki_progress/controller/setup_web.dart'
     if (dart.library.io) 'package:anki_progress/controller/setup_other.dart'
     as setup; // so that other platforms won't load web specific plugins
-import 'package:anki_progress/view_models/selection_model.dart';
+import 'package:anki_progress/view_models/data_source_model.dart';
 import 'package:anki_progress/views/pages/cards_page.dart';
 import 'package:anki_progress/views/pages/file_page.dart';
 import 'package:anki_progress/views/run_with_app_container.dart';
@@ -22,7 +22,7 @@ class AnkiProgress extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => SelectionModel(),
+      create: (context) => DataSourceModel(),
       child: MaterialApp(
         title: "Anki Progress",
         theme: themeData,

@@ -9,7 +9,7 @@ import '../services/database/database_repository.dart';
 import '../services/database/entities/deck.dart';
 import '../services/database/entities/field.dart';
 
-class SelectionModel extends ChangeNotifier {
+class DataSourceModel extends ChangeNotifier {
   String? selectedFile;
   Deck? selectedDeck;
   Map<int, Field>? selectedFields;
