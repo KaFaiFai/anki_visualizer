@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:anki_progress/models/card_log.dart';
 import 'package:anki_progress/models/preference.dart';
 import 'package:anki_progress/services/database/entities/review.dart';
@@ -98,7 +100,11 @@ class CardProgress extends StatelessWidget {
     final Review? review = cardLog.reviews.where((e) => Date.fromTimestamp(milliseconds: e.id) == date).firstOrNull;
     final Color color;
     if (review == null) {
-      color = Colors.yellow.withAlpha(50);
+      final prevReviews = cardLog.reviews.where((e) => Date.fromTimestamp(milliseconds: e.id) < date);
+      final prevReview = prevReviews.lastOrNull;
+      final datePassed = prevReview == null ? 0 : date.difference(Date.fromTimestamp(milliseconds: prevReview.id));
+      final value = datePassed * prevReviews.length;
+      color = Colors.amber.withAlpha(min(value, 255));
     } else {
       final easeColorMap = {1: Colors.red, 2: Colors.blue, 3: Colors.green, 4: Colors.blueGrey};
       color = easeColorMap[review.ease] ?? Colors.brown.withAlpha(50);

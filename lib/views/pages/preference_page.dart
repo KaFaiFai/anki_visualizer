@@ -122,10 +122,10 @@ DateTimeRange _calDateTimeRangeBoundary(List<CardLog> cardLogs) {
   for (final cl in cardLogs) {
     for (final r in cl.reviews) {
       final curDate = Date.fromTimestamp(milliseconds: r.id);
-      if (curDate.difference(begin) < 0) {
+      if (curDate < begin) {
         begin = curDate;
       }
-      if (curDate.difference(end) > 0) {
+      if (curDate > end) {
         end = curDate;
       }
     }

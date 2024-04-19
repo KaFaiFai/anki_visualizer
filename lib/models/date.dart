@@ -51,16 +51,6 @@ class Date implements Comparable<Date> {
   }
 
   @override
-  bool operator ==(Object other) {
-    return other is Date && year == other.year && month == other.month && day == other.day;
-  }
-
-  @override
-  int get hashCode {
-    return Object.hash(year, month, day);
-  }
-
-  @override
   int compareTo(Date other) {
     int diff = difference(other);
     if (diff < 0) {
@@ -70,5 +60,23 @@ class Date implements Comparable<Date> {
     } else {
       return 0;
     }
+  }
+
+  bool operator <=(Date other) => compareTo(other) <= 0;
+
+  bool operator <(Date other) => compareTo(other) < 0;
+
+  bool operator >=(Date other) => compareTo(other) >= 0;
+
+  bool operator >(Date other) => compareTo(other) > 0;
+
+  @override
+  bool operator ==(Object other) {
+    return other is Date && year == other.year && month == other.month && day == other.day;
+  }
+
+  @override
+  int get hashCode {
+    return Object.hash(year, month, day);
   }
 }
