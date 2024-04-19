@@ -1,4 +1,5 @@
 import 'package:anki_progress/models/card_log.dart';
+import 'package:anki_progress/models/preference.dart';
 import 'package:anki_progress/services/database/entities/review.dart';
 import 'package:flutter/material.dart' hide Card;
 
@@ -6,8 +7,9 @@ import '../../models/date.dart';
 
 class CardsGrid extends StatefulWidget {
   final List<CardLog> cardLogs;
+  final Preference preference;
 
-  const CardsGrid({super.key, required this.cardLogs});
+  const CardsGrid({super.key, required this.cardLogs, required this.preference});
 
   @override
   State<CardsGrid> createState() => _CardsGridState();
@@ -24,7 +26,7 @@ class _CardsGridState extends State<CardsGrid> with SingleTickerProviderStateMix
   @override
   void initState() {
     super.initState();
-    animationDuration = Duration(milliseconds: widget.cardLogs.length * 30);
+    animationDuration = Duration(milliseconds: widget.preference.milliseconds);
 
     scrollController = ScrollController();
     animationController = AnimationController(duration: animationDuration, vsync: this);
@@ -32,7 +34,8 @@ class _CardsGridState extends State<CardsGrid> with SingleTickerProviderStateMix
       ..addListener(() {
         setState(() {});
       });
-    _calBeginAndEndDate();
+    begin = Date.fromDateTime(widget.preference.dateRange.start);
+    end = Date.fromDateTime(widget.preference.dateRange.end);
 
     // resetState();
 
@@ -46,8 +49,8 @@ class _CardsGridState extends State<CardsGrid> with SingleTickerProviderStateMix
     return GridView.builder(
       controller: scrollController,
       scrollDirection: Axis.vertical,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 30,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: widget.preference.numCol,
         mainAxisSpacing: 10,
         crossAxisSpacing: 10,
         childAspectRatio: 1.8,
@@ -81,24 +84,6 @@ class _CardsGridState extends State<CardsGrid> with SingleTickerProviderStateMix
       curve: Curves.linear,
     );
     animationController.forward();
-  }
-
-  void _calBeginAndEndDate() {
-    Date beginDate = Date.fromTimestamp(milliseconds: widget.cardLogs.first.reviews.first.id);
-    Date endDate = Date.fromTimestamp(milliseconds: widget.cardLogs.first.reviews.first.id);
-    for (final cl in widget.cardLogs) {
-      for (final r in cl.reviews) {
-        final curDate = Date.fromTimestamp(milliseconds: r.id);
-        if (curDate.difference(beginDate) < 0) {
-          beginDate = curDate;
-        }
-        if (curDate.difference(endDate) > 0) {
-          endDate = curDate;
-        }
-      }
-    }
-    begin = beginDate;
-    end = endDate;
   }
 }
 

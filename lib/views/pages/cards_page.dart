@@ -1,4 +1,5 @@
 import 'package:anki_progress/view_models/data_source_model.dart';
+import 'package:anki_progress/view_models/preference_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -9,11 +10,12 @@ class CardsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<DataSourceModel>(
-      builder: (_, vm, __) => FutureBuilder(
-        future: vm.cardLogs,
+    return Consumer2<DataSourceModel, PreferenceModel>(
+      builder: (_, dsm, pm, __) => FutureBuilder(
+        future: dsm.cardLogs,
         builder: (context, snapshot) {
-          if (!snapshot.hasData) {
+          final preference = pm.preference;
+          if (!snapshot.hasData || preference == null) {
             return const FractionallySizedBox(
               widthFactor: 0.5,
               heightFactor: 0.5,
@@ -22,7 +24,7 @@ class CardsPage extends StatelessWidget {
               ),
             );
           }
-          return CardsGrid(cardLogs: snapshot.requireData);
+          return CardsGrid(cardLogs: snapshot.requireData, preference: preference);
         },
       ),
     );

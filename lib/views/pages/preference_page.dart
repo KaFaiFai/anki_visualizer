@@ -51,22 +51,22 @@ class _InputFieldState extends State<_InputField> {
   @override
   void initState() {
     super.initState();
-    const seconds = 5;
+    final milliseconds = widget.cardLogs.length * 30;
     cardLogsRange = _calDateTimeRangeBoundary(widget.cardLogs);
-    final selectedRange = cardLogsRange;
-    const numCol = 20;
-    preference = Preference(seconds: seconds, dateRange: selectedRange, numCol: numCol);
+    final dateRange = cardLogsRange;
+    const numCol = 30;
+    preference = Preference(milliseconds: milliseconds, dateRange: dateRange, numCol: numCol);
   }
 
   @override
   Widget build(BuildContext context) {
     return PaddedColumn(padding: 10, children: [
       TextField(
-        controller: TextEditingController(text: "${preference.seconds}"),
-        decoration: const InputDecoration(suffix: Text("seconds")),
+        controller: TextEditingController(text: "${preference.milliseconds}"),
+        decoration: const InputDecoration(suffix: Text("milliseconds")),
         inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
         onChanged: (text) => setState(() {
-          preference.seconds = int.parse(text);
+          preference.milliseconds = int.parse(text);
         }),
       ),
       Row(
@@ -81,7 +81,13 @@ class _InputFieldState extends State<_InputField> {
                 builder: (context, child) => FractionallySizedBox(
                   widthFactor: 0.5,
                   heightFactor: 0.5,
-                  child: child,
+                  child: Theme(
+                    data: ThemeData(
+                      buttonTheme: ButtonThemeData(textTheme: ButtonTextTheme.accent),
+                      // primaryColor: Colors.red,
+                    ),
+                    child: child ?? Container(),
+                  ),
                 ),
               ).then((range) => setState(() {
                     if (range != null) preference.dateRange = range;
