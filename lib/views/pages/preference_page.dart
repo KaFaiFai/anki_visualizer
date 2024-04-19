@@ -55,38 +55,45 @@ class _InputFieldState extends State<_InputField> {
     cardLogsRange = _calDateTimeRangeBoundary(widget.cardLogs);
     final selectedRange = cardLogsRange;
     const numCol = 20;
-    preference = Preference(seconds: seconds, selectedRange: selectedRange, numCol: numCol);
+    preference = Preference(seconds: seconds, dateRange: selectedRange, numCol: numCol);
   }
 
   @override
   Widget build(BuildContext context) {
     return PaddedColumn(padding: 10, children: [
       TextField(
+        controller: TextEditingController(text: "${preference.seconds}"),
         decoration: const InputDecoration(suffix: Text("seconds")),
         inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
         onChanged: (text) => setState(() {
           preference.seconds = int.parse(text);
         }),
       ),
-      ElevatedButton(
-        onPressed: () {
-          showDateRangePicker(
-            context: context,
-            initialDateRange: preference.selectedRange,
-            firstDate: cardLogsRange.start,
-            lastDate: cardLogsRange.end,
-            builder: (context, child) => FractionallySizedBox(
-              widthFactor: 0.5,
-              heightFactor: 0.5,
-              child: child,
-            ),
-          ).then((range) => setState(() {
-                if (range != null) preference.selectedRange = range;
-              }));
-        },
-        child: Text("Pick date range"),
+      Row(
+        children: [
+          ElevatedButton(
+            onPressed: () {
+              showDateRangePicker(
+                context: context,
+                initialDateRange: preference.dateRange,
+                firstDate: cardLogsRange.start,
+                lastDate: cardLogsRange.end,
+                builder: (context, child) => FractionallySizedBox(
+                  widthFactor: 0.5,
+                  heightFactor: 0.5,
+                  child: child,
+                ),
+              ).then((range) => setState(() {
+                    if (range != null) preference.dateRange = range;
+                  }));
+            },
+            child: Text("Pick date range"),
+          ),
+          Text("${preference.dateRange}"),
+        ],
       ),
       TextField(
+        controller: TextEditingController(text: "${preference.numCol}"),
         decoration: const InputDecoration(suffix: Text("numCol")),
         inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
         onChanged: (text) => setState(() {
