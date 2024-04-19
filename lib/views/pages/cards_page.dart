@@ -5,6 +5,7 @@ import 'package:anki_progress/view_models/preference_model.dart';
 import 'package:anki_progress/views/basic/capturable.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/card_log.dart';
@@ -60,11 +61,15 @@ class _GridsWithControlState extends State<GridsWithControl> {
           child: CardsGrid(key: _cardsGridKey, cardLogs: widget.cardLogs, preference: widget.preference),
         ),
         IconButton(
-          onPressed: () {
-            final folder =
-                join(Platform.environment['UserProfile']!, "AndroidStudioProjects", "anki_progress", "doc", "captures");
+          onPressed: () async {
+            final directory = await getApplicationDocumentsDirectory();
+            final folder = join(directory.path, "captures");
+            await Directory(folder).create(recursive: true);
+            print("Captures are saved to $folder");
+
+            final begin = DateTime.now().millisecondsSinceEpoch;
             _cardsGridKey.currentState?.playProgress(() {
-              final time = DateTime.now().millisecondsSinceEpoch;
+              final time = DateTime.now().millisecondsSinceEpoch - begin;
               final saveTo = join(folder, "image-$time.png");
               _capturableKey.currentState?.captureAndSave(saveTo);
             });
