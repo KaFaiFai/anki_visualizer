@@ -84,8 +84,8 @@ class _InputFieldState extends State<_InputField> {
                 firstDate: cardLogsRange.start,
                 lastDate: cardLogsRange.end,
                 builder: (context, child) => FractionallySizedBox(
-                  widthFactor: 0.5,
-                  heightFactor: 0.5,
+                  widthFactor: 0.8,
+                  heightFactor: 0.8,
                   child: Theme(
                     data: ThemeData(
                       buttonTheme: ButtonThemeData(textTheme: ButtonTextTheme.accent),

@@ -14,10 +14,10 @@ class CardsGrid extends StatefulWidget {
   const CardsGrid({super.key, required this.cardLogs, required this.preference});
 
   @override
-  State<CardsGrid> createState() => _CardsGridState();
+  State<CardsGrid> createState() => CardsGridState();
 }
 
-class _CardsGridState extends State<CardsGrid> with SingleTickerProviderStateMixin {
+class CardsGridState extends State<CardsGrid> with SingleTickerProviderStateMixin {
   late final ScrollController scrollController;
   late final AnimationController animationController;
   late final Animation<double> animation;
@@ -38,27 +38,24 @@ class _CardsGridState extends State<CardsGrid> with SingleTickerProviderStateMix
       });
     begin = Date.fromDateTime(widget.preference.dateRange.start);
     end = Date.fromDateTime(widget.preference.dateRange.end);
-
-    // resetState();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      playProgress();
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      controller: scrollController,
-      scrollDirection: Axis.vertical,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: widget.preference.numCol,
-        mainAxisSpacing: 10,
-        crossAxisSpacing: 10,
-        childAspectRatio: 1.8,
+    return Container(
+      color: Theme.of(context).colorScheme.background,
+      child: GridView.builder(
+        controller: scrollController,
+        scrollDirection: Axis.vertical,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: widget.preference.numCol,
+          mainAxisSpacing: 10,
+          crossAxisSpacing: 10,
+          childAspectRatio: 1.8,
+        ),
+        itemCount: widget.cardLogs.length,
+        itemBuilder: (BuildContext context, int index) => CardProgress(cardLog: widget.cardLogs[index], date: current),
       ),
-      itemCount: widget.cardLogs.length,
-      itemBuilder: (BuildContext context, int index) => CardProgress(cardLog: widget.cardLogs[index], date: current),
     );
   }
 
@@ -79,12 +76,23 @@ class _CardsGridState extends State<CardsGrid> with SingleTickerProviderStateMix
     animationController.reset();
   }
 
-  void playProgress() {
+  void playProgress(void Function() callback) {
     scrollController.animateTo(
       scrollController.position.maxScrollExtent,
       duration: animationDuration,
       curve: Curves.linear,
     );
+    animationController.addListener(callback);
+    animationController.addStatusListener((status) {
+      switch (status) {
+        case AnimationStatus.forward:
+          print("Animation started");
+        case AnimationStatus.completed:
+          animationController.removeListener(callback);
+          print("Animation ended");
+        default:
+      }
+    });
     animationController.forward();
   }
 }
