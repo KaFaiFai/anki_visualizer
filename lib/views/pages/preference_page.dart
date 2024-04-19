@@ -14,9 +14,9 @@ class PreferencePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<DataSourceModel>(
-      builder: (_, vm, __) => FutureBuilder(
-        future: vm.cardLogs,
+    return Consumer2<DataSourceModel, PreferenceModel>(
+      builder: (_, dsm, pm, __) => FutureBuilder(
+        future: dsm.cardLogs,
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return const FractionallySizedBox(
@@ -28,7 +28,7 @@ class PreferencePage extends StatelessWidget {
             );
           }
           final cardLogs = snapshot.requireData;
-          return _InputField(cardLogs);
+          return _InputField(cardLogs, initialPreference: pm.preference);
         },
       ),
     );
@@ -37,8 +37,9 @@ class PreferencePage extends StatelessWidget {
 
 class _InputField extends StatefulWidget {
   final List<CardLog> cardLogs;
+  final Preference? initialPreference;
 
-  const _InputField(this.cardLogs);
+  const _InputField(this.cardLogs, {this.initialPreference});
 
   @override
   State<_InputField> createState() => _InputFieldState();
@@ -51,11 +52,15 @@ class _InputFieldState extends State<_InputField> {
   @override
   void initState() {
     super.initState();
-    final milliseconds = widget.cardLogs.length * 30;
     cardLogsRange = _calDateTimeRangeBoundary(widget.cardLogs);
-    final dateRange = cardLogsRange;
-    const numCol = 30;
-    preference = Preference(milliseconds: milliseconds, dateRange: dateRange, numCol: numCol);
+    if (widget.initialPreference != null) {
+      preference = widget.initialPreference!;
+    } else {
+      final milliseconds = widget.cardLogs.length * 8;
+      final dateRange = cardLogsRange;
+      const numCol = 30;
+      preference = Preference(milliseconds: milliseconds, dateRange: dateRange, numCol: numCol);
+    }
   }
 
   @override
