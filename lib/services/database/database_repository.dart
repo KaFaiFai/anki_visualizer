@@ -18,7 +18,7 @@ class DatabaseRepository {
       'cards',
       where: 'did = ?',
       whereArgs: [deckId],
-      orderBy: "ord",
+      orderBy: "id",
     );
     return maps.map((e) => Card.fromMap(e)).toList();
   }

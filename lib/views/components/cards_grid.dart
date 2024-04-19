@@ -47,10 +47,10 @@ class _CardsGridState extends State<CardsGrid> with SingleTickerProviderStateMix
       controller: scrollController,
       scrollDirection: Axis.vertical,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 15,
+        crossAxisCount: 30,
         mainAxisSpacing: 10,
         crossAxisSpacing: 10,
-        childAspectRatio: 1,
+        childAspectRatio: 1.8,
       ),
       itemCount: widget.cardLogs.length,
       itemBuilder: (BuildContext context, int index) => CardProgress(cardLog: widget.cardLogs[index], date: current),
@@ -122,11 +122,11 @@ class CardProgress extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: color,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Theme.of(context).colorScheme.outline, width: 5),
+        borderRadius: BorderRadius.circular(5),
+        border: Border.all(color: Theme.of(context).colorScheme.outline, width: 2),
       ),
       alignment: Alignment.center,
-      child: Text(cardLog.text),
+      child: Text(cardLog.text, style: Theme.of(context).textTheme.bodySmall),
     );
   }
 }
