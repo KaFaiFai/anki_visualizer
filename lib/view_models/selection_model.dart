@@ -58,4 +58,26 @@ class SelectionModel extends ChangeNotifier {
     if (field != null) selectedFields?[notetypeId] = field;
     notifyListeners();
   }
+
+  Future<bool> getCardLogs() async {
+    /// returns where this operation is valid
+    ///
+    final db = await database;
+    final deck = selectedDeck;
+    final allFieldsInDeck = (await fieldsInDeck)?.keys;
+    final fields = selectedFields;
+    final allFieldsSelected = allFieldsInDeck?.every((e) => fields?.keys.contains(e) ?? false) ?? false;
+    if (db == null || deck == null || fields == null || !allFieldsSelected) return false;
+
+    final cards = await DatabaseRepository().getAllCardsInDeck(db, deck.id);
+    cardLogs = Future.wait(cards.map((card) async {
+      final reviews = await DatabaseRepository().getCardReviews(db, card.id);
+      final (mid, notes) = await DatabaseRepository().getCardNotes(db, card.id);
+      final fieldOrd = fields[mid]!.ord;
+      final text = notes[fieldOrd];
+      return CardLog(text, reviews);
+    }));
+
+    return true;
+  }
 }

@@ -27,97 +27,107 @@ class FilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ElevatedButton(
-          onPressed: () {
-            FilePicker.platform.pickFiles(initialDirectory: initialDirectory).then((value) {
-              if (value == null) return;
-              Provider.of<SelectionModel>(context, listen: false).selectFile(value.files.single.path!);
-            });
-          },
-          child: Text("Pick a file"),
-        ),
-        Consumer<SelectionModel>(
-          builder: (_, vm, __) => FutureBuilder(
-            future: vm.database,
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return Text("Error loading database");
-              } else if (snapshot.hasData) {
-                return Text("Successfully loaded database");
-              } else {
-                return Text("Please choose a database");
-              }
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          ElevatedButton(
+            onPressed: () {
+              FilePicker.platform.pickFiles(initialDirectory: initialDirectory).then((value) {
+                if (value == null) return;
+                Provider.of<SelectionModel>(context, listen: false).selectFile(value.files.single.path!);
+              });
             },
+            child: Text("Pick a file"),
           ),
-        ),
-        Consumer<SelectionModel>(
-          builder: (_, vm, __) => FutureBuilder(
-            future: vm.decks,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return Wrap(
-                  spacing: 30,
-                  runSpacing: 10,
-                  children: snapshot.requireData.map((deck) {
-                    if (vm.selectedDeck == deck) {
-                      return ElevatedButton(onPressed: () => vm.toggleDeck(deck), child: Text(deck.name));
-                    } else {
-                      return OutlinedButton(onPressed: () => vm.toggleDeck(deck), child: Text(deck.name));
-                    }
-                  }).toList(),
-                );
-              } else if (snapshot.hasError) {
-                return Text("Please select a file again");
-              }
-              return Text("${snapshot.hasData}");
-            },
+          Consumer<SelectionModel>(
+            builder: (_, vm, __) => FutureBuilder(
+              future: vm.database,
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Text("Error loading database");
+                } else if (snapshot.hasData) {
+                  return Text("Successfully loaded database");
+                } else {
+                  return Text("Please choose a database");
+                }
+              },
+            ),
           ),
-        ),
-        Consumer<SelectionModel>(
-          builder: (_, vm, __) => FutureBuilder(
-            future: vm.fieldsInDeck,
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return Text("Error getting fields in deck");
-              } else if (snapshot.hasData) {
-                return Row(
-                  children: snapshot.requireData.entries.map(
-                    (e) {
-                      final notetypeId = e.key;
-                      final fields = e.value;
-                      return PaddedColumn(
-                        padding: 10,
-                        children: [
-                          Text("$notetypeId"),
-                          DropdownButton<Field>(
-                            value: vm.selectedFields?[notetypeId],
-                            onChanged: (field) => vm.selectField(notetypeId, field),
-                            items: fields
-                                .map(
-                                  (e) => DropdownMenuItem<Field>(
-                                    value: e,
-                                    child: Text(
-                                      "${e.ord}: ${e.name}",
-                                      style: Theme.of(context).textTheme.bodyMedium,
+          Consumer<SelectionModel>(
+            builder: (_, vm, __) => FutureBuilder(
+              future: vm.decks,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Wrap(
+                    spacing: 30,
+                    runSpacing: 10,
+                    children: snapshot.requireData.map((deck) {
+                      if (vm.selectedDeck == deck) {
+                        return ElevatedButton(onPressed: () => vm.toggleDeck(deck), child: Text(deck.name));
+                      } else {
+                        return OutlinedButton(onPressed: () => vm.toggleDeck(deck), child: Text(deck.name));
+                      }
+                    }).toList(),
+                  );
+                } else if (snapshot.hasError) {
+                  return Text("Please select a file again");
+                }
+                return Text("${snapshot.hasData}");
+              },
+            ),
+          ),
+          Consumer<SelectionModel>(
+            builder: (_, vm, __) => FutureBuilder(
+              future: vm.fieldsInDeck,
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Text("Error getting fields in deck");
+                } else if (snapshot.hasData) {
+                  return Row(
+                    children: snapshot.requireData.entries.map(
+                      (e) {
+                        final notetypeId = e.key;
+                        final fields = e.value;
+                        return PaddedColumn(
+                          padding: 10,
+                          children: [
+                            Text("$notetypeId"),
+                            DropdownButton<Field>(
+                              value: vm.selectedFields?[notetypeId],
+                              onChanged: (field) => vm.selectField(notetypeId, field),
+                              items: fields
+                                  .map(
+                                    (e) => DropdownMenuItem<Field>(
+                                      value: e,
+                                      child: Text(
+                                        "${e.ord}: ${e.name}",
+                                        style: Theme.of(context).textTheme.bodyMedium,
+                                      ),
                                     ),
-                                  ),
-                                )
-                                .toList(),
-                          ),
-                        ],
-                      );
-                    },
-                  ).toList(),
-                );
-              }
-              return Container();
-            },
+                                  )
+                                  .toList(),
+                            ),
+                          ],
+                        );
+                      },
+                    ).toList(),
+                  );
+                }
+                return Container();
+              },
+            ),
           ),
-        ),
-        ElevatedButton(onPressed: () {}, child: Text("Next")),
-      ],
+          Consumer<SelectionModel>(
+            builder: (_, vm, __) => FutureBuilder(
+              future: vm.getCardLogs(),
+              builder: (context, snapshot) {
+                final clickable = snapshot.data ?? false;
+                return ElevatedButton(onPressed: clickable ? vm.getCardLogs : null, child: Text("Next"));
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
