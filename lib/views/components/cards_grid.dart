@@ -3,9 +3,29 @@ import 'dart:math';
 import 'package:anki_progress/models/card_log.dart';
 import 'package:anki_progress/models/preference.dart';
 import 'package:anki_progress/services/database/entities/review.dart';
+import 'package:anki_progress/views/run_with_app_container.dart';
 import 'package:flutter/material.dart' hide Card;
 
 import '../../models/date.dart';
+
+void main() {
+  final cardLogs = List.generate(
+    500,
+    (index) => CardLog(
+      "card $index",
+      List.generate(
+        20,
+        (_) => Review(id: index, cid: 0, ease: 0, ivl: 0, lastIvl: 0, time: 0, type: 0),
+      ),
+    ),
+  );
+  final preference = Preference(
+    milliseconds: 3000,
+    dateRange: DateTimeRange(start: DateTime.now(), end: DateTime.now()),
+    numCol: 10,
+  );
+  runWithAppContainer(CardsGrid(cardLogs: cardLogs, preference: preference));
+}
 
 class CardsGrid extends StatefulWidget {
   final List<CardLog> cardLogs;
@@ -38,6 +58,10 @@ class CardsGridState extends State<CardsGrid> with SingleTickerProviderStateMixi
       });
     begin = Date.fromDateTime(widget.preference.dateRange.start);
     end = Date.fromDateTime(widget.preference.dateRange.end);
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      playProgress(() {});
+    });
   }
 
   @override
