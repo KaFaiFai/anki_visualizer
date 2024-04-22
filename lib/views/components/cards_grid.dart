@@ -59,9 +59,9 @@ class CardsGridState extends State<CardsGrid> with SingleTickerProviderStateMixi
     begin = Date.fromDateTime(widget.preference.dateRange.start);
     end = Date.fromDateTime(widget.preference.dateRange.end);
 
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      playProgress(() {});
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //   playProgress(() {});
+    // });
   }
 
   @override

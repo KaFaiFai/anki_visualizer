@@ -1,11 +1,9 @@
-import 'dart:io';
-
 import 'package:anki_progress/view_models/data_source_model.dart';
+import 'package:anki_progress/view_models/exports_model.dart';
 import 'package:anki_progress/view_models/preference_model.dart';
 import 'package:anki_progress/views/basic/capturable.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/card_log.dart';
@@ -17,8 +15,8 @@ class CardsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<DataSourceModel, PreferenceModel>(
-      builder: (_, dsm, pm, __) => FutureBuilder(
+    return Consumer3<DataSourceModel, PreferenceModel, ExportsModel>(
+      builder: (_, dsm, pm, em, __) => FutureBuilder(
         future: dsm.cardLogs,
         builder: (context, snapshot) {
           final preference = pm.preference;
@@ -31,7 +29,11 @@ class CardsPage extends StatelessWidget {
               ),
             );
           }
-          return GridsWithControl(cardLogs: snapshot.requireData, preference: preference);
+          return GridsWithControl(
+            cardLogs: snapshot.requireData,
+            preference: preference,
+            captureFolder: em.captureFolder,
+          );
         },
       ),
     );
@@ -41,8 +43,9 @@ class CardsPage extends StatelessWidget {
 class GridsWithControl extends StatefulWidget {
   final List<CardLog> cardLogs;
   final Preference preference;
+  final String captureFolder;
 
-  const GridsWithControl({super.key, required this.cardLogs, required this.preference});
+  const GridsWithControl({super.key, required this.cardLogs, required this.preference, required this.captureFolder});
 
   @override
   State<GridsWithControl> createState() => _GridsWithControlState();
@@ -62,15 +65,10 @@ class _GridsWithControlState extends State<GridsWithControl> {
         ),
         IconButton(
           onPressed: () async {
-            final directory = await getApplicationDocumentsDirectory();
-            final folder = join(directory.path, "captures");
-            await Directory(folder).create(recursive: true);
-            print("Captures are saved to $folder");
-
             final begin = DateTime.now().millisecondsSinceEpoch;
             _cardsGridKey.currentState?.playProgress(() {
               final time = DateTime.now().millisecondsSinceEpoch - begin;
-              final saveTo = join(folder, "image-$time.png");
+              final saveTo = join(widget.captureFolder, "image-$time.png");
               _capturableKey.currentState?.captureAndSave(saveTo);
             });
           },
