@@ -3,10 +3,11 @@ import 'package:anki_progress/controller/setup_other.dart'
     if (dart.library.io) 'package:anki_progress/controller/setup_other.dart'
     as setup; // so that other platforms won't load web specific plugins
 import 'package:anki_progress/view_models/data_source_model.dart';
+import 'package:anki_progress/view_models/exports_model.dart';
 import 'package:anki_progress/view_models/preference_model.dart';
 import 'package:anki_progress/views/pages/cards_page.dart';
+import 'package:anki_progress/views/pages/configuration_page.dart';
 import 'package:anki_progress/views/pages/file_page.dart';
-import 'package:anki_progress/views/pages/preference_page.dart';
 import 'package:anki_progress/views/run_with_app_container.dart';
 import 'package:anki_progress/views/theme/theme_data.dart';
 import 'package:flutter/foundation.dart';
@@ -27,6 +28,7 @@ class AnkiProgress extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => DataSourceModel()),
         ChangeNotifierProvider(create: (context) => PreferenceModel()),
+        ChangeNotifierProvider(create: (context) => ExportsModel()),
       ],
       child: MaterialApp(
         title: "Anki Progress",
@@ -39,11 +41,11 @@ class AnkiProgress extends StatelessWidget {
             backgroundColor: themeData.colorScheme.background,
             appBar: AppBar(
               title: const TabBar(
-                tabs: [Tab(text: "File"), Tab(text: "Preference"), Tab(text: "Cards")],
+                tabs: [Tab(text: "File"), Tab(text: "Config"), Tab(text: "Cards")],
               ),
             ),
             body: const TabBarView(
-              children: [FilePage(), PreferencePage(), CardsPage()],
+              children: [FilePage(), ConfigurationPage(), CardsPage()],
             ),
           ),
         ),

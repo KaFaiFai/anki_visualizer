@@ -1,6 +1,8 @@
 import 'package:anki_progress/models/preference.dart';
+import 'package:anki_progress/view_models/exports_model.dart';
 import 'package:anki_progress/view_models/preference_model.dart';
 import 'package:anki_progress/views/basic/padded_column.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -9,8 +11,8 @@ import '../../models/card_log.dart';
 import '../../models/date.dart';
 import '../../view_models/data_source_model.dart';
 
-class PreferencePage extends StatelessWidget {
-  const PreferencePage({super.key});
+class ConfigurationPage extends StatelessWidget {
+  const ConfigurationPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -110,6 +112,24 @@ class _InputFieldState extends State<_InputField> {
         onChanged: (text) => setState(() {
           preference.numCol = int.parse(text);
         }),
+      ),
+      ElevatedButton(
+        onPressed: () {
+          FilePicker.platform.getDirectoryPath().then((value) {
+            if (value == null) return;
+            Provider.of<ExportsModel>(context, listen: false).updateCaptureFolder(value);
+          });
+        },
+        child: Text("capture folder"),
+      ),
+      ElevatedButton(
+        onPressed: () {
+          FilePicker.platform.getDirectoryPath().then((value) {
+            if (value == null) return;
+            Provider.of<ExportsModel>(context, listen: false).updateExportsFile(value);
+          });
+        },
+        child: Text("exports folder"),
       ),
       Consumer<PreferenceModel>(
         builder: (BuildContext context, vm, Widget? child) => ElevatedButton(
