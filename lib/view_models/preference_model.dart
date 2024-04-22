@@ -1,12 +1,14 @@
-import 'package:anki_progress/models/preference.dart';
+import 'package:anki_progress/models/animation_preference.dart';
 import 'package:flutter/material.dart';
 
 class PreferenceModel extends ChangeNotifier {
-  Preference? preference;
+  AnimationPreference? preference;
 
-  PreferenceModel({this.preference});
+  PreferenceModel();
 
-  void updatePreference(Preference? preference) {
+
+
+  void updatePreference(AnimationPreference? preference) {
     print(preference);
     this.preference = preference;
   }

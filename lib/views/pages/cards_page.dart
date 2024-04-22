@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 
+import '../../models/animation_preference.dart';
 import '../../models/card_log.dart';
-import '../../models/preference.dart';
 import '../components/cards_grid.dart';
 
 class CardsPage extends StatelessWidget {
@@ -42,7 +42,7 @@ class CardsPage extends StatelessWidget {
 
 class GridsWithControl extends StatefulWidget {
   final List<CardLog> cardLogs;
-  final Preference preference;
+  final AnimationPreference preference;
   final String captureFolder;
 
   const GridsWithControl({super.key, required this.cardLogs, required this.preference, required this.captureFolder});
@@ -65,10 +65,8 @@ class _GridsWithControlState extends State<GridsWithControl> {
           child: CardsGrid(key: _cardsGridKey, cardLogs: widget.cardLogs, preference: widget.preference),
         ),
         IconButton(
-          onPressed: () async {
-            final begin = DateTime.now().millisecondsSinceEpoch;
+          onPressed: () {
             _cardsGridKey.currentState?.playProgress(() {
-              final time = DateTime.now().millisecondsSinceEpoch - begin;
               final saveTo = join(widget.captureFolder, "image-${_count.toString().padLeft(7, '0')}.png");
               _capturableKey.currentState?.captureAndSave(saveTo);
               _count++;

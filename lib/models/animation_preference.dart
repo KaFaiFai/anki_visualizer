@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class Preference {
+class AnimationPreference {
   int milliseconds;
   DateTimeRange dateRange;
   int numCol;
 
-  Preference({
+  AnimationPreference({
     required this.milliseconds,
     required this.dateRange,
     required this.numCol,

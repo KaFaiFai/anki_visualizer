@@ -1,7 +1,9 @@
 import 'dart:io';
 
 import 'package:anki_progress/models/card_log.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart' hide Card;
+import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../services/database/database_provider.dart';
@@ -10,6 +12,12 @@ import '../services/database/entities/deck.dart';
 import '../services/database/entities/field.dart';
 
 class DataSourceModel extends ChangeNotifier {
+  static String? initialDirectory = Platform.isAndroid
+      ? initialDirectory = "/storage/emulated/0/Android/data/com.ichi2.anki/files/AnkiDroid"
+      : Platform.isWindows
+          ? initialDirectory = join(Platform.environment['UserProfile']!, "AppData\\Roaming\\Anki2\\User 1")
+          : null;
+
   String? selectedFile;
   Deck? selectedDeck;
   Map<int, Field>? selectedFields;
@@ -19,11 +27,14 @@ class DataSourceModel extends ChangeNotifier {
   Future<Map<int, List<Field>>>? fieldsInDeck;
   Future<List<CardLog>>? cardLogs;
 
-  void selectFile(String path) {
-    selectedFile = path;
-    database = DatabaseProvider().importDb(File(path));
-    _loadDecks();
-    notifyListeners();
+  void selectFile() {
+    FilePicker.platform.pickFiles(initialDirectory: initialDirectory).then((value) {
+      if (value == null) return;
+      selectedFile = value.files.single.path;
+      database = DatabaseProvider().importDb(File(selectedFile!));
+      _loadDecks();
+      notifyListeners();
+    });
   }
 
   Future<void> _loadDecks() async {
@@ -37,6 +48,7 @@ class DataSourceModel extends ChangeNotifier {
     selectedDeck = selectedDeck == deck ? null : deck;
     selectedFields = null;
     _loadFieldsInDeck();
+    // TODO: assign initial value for selectedFields
     notifyListeners();
   }
 

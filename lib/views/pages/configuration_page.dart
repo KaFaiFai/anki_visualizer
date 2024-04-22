@@ -1,8 +1,7 @@
-import 'package:anki_progress/models/preference.dart';
+import 'package:anki_progress/models/animation_preference.dart';
 import 'package:anki_progress/view_models/exports_model.dart';
 import 'package:anki_progress/view_models/preference_model.dart';
 import 'package:anki_progress/views/basic/padded_column.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -39,7 +38,7 @@ class ConfigurationPage extends StatelessWidget {
 
 class _InputField extends StatefulWidget {
   final List<CardLog> cardLogs;
-  final Preference? initialPreference;
+  final AnimationPreference? initialPreference;
 
   const _InputField(this.cardLogs, {this.initialPreference});
 
@@ -49,32 +48,27 @@ class _InputField extends StatefulWidget {
 
 class _InputFieldState extends State<_InputField> {
   late DateTimeRange cardLogsRange;
-  late Preference preference;
+  late int milliseconds;
+  late DateTimeRange dateRange;
+  late int numCol;
 
   @override
   void initState() {
     super.initState();
     cardLogsRange = _calDateTimeRangeBoundary(widget.cardLogs);
-    if (widget.initialPreference != null) {
-      preference = widget.initialPreference!;
-    } else {
-      final milliseconds = widget.cardLogs.length * 8;
-      final dateRange = cardLogsRange;
-      const numCol = 30;
-      preference = Preference(milliseconds: milliseconds, dateRange: dateRange, numCol: numCol);
-    }
+    milliseconds = widget.initialPreference?.milliseconds ?? widget.cardLogs.length * 8;
+    dateRange = widget.initialPreference?.dateRange ?? cardLogsRange;
+    numCol = widget.initialPreference?.numCol ?? 30;
   }
 
   @override
   Widget build(BuildContext context) {
     return PaddedColumn(padding: 10, children: [
       TextField(
-        controller: TextEditingController(text: "${preference.milliseconds}"),
+        controller: TextEditingController(text: "$milliseconds"),
         decoration: const InputDecoration(suffix: Text("milliseconds")),
         inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
-        onChanged: (text) => setState(() {
-          preference.milliseconds = int.parse(text);
-        }),
+        onChanged: (text) => setState(() => milliseconds = int.parse(text)),
       ),
       Row(
         children: [
@@ -82,7 +76,7 @@ class _InputFieldState extends State<_InputField> {
             onPressed: () {
               showDateRangePicker(
                 context: context,
-                initialDateRange: preference.dateRange,
+                initialDateRange: dateRange,
                 firstDate: cardLogsRange.start,
                 lastDate: cardLogsRange.end,
                 builder: (context, child) => FractionallySizedBox(
@@ -97,44 +91,38 @@ class _InputFieldState extends State<_InputField> {
                   ),
                 ),
               ).then((range) => setState(() {
-                    if (range != null) preference.dateRange = range;
+                    if (range != null) dateRange = range;
                   }));
             },
             child: Text("Pick date range"),
           ),
-          Text("${preference.dateRange}"),
+          Text("${dateRange}"),
         ],
       ),
       TextField(
-        controller: TextEditingController(text: "${preference.numCol}"),
+        controller: TextEditingController(text: "$numCol"),
         decoration: const InputDecoration(suffix: Text("numCol")),
         inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
-        onChanged: (text) => setState(() {
-          preference.numCol = int.parse(text);
-        }),
-      ),
-      ElevatedButton(
-        onPressed: () {
-          FilePicker.platform.getDirectoryPath().then((value) {
-            if (value == null) return;
-            Provider.of<ExportsModel>(context, listen: false).updateCaptureFolder(value);
-          });
-        },
-        child: Text("capture folder"),
-      ),
-      ElevatedButton(
-        onPressed: () {
-          FilePicker.platform.getDirectoryPath().then((value) {
-            if (value == null) return;
-            Provider.of<ExportsModel>(context, listen: false).updateExportsFile(value);
-          });
-        },
-        child: Text("exports folder"),
+        onChanged: (text) => setState(() => numCol = int.parse(text)),
       ),
       Consumer<PreferenceModel>(
-        builder: (BuildContext context, vm, Widget? child) => ElevatedButton(
-          onPressed: () => vm.updatePreference(preference),
+        builder: (_, pm, __) => ElevatedButton(
+          onPressed: () => pm.updatePreference(
+            AnimationPreference(milliseconds: milliseconds, dateRange: dateRange, numCol: numCol),
+          ),
           child: Text("Confirm"),
+        ),
+      ),
+      Consumer<ExportsModel>(
+        builder: (_, em, __) => ElevatedButton(
+          onPressed: () => em.selectCaptureRootFolder(),
+          child: Text(em.captureRootFolder),
+        ),
+      ),
+      Consumer<ExportsModel>(
+        builder: (_, em, __) => ElevatedButton(
+          onPressed: () => em.selectExportsFolder(),
+          child: Text(em.exportsFolder),
         ),
       ),
     ]);

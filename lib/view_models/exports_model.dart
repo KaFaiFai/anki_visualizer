@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:ffmpeg_kit_flutter/ffmpeg_kit.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image/image.dart';
 import 'package:path/path.dart';
@@ -8,8 +8,11 @@ import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
 class ExportsModel extends ChangeNotifier {
+  late String captureRootFolder;
   late String captureFolder; // temp folder to store individual images
   late String exportsFolder;
+
+  Future<bool>? exportGIFState;
 
   ExportsModel() {
     _init();
@@ -17,20 +20,35 @@ class ExportsModel extends ChangeNotifier {
 
   Future<void> _init() async {
     final directory = await getApplicationDocumentsDirectory();
-    final captureRootFolder = join(directory.path, "captures");
-    updateCaptureFolder(captureRootFolder);
+    captureRootFolder = join(directory.path, "captures");
+    _updateCaptureFolder(captureRootFolder);
     final exportsRootFolder = join(directory.path, "exports");
-    updateExportsFile(exportsRootFolder);
+    _updateExportsFolder(exportsRootFolder);
   }
 
-  Future<void> updateCaptureFolder(String rootFolder) async {
+  void selectCaptureRootFolder() {
+    FilePicker.platform.getDirectoryPath(initialDirectory: captureRootFolder).then((value) {
+      if (value == null) return;
+      _updateCaptureFolder(value);
+    });
+  }
+
+  Future<void> _updateCaptureFolder(String rootFolder) async {
+    captureRootFolder = rootFolder;
     captureFolder = join(rootFolder, Uuid().v4());
     await Directory(captureFolder).create(recursive: true);
     print("Captures are saved to $captureFolder");
     notifyListeners();
   }
 
-  Future<void> updateExportsFile(String folder) async {
+  void selectExportsFolder() {
+    FilePicker.platform.getDirectoryPath(initialDirectory: exportsFolder).then((value) {
+      if (value == null) return;
+      _updateExportsFolder(value);
+    });
+  }
+
+  Future<void> _updateExportsFolder(String folder) async {
     exportsFolder = folder;
     await Directory(exportsFolder).create(recursive: true);
     print("Exports are saved to $exportsFolder");
@@ -38,11 +56,9 @@ class ExportsModel extends ChangeNotifier {
   }
 
   void exportVideo() {
+    // TODO: convert images to video format
+    return;
     // ffmpeg.exe -i {{captureFolder}}\image-%d.png {{exportsFolder}}\output.mp4
-    FFmpegKit.execute('-i $captureFolder\\image-%d.png $exportsFolder\\output.mp4').then((session) async {
-      final returnCode = await session.getReturnCode();
-      print(returnCode);
-    });
   }
 
   Future<void> exportGIF() async {
@@ -58,8 +74,9 @@ class ExportsModel extends ChangeNotifier {
       }
       final exportPath = join(exportsFolder, "output.gif");
       File(exportPath).deleteSync();
-      await encodeGifFile(exportPath, image);
-      print("Exported gif to $exportPath");
+      exportGIFState = encodeGifFile(exportPath, image);
+      notifyListeners();
+      exportGIFState?.then((_) => print("Exported gif to $exportPath"));
     }
   }
 }

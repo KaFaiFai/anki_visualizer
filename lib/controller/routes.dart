@@ -4,11 +4,6 @@ class Routes {
   Routes._();
 
   static const filePage = '/'; // to make it the index page
-  static const dictionaryPage = '/dictionary';
-  static const statisticsPage = '/statistics';
-  static const infoPage = '/info';
-  static const privacyPolicyPage = '/privacy_policy';
-  static const termsPage = '/terms_and_conditions';
 
   static NavigatorObserver buildPageObserver() {
     return _NavigatorObserver((route) {
