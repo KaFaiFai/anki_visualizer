@@ -69,7 +69,7 @@ class _GridsWithControlState extends State<GridsWithControl> {
             final begin = DateTime.now().millisecondsSinceEpoch;
             _cardsGridKey.currentState?.playProgress(() {
               final time = DateTime.now().millisecondsSinceEpoch - begin;
-              final saveTo = join(widget.captureFolder, "image-$_count.png");
+              final saveTo = join(widget.captureFolder, "image-${_count.toString().padLeft(7, '0')}.png");
               _capturableKey.currentState?.captureAndSave(saveTo);
               _count++;
             });

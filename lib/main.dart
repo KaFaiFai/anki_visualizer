@@ -7,6 +7,7 @@ import 'package:anki_progress/view_models/exports_model.dart';
 import 'package:anki_progress/view_models/preference_model.dart';
 import 'package:anki_progress/views/pages/cards_page.dart';
 import 'package:anki_progress/views/pages/configuration_page.dart';
+import 'package:anki_progress/views/pages/export_page.dart';
 import 'package:anki_progress/views/pages/file_page.dart';
 import 'package:anki_progress/views/run_with_app_container.dart';
 import 'package:anki_progress/views/theme/theme_data.dart';
@@ -36,16 +37,16 @@ class AnkiProgress extends StatelessWidget {
         showPerformanceOverlay: kProfileMode,
         // debugShowCheckedModeBanner: false,
         home: DefaultTabController(
-          length: 3,
+          length: 4,
           child: Scaffold(
             backgroundColor: themeData.colorScheme.background,
             appBar: AppBar(
               title: const TabBar(
-                tabs: [Tab(text: "File"), Tab(text: "Config"), Tab(text: "Cards")],
+                tabs: [Tab(text: "File"), Tab(text: "Config"), Tab(text: "Cards"), Tab(text: "Export")],
               ),
             ),
             body: const TabBarView(
-              children: [FilePage(), ConfigurationPage(), CardsPage()],
+              children: [FilePage(), ConfigurationPage(), CardsPage(), ExportPage()],
             ),
           ),
         ),

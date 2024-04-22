@@ -1,13 +1,15 @@
 import 'dart:io';
 
+import 'package:ffmpeg_kit_flutter/ffmpeg_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:image/image.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
 class ExportsModel extends ChangeNotifier {
   late String captureFolder; // temp folder to store individual images
-  late String exportsFile;
+  late String exportsFolder;
 
   ExportsModel() {
     _init();
@@ -29,13 +31,35 @@ class ExportsModel extends ChangeNotifier {
   }
 
   Future<void> updateExportsFile(String folder) async {
-    exportsFile = folder;
-    await Directory(exportsFile).create(recursive: true);
-    print("Exports are saved to $exportsFile");
+    exportsFolder = folder;
+    await Directory(exportsFolder).create(recursive: true);
+    print("Exports are saved to $exportsFolder");
     notifyListeners();
   }
 
-  void exportVideo() {}
+  void exportVideo() {
+    // ffmpeg.exe -i {{captureFolder}}\image-%d.png {{exportsFolder}}\output.mp4
+    FFmpegKit.execute('-i $captureFolder\\image-%d.png $exportsFolder\\output.mp4').then((session) async {
+      final returnCode = await session.getReturnCode();
+      print(returnCode);
+    });
+  }
 
-  void exportGIF() {}
+  Future<void> exportGIF() async {
+    // ffmpeg.exe -i {{captureFolder}}\image-%d.png {{exportsFolder}}\output.gif
+
+    final files = Directory(captureFolder).listSync();
+    // print(files);
+    final image = await decodePngFile(files.first.path);
+    if (image != null) {
+      for (var i = 1; i < files.length; i++) {
+        final newImage = await decodePngFile(files[i].path);
+        if (newImage != null) image.addFrame(newImage);
+      }
+      final exportPath = join(exportsFolder, "output.gif");
+      File(exportPath).deleteSync();
+      await encodeGifFile(exportPath, image);
+      print("Exported gif to $exportPath");
+    }
+  }
 }
