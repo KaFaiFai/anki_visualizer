@@ -135,7 +135,7 @@ class CardProgress extends StatelessWidget {
       final prevReviews = cardLog.reviews.where((e) => Date.fromTimestamp(milliseconds: e.id) < date);
       final prevReview = prevReviews.lastOrNull;
       final datePassed = prevReview == null ? 0 : date.difference(Date.fromTimestamp(milliseconds: prevReview.id));
-      final value = datePassed * prevReviews.length;
+      final value = datePassed; // * prevReviews.length;
       color = Colors.amber.withAlpha(min(value, 255));
     } else {
       final easeColorMap = {1: Colors.red, 2: Colors.blue, 3: Colors.green, 4: Colors.blueGrey};

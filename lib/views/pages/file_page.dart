@@ -32,6 +32,7 @@ class FilePage extends StatelessWidget {
         children: [
           ElevatedButton(
             onPressed: () {
+              print("initialDirectory: $initialDirectory");
               FilePicker.platform.pickFiles(initialDirectory: initialDirectory).then((value) {
                 if (value == null) return;
                 Provider.of<DataSourceModel>(context, listen: false).selectFile(value.files.single.path!);

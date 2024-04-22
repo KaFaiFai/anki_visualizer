@@ -54,6 +54,7 @@ class GridsWithControl extends StatefulWidget {
 class _GridsWithControlState extends State<GridsWithControl> {
   final GlobalKey<CapturableState> _capturableKey = GlobalKey<CapturableState>();
   final GlobalKey<CardsGridState> _cardsGridKey = GlobalKey<CardsGridState>();
+  int _count = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -68,8 +69,9 @@ class _GridsWithControlState extends State<GridsWithControl> {
             final begin = DateTime.now().millisecondsSinceEpoch;
             _cardsGridKey.currentState?.playProgress(() {
               final time = DateTime.now().millisecondsSinceEpoch - begin;
-              final saveTo = join(widget.captureFolder, "image-$time.png");
+              final saveTo = join(widget.captureFolder, "image-$_count.png");
               _capturableKey.currentState?.captureAndSave(saveTo);
+              _count++;
             });
           },
           icon: Icon(Icons.play_arrow),

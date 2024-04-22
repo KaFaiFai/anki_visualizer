@@ -35,5 +35,7 @@ class ExportsModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void exports() {}
+  void exportVideo() {}
+
+  void exportGIF() {}
 }
