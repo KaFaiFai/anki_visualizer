@@ -65,18 +65,15 @@ class ExportsModel extends ChangeNotifier {
     // ffmpeg.exe -i {{captureFolder}}\image-%d.png {{exportsFolder}}\output.gif
 
     final files = Directory(captureFolder).listSync();
-    // print(files);
-    final image = await decodePngFile(files.first.path);
-    if (image != null) {
-      for (var i = 1; i < files.length; i++) {
-        final newImage = await decodePngFile(files[i].path);
-        if (newImage != null) image.addFrame(newImage);
-      }
-      final exportPath = join(exportsFolder, "output.gif");
-      File(exportPath).deleteSync();
-      exportGIFState = encodeGifFile(exportPath, image);
-      notifyListeners();
-      exportGIFState?.then((_) => print("Exported gif to $exportPath"));
-    }
+    final decodeImages = files.map((e) => decodePngFile(e.path));
+    final images = await Future.wait(decodeImages).then((images) => images.nonNulls);
+    final animation = images.reduce((image, nextImage) => image..addFrame(nextImage));
+
+    final exportPath = join(exportsFolder, "output.gif");
+    File(exportPath).deleteSync();
+    // TODO: faster export
+    exportGIFState = encodeGifFile(exportPath, animation);
+    notifyListeners();
+    exportGIFState?.then((_) => print("Exported gif to $exportPath"));
   }
 }

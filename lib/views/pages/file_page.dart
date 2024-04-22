@@ -29,12 +29,7 @@ class FilePage extends StatelessWidget {
   Widget buildSelectFileRow(BuildContext context) {
     return Consumer<DataSourceModel>(
       builder: (_, dsm, __) => OutlinedButton(
-        style: OutlinedButton.styleFrom(
-          textStyle: Theme.of(context).textTheme.bodyMedium,
-          padding: const EdgeInsets.all(20),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          side: const BorderSide(width: 2),
-        ),
+        style: OutlinedButton.styleFrom(padding: const EdgeInsets.all(20)),
         onPressed: () => dsm.selectFile(),
         child: PaddedRow(
           padding: 5,
@@ -73,12 +68,16 @@ class FilePage extends StatelessWidget {
             return Container();
           }
           return SingleChildScrollView(
+            padding: const EdgeInsets.only(right: 10), // to not overlap with the scrollbar
             child: PaddedColumn(
               padding: 2,
               paddingColor: Theme.of(context).colorScheme.outline,
               children: snapshot.requireData.map((deck) {
+                final isSelected = dsm.selectedDeck == deck;
                 return TextButton(
                   style: TextButton.styleFrom(
+                    foregroundColor: isSelected ? Theme.of(context).colorScheme.background : null,
+                    backgroundColor: isSelected ? Theme.of(context).colorScheme.primary : null,
                     textStyle: Theme.of(context).textTheme.labelMedium,
                     padding: const EdgeInsets.all(15),
                     shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
@@ -88,7 +87,7 @@ class FilePage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Flexible(child: Text(deck.name, overflow: TextOverflow.ellipsis)),
-                      if (dsm.selectedDeck == deck) const Icon(Icons.arrow_right),
+                      if (isSelected) const Icon(Icons.arrow_right),
                     ],
                   ),
                 );
@@ -168,10 +167,7 @@ class FilePage extends StatelessWidget {
             width: 300,
             height: 50,
             child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                textStyle: Theme.of(context).textTheme.displayLarge,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-              ),
+              style: ElevatedButton.styleFrom(textStyle: Theme.of(context).textTheme.displayLarge),
               onPressed: clickable ? dsm.getCardLogs : null,
               child: Text("Next"),
             ),
