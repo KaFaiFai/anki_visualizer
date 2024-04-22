@@ -1,11 +1,10 @@
-import 'dart:ffi';
-
 import 'package:anki_progress/services/database/entities/card.dart';
 import 'package:anki_progress/services/database/entities/field.dart';
 import 'package:anki_progress/services/database/entities/review.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import 'entities/deck.dart';
+import 'entities/notetype.dart';
 
 class DatabaseRepository {
   Future<List<Deck>> getAllDecks(Database db) async {
@@ -49,14 +48,19 @@ class DatabaseRepository {
     return notetypeIdToFields;
   }
 
-  // Future<Notetype> getNotetype(Database db, int notetypeId) async {
-  //   final List<Map<String, dynamic>> maps = await db.query(
-  //     'notetypes',
-  //     where: 'id = ?',
-  //     whereArgs: [notetypeId],
-  //   );
-  //   return Notetype.fromMap(maps.single);
-  // }
+  Future<List<Notetype>> getAllNotetypesInDeck(Database db, int deckId) async {
+    final sqlGetNoteTypes = """
+        SELECT notetypes.id, notetypes.name
+        FROM cards
+        LEFT JOIN notes ON cards.nid = notes.id
+        LEFT JOIN notetypes ON notes.mid = notetypes.id
+        WHERE cards.did = $deckId
+        GROUP BY notes.mid
+        """;
+    final List<Map<String, dynamic>> maps = await db.rawQuery(sqlGetNoteTypes);
+    final idToNotetype = <int, Notetype>{};
+    return maps.map((e) => Notetype.fromMap(e)).toList();
+  }
 
   Future<(int, List<String>)> getCardNotes(Database db, int cardId) async {
     // Get mid and flds in this note of the card. separated by 0x1f (31) character

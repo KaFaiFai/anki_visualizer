@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:anki_progress/core/extensions.dart';
 import 'package:anki_progress/models/card_log.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart' hide Card;
@@ -10,6 +11,7 @@ import '../services/database/database_provider.dart';
 import '../services/database/database_repository.dart';
 import '../services/database/entities/deck.dart';
 import '../services/database/entities/field.dart';
+import '../services/database/entities/notetype.dart';
 
 class DataSourceModel extends ChangeNotifier {
   static String? initialDirectory = Platform.isAndroid
@@ -25,22 +27,24 @@ class DataSourceModel extends ChangeNotifier {
   Future<Database>? database;
   Future<List<Deck>>? decks;
   Future<Map<int, List<Field>>>? fieldsInDeck;
+  Future<List<Notetype>>? notetypesInDeck;
   Future<List<CardLog>>? cardLogs;
 
   void selectFile() {
     FilePicker.platform.pickFiles(initialDirectory: initialDirectory).then((value) {
       if (value == null) return;
       selectedFile = value.files.single.path;
-      database = DatabaseProvider().importDb(File(selectedFile!));
-      _loadDecks();
       notifyListeners();
+      database = DatabaseProvider().importDb(File(selectedFile!)).delayed();
+      notifyListeners();
+      _loadDecks();
     });
   }
 
   Future<void> _loadDecks() async {
     final db = await database;
     if (db == null) return;
-    decks = DatabaseRepository().getAllDecks(db);
+    decks = DatabaseRepository().getAllDecks(db).delayed();
     notifyListeners();
   }
 
@@ -60,7 +64,8 @@ class DataSourceModel extends ChangeNotifier {
     if (deckId == null) {
       fieldsInDeck = null;
     } else {
-      fieldsInDeck = DatabaseRepository().getAllFieldsInDeck(db, deckId);
+      fieldsInDeck = DatabaseRepository().getAllFieldsInDeck(db, deckId).delayed();
+      notetypesInDeck = DatabaseRepository().getAllNotetypesInDeck(db, deckId).delayed();
     }
     notifyListeners();
   }
@@ -73,7 +78,7 @@ class DataSourceModel extends ChangeNotifier {
 
   Future<bool> getCardLogs() async {
     /// returns where this operation is valid
-    ///
+
     final db = await database;
     final deck = selectedDeck;
     final allFieldsInDeck = (await fieldsInDeck)?.keys;
