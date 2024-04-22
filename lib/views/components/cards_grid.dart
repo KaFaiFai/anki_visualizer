@@ -102,6 +102,7 @@ class CardsGridState extends State<CardsGrid> with SingleTickerProviderStateMixi
   }
 
   void playProgress(void Function() callback) {
+    resetState();
     scrollController.animateTo(
       scrollController.position.maxScrollExtent,
       duration: animationDuration,
