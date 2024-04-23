@@ -172,7 +172,7 @@ class FilePage extends StatelessWidget {
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(textStyle: Theme.of(context).textTheme.displayLarge),
               onPressed: clickable ? dsm.getCardLogs : null,
-              child: Text("Next"),
+              child: const Text("Next"),
             ),
           );
         },

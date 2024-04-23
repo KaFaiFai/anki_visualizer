@@ -10,7 +10,7 @@ import 'package:uuid/uuid.dart';
 class ExportsModel extends ChangeNotifier {
   late String captureRootFolder;
   late String captureFolder; // temp folder to store individual images
-  late String exportsFolder;
+  late String videosFolder;
 
   Future<bool>? exportGIFState;
 
@@ -22,8 +22,8 @@ class ExportsModel extends ChangeNotifier {
     final directory = Values.userDirectory;
     captureRootFolder = join(directory.path, "anki_visualize", "captures");
     _updateCaptureFolder(captureRootFolder);
-    final exportsRootFolder = join(directory.path, "anki_visualize", "exports");
-    _updateExportsFolder(exportsRootFolder);
+    final videosRootFolder = join(directory.path, "anki_visualize", "videos");
+    _updateVideosFolder(videosRootFolder);
   }
 
   void selectCaptureRootFolder() {
@@ -41,35 +41,35 @@ class ExportsModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void selectExportsFolder() {
-    FilePicker.platform.getDirectoryPath(initialDirectory: exportsFolder).then((value) {
+  void selectVideosFolder() {
+    FilePicker.platform.getDirectoryPath(initialDirectory: videosFolder).then((value) {
       if (value == null) return;
-      _updateExportsFolder(value);
+      _updateVideosFolder(value);
     });
   }
 
-  Future<void> _updateExportsFolder(String folder) async {
-    exportsFolder = folder;
-    await Directory(exportsFolder).create(recursive: true);
-    print("Exports are saved to $exportsFolder");
+  Future<void> _updateVideosFolder(String folder) async {
+    videosFolder = folder;
+    await Directory(videosFolder).create(recursive: true);
+    print("Videos are saved to $videosFolder");
     notifyListeners();
   }
 
   void exportVideo() {
     // TODO: convert images to video format
     return;
-    // ffmpeg.exe -i {{captureFolder}}\image-%d.png {{exportsFolder}}\output.mp4
+    // ffmpeg.exe -i {{captureFolder}}\image-%d.png {{videosFolder}}\output.mp4
   }
 
   Future<void> exportGIF() async {
-    // ffmpeg.exe -i {{captureFolder}}\image-%d.png {{exportsFolder}}\output.gif
+    // ffmpeg.exe -i {{captureFolder}}\image-%d.png {{videosFolder}}\output.gif
 
     final files = Directory(captureFolder).listSync();
     final decodeImages = files.map((e) => decodePngFile(e.path));
     final images = await Future.wait(decodeImages).then((images) => images.nonNulls);
     final animation = images.reduce((image, nextImage) => image..addFrame(nextImage));
 
-    final exportPath = join(exportsFolder, "output.gif");
+    final exportPath = join(videosFolder, "output.gif");
     File(exportPath).deleteSync();
     // TODO: faster export
     exportGIFState = encodeGifFile(exportPath, animation);

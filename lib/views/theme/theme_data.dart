@@ -8,6 +8,7 @@ final elevatedButtonTheme = ElevatedButtonThemeData(
     foregroundColor: lightColorScheme.background,
     backgroundColor: lightColorScheme.primary,
     textStyle: textTheme.bodyMedium,
+    padding: const EdgeInsets.all(20),
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
   ),
 );
@@ -15,6 +16,7 @@ final elevatedButtonTheme = ElevatedButtonThemeData(
 final outlinedButtonTheme = OutlinedButtonThemeData(
   style: OutlinedButton.styleFrom(
     textStyle: textTheme.bodyMedium,
+    padding: const EdgeInsets.all(20),
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
     side: const BorderSide(width: 2),
   ),

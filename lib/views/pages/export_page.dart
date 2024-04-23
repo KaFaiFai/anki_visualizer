@@ -41,19 +41,19 @@ class ExportPage extends StatelessWidget {
                     } else {
                       switch (snapshot.connectionState) {
                         case ConnectionState.waiting:
-                          return const Text("Exporting to GIF");
+                          return const Text("Exporting to .gif");
                         case ConnectionState.done:
-                          return Text("GIF exported to ${em.exportsFolder}");
+                          return Text(".gif exported to ${em.videosFolder}");
                         default:
-                          return const Text("GIF");
+                          return const Text(".gif");
                       }
                     }
                   },
                 ),
               ),
               IconButton(
-                onPressed: () => OpenFilex.open(em.exportsFolder),
-                icon: Icon(Icons.folder_copy),
+                onPressed: () => OpenFilex.open(em.videosFolder),
+                icon: const Icon(Icons.folder_copy),
               ),
             ],
           );
