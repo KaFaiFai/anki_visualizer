@@ -1,16 +1,6 @@
 import 'dart:io';
 
 import 'package:anki_progress/core/values.dart';
-import 'package:ffmpeg_helper/ffmpeg/args/log_level_arg.dart';
-import 'package:ffmpeg_helper/ffmpeg/args/overwrite_arg.dart';
-import 'package:ffmpeg_helper/ffmpeg/args/trim_arg.dart';
-import 'package:ffmpeg_helper/ffmpeg/ffmpeg_command.dart';
-import 'package:ffmpeg_helper/ffmpeg/ffmpeg_filter_chain.dart';
-import 'package:ffmpeg_helper/ffmpeg/ffmpeg_filter_graph.dart';
-import 'package:ffmpeg_helper/ffmpeg/ffmpeg_input.dart';
-import 'package:ffmpeg_helper/ffmpeg/filters/scale_filter.dart';
-import 'package:ffmpeg_helper/helpers/ffmpeg_helper_class.dart';
-import 'package:ffmpeg_helper/helpers/helper_sessions.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image/image.dart';
@@ -85,43 +75,13 @@ class ExportsModel extends ChangeNotifier {
     exportGIFState = encodeGifFile(exportPath, animation, samplingFactor: 100);
     notifyListeners();
     exportGIFState?.then((_) => print("Exported gif to $exportPath"));
+  }
 
-    await FFMpegHelper.instance.initialize();
-
-    // Command builder
-    // Use prebuilt args and filters or create custom ones
-    final FFMpegCommand cliCommand = FFMpegCommand(
-      inputs: files.map((e) => FFMpegInput.asset(e.path)).toList(),
-      args: [
-        const LogLevelArgument(LogLevel.info),
-        const OverwriteArgument(),
-        const TrimArgument(
-          start: Duration(seconds: 0),
-          end: Duration(seconds: 10),
-        ),
-      ],
-      filterGraph: FilterGraph(
-        chains: [
-          FilterChain(
-            inputs: [],
-            filters: [
-              ScaleFilter(
-                height: 300,
-                width: -2,
-              ),
-            ],
-            outputs: [],
-          ),
-        ],
-      ),
-      outputFilepath: exportPath,
-    );
-    FFMpegHelperSession session = await FFMpegHelper.instance.runAsync(
-      cliCommand,
-      // statisticsCallback: (Statistics statistics) {
-      //   print('bitrate: ${statistics.getBitrate()}');
-      //   return 0 as dynamic;
-      // },
-    );
+  Future<void> exportGIFWithFFMpeg() async {
+    const ffmpegPath = "C:\\insert\\link\\to\\bin\\ffmpeg.exe";
+    final imagesPath = join(captureFolder, "image-%7d.png");
+    final exportPath = join(videosFolder, "output.gif");
+    await Process.run(ffmpegPath, ["-i", imagesPath, exportPath]);
+    notifyListeners();
   }
 }

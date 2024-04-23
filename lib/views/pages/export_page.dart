@@ -32,7 +32,7 @@ class ExportPage extends StatelessWidget {
             padding: 10,
             children: [
               ElevatedButton(
-                onPressed: () => em.exportGIF(),
+                onPressed: () => em.exportGIFWithFFMpeg(),
                 child: FutureBuilder(
                   future: em.exportGIFState,
                   builder: (context, snapshot) {
