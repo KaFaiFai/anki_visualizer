@@ -1,6 +1,16 @@
 import 'dart:io';
 
 import 'package:anki_progress/core/values.dart';
+import 'package:ffmpeg_helper/ffmpeg/args/log_level_arg.dart';
+import 'package:ffmpeg_helper/ffmpeg/args/overwrite_arg.dart';
+import 'package:ffmpeg_helper/ffmpeg/args/trim_arg.dart';
+import 'package:ffmpeg_helper/ffmpeg/ffmpeg_command.dart';
+import 'package:ffmpeg_helper/ffmpeg/ffmpeg_filter_chain.dart';
+import 'package:ffmpeg_helper/ffmpeg/ffmpeg_filter_graph.dart';
+import 'package:ffmpeg_helper/ffmpeg/ffmpeg_input.dart';
+import 'package:ffmpeg_helper/ffmpeg/filters/scale_filter.dart';
+import 'package:ffmpeg_helper/helpers/ffmpeg_helper_class.dart';
+import 'package:ffmpeg_helper/helpers/helper_sessions.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image/image.dart';
@@ -58,11 +68,11 @@ class ExportsModel extends ChangeNotifier {
   void exportVideo() {
     // TODO: convert images to video format
     return;
-    // ffmpeg.exe -i {{captureFolder}}\image-%d.png {{videosFolder}}\output.mp4
+    // ffmpeg.exe -i {{captureFolder}}\image-%7d.png {{videosFolder}}\output.mp4
   }
 
   Future<void> exportGIF() async {
-    // ffmpeg.exe -i {{captureFolder}}\image-%d.png {{videosFolder}}\output.gif
+    // ffmpeg.exe -i {{captureFolder}}\image-%7d.png {{videosFolder}}\output.gif
 
     final files = Directory(captureFolder).listSync();
     final decodeImages = files.map((e) => decodePngFile(e.path));
@@ -70,10 +80,48 @@ class ExportsModel extends ChangeNotifier {
     final animation = images.reduce((image, nextImage) => image..addFrame(nextImage));
 
     final exportPath = join(videosFolder, "output.gif");
-    File(exportPath).deleteSync();
+    if (File(exportPath).existsSync()) File(exportPath).deleteSync();
     // TODO: faster export
-    exportGIFState = encodeGifFile(exportPath, animation);
+    exportGIFState = encodeGifFile(exportPath, animation, samplingFactor: 100);
     notifyListeners();
     exportGIFState?.then((_) => print("Exported gif to $exportPath"));
+
+    await FFMpegHelper.instance.initialize();
+
+    // Command builder
+    // Use prebuilt args and filters or create custom ones
+    final FFMpegCommand cliCommand = FFMpegCommand(
+      inputs: files.map((e) => FFMpegInput.asset(e.path)).toList(),
+      args: [
+        const LogLevelArgument(LogLevel.info),
+        const OverwriteArgument(),
+        const TrimArgument(
+          start: Duration(seconds: 0),
+          end: Duration(seconds: 10),
+        ),
+      ],
+      filterGraph: FilterGraph(
+        chains: [
+          FilterChain(
+            inputs: [],
+            filters: [
+              ScaleFilter(
+                height: 300,
+                width: -2,
+              ),
+            ],
+            outputs: [],
+          ),
+        ],
+      ),
+      outputFilepath: exportPath,
+    );
+    FFMpegHelperSession session = await FFMpegHelper.instance.runAsync(
+      cliCommand,
+      // statisticsCallback: (Statistics statistics) {
+      //   print('bitrate: ${statistics.getBitrate()}');
+      //   return 0 as dynamic;
+      // },
+    );
   }
 }
