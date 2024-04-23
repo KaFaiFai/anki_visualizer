@@ -25,15 +25,18 @@ class ConfigurationPage extends StatelessWidget {
             );
           }
           final cardLogs = snapshot.requireData;
-          return Column(
-            children: [
-              PreferenceForm(
-                cardLogs: cardLogs,
-                // initialPreference: pm.preference,
-                onPressConfirm: pm.updatePreference,
-              ),
-              const ExportsDirectoryButtons(),
-            ],
+          return Padding(
+            padding: const EdgeInsets.all(40.0),
+            child: Column(
+              children: [
+                PreferenceForm(
+                  cardLogs: cardLogs,
+                  // initialPreference: pm.preference,
+                  onPressConfirm: pm.updatePreference,
+                ),
+                const ExportsDirectoryButtons(),
+              ],
+            ),
           );
         },
       ),

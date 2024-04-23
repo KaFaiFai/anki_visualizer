@@ -1,3 +1,5 @@
+import 'package:anki_progress/models/date_range.dart';
+import 'package:anki_progress/views/basic/padded_row.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/animation_preference.dart';
@@ -22,8 +24,8 @@ class _PreferenceFormState extends State<PreferenceForm> {
 
   late TextEditingController millisecondsController;
   late TextEditingController numColController;
-  late DateTimeRange cardLogsRange;
-  late DateTimeRange dateRange;
+  late DateRange cardLogsRange;
+  DateRange? dateRange;
 
   @override
   void initState() {
@@ -40,66 +42,45 @@ class _PreferenceFormState extends State<PreferenceForm> {
   Widget build(BuildContext context) {
     return Form(
       key: _formKey,
-      child: PaddedColumn(padding: 10, children: [
-        TextFormField(
-          controller: millisecondsController,
-          decoration: const InputDecoration(suffix: Text("milliseconds")),
-          validator: _validatePositiveInteger,
-        ),
-        Row(
-          children: [
-            IconButton(
-              onPressed: () {
-                showDateRangePicker(
-                  context: context,
-                  initialDateRange: dateRange,
-                  firstDate: cardLogsRange.start,
-                  lastDate: cardLogsRange.end,
-                  builder: (context, child) => FractionallySizedBox(
-                    widthFactor: 0.8,
-                    heightFactor: 0.8,
-                    child: Theme(
-                      data: ThemeData(
-                        buttonTheme: const ButtonThemeData(textTheme: ButtonTextTheme.accent),
-                        // primaryColor: Colors.red,
-                      ),
-                      child: child ?? Container(),
-                    ),
-                  ),
-                ).then((range) => setState(() {
-                      if (range != null) dateRange = range;
-                    }));
-              },
-              icon: Icon(Icons.calendar_month),
+      child: PaddedColumn(
+        padding: 10,
+        children: [
+          TextFormField(
+            controller: millisecondsController,
+            decoration: InputDecoration(
+              border: const OutlineInputBorder(),
+              labelText: "Duration",
+              suffixText: "ms",
+              suffixStyle: Theme.of(context).textTheme.bodyMedium,
             ),
-            Text("${Date.fromDateTime(dateRange.start)} to ${Date.fromDateTime(dateRange.end)}"),
-          ],
-        ),
-        TextFormField(
-          controller: numColController,
-          decoration: const InputDecoration(suffix: Text("numCol")),
-          validator: _validatePositiveInteger,
-        ),
-        ElevatedButton(
-          onPressed: () {
-            if (_formKey.currentState!.validate()) {
-              // print(millisecondsController.text);
-              widget.onPressConfirm(
-                AnimationPreference(
-                  milliseconds: int.parse(millisecondsController.text),
-                  dateRange: dateRange!,
-                  numCol: int.parse(numColController.text),
-                ),
-              );
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Please enter the information again')),
-              );
-            }
-          },
-          child: const Text("Confirm"),
-        ),
-      ]),
+            validator: _validatePositiveInteger,
+          ),
+          PaddedRow(
+            padding: 10,
+            children: [
+              IconButton(
+                onPressed: _pickDateRange,
+                iconSize: 50,
+                icon: const Icon(Icons.calendar_month),
+              ),
+              Text("$dateRange"),
+            ],
+          ),
+          TextFormField(
+            controller: numColController,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: "Number of cards per row",
+            ),
+            validator: _validatePositiveInteger,
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(textStyle: Theme.of(context).textTheme.displayLarge),
+            onPressed: _submitForm,
+            child: const Text("Confirm"),
+          ),
+        ],
+      ),
     );
   }
 
@@ -109,23 +90,61 @@ class _PreferenceFormState extends State<PreferenceForm> {
     numColController.dispose();
     super.dispose();
   }
+
+  void _pickDateRange() {
+    showDateRangePicker(
+      context: context,
+      initialDateRange: dateRange?.toDateTimeRange(),
+      firstDate: cardLogsRange.start.toDateTime(),
+      lastDate: cardLogsRange.end.toDateTime(),
+      builder: (context, child) => FractionallySizedBox(
+        widthFactor: 0.8,
+        heightFactor: 0.8,
+        child: Theme(
+          data: ThemeData(
+            buttonTheme: const ButtonThemeData(textTheme: ButtonTextTheme.accent),
+            // primaryColor: Colors.red,
+          ),
+          child: child ?? Container(),
+        ),
+      ),
+    ).then((range) => setState(() {
+          if (range != null) dateRange = DateRange.fromDateTimeRange(range);
+        }));
+  }
+
+  void _submitForm() {
+    if (_formKey.currentState!.validate()) {
+      widget.onPressConfirm(
+        AnimationPreference(
+          milliseconds: int.parse(millisecondsController.text),
+          dateRange: dateRange!,
+          numCol: int.parse(numColController.text),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter the information again')),
+      );
+    }
+  }
 }
 
-DateTimeRange _calDateTimeRangeBoundary(List<CardLog> cardLogs) {
-  Date begin = Date.fromTimestamp(milliseconds: cardLogs.first.reviews.first.id);
+DateRange _calDateTimeRangeBoundary(List<CardLog> cardLogs) {
+  Date start = Date.fromTimestamp(milliseconds: cardLogs.first.reviews.first.id);
   Date end = Date.fromTimestamp(milliseconds: cardLogs.first.reviews.first.id);
   for (final cl in cardLogs) {
     for (final r in cl.reviews) {
       final curDate = Date.fromTimestamp(milliseconds: r.id);
-      if (curDate < begin) {
-        begin = curDate;
+      if (curDate < start) {
+        start = curDate;
       }
       if (curDate > end) {
         end = curDate;
       }
     }
   }
-  return DateTimeRange(start: begin.toDateTime(), end: end.toDateTime());
+  return DateRange(start: start, end: end);
 }
 
 String? _validatePositiveInteger(String? value) {

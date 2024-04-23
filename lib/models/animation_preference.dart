@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
+import 'package:anki_progress/models/date_range.dart';
 
 class AnimationPreference {
   int milliseconds;
-  DateTimeRange dateRange;
+  DateRange dateRange;
   int numCol;
 
   AnimationPreference({

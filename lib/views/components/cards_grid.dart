@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:anki_progress/models/animation_preference.dart';
 import 'package:anki_progress/models/card_log.dart';
+import 'package:anki_progress/models/date_range.dart';
 import 'package:anki_progress/services/database/entities/review.dart';
 import 'package:anki_progress/views/run_with_app_container.dart';
 import 'package:flutter/material.dart' hide Card;
@@ -21,7 +22,7 @@ void main() {
   );
   final preference = AnimationPreference(
     milliseconds: 3000,
-    dateRange: DateTimeRange(start: DateTime.now(), end: DateTime.now()),
+    dateRange: DateRange(start: Date.today(), end: Date.today()),
     numCol: 10,
   );
   runWithAppContainer(CardsGrid(cardLogs: cardLogs, preference: preference));
@@ -42,7 +43,7 @@ class CardsGridState extends State<CardsGrid> with SingleTickerProviderStateMixi
   late final AnimationController animationController;
   late final Animation<double> animation;
   late final Duration animationDuration;
-  late final Date begin;
+  late final Date start;
   late final Date end;
 
   @override
@@ -56,8 +57,8 @@ class CardsGridState extends State<CardsGrid> with SingleTickerProviderStateMixi
       ..addListener(() {
         setState(() {});
       });
-    begin = Date.fromDateTime(widget.preference.dateRange.start);
-    end = Date.fromDateTime(widget.preference.dateRange.end);
+    start = widget.preference.dateRange.start;
+    end = widget.preference.dateRange.end;
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       resetState();
@@ -92,8 +93,8 @@ class CardsGridState extends State<CardsGrid> with SingleTickerProviderStateMixi
   }
 
   Date get current {
-    final diff = end.difference(begin);
-    return begin.add((diff * animation.value).floor());
+    final diff = end.difference(start);
+    return start.add((diff * animation.value).floor());
   }
 
   void resetState() {
