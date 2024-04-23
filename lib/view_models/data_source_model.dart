@@ -84,7 +84,7 @@ class DataSourceModel extends ChangeNotifier {
     final allFieldsInDeck = (await fieldsInDeck)?.keys;
     final fields = selectedFields;
     final allFieldsSelected = allFieldsInDeck?.every((e) => fields?.keys.contains(e) ?? false) ?? false;
-    if (db == null || deck == null || fields == null || !allFieldsSelected) return false;
+    if (db == null || deck == null || fields == null || fields.isEmpty || !allFieldsSelected) return false;
 
     final cards = await DatabaseRepository().getAllCardsInDeck(db, deck.id);
     cardLogs = Future.wait(cards.map((card) async {

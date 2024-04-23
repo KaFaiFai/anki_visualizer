@@ -4,8 +4,11 @@ import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
 
-void setup() async {
+import '../core/values.dart';
+
+Future<void> setup() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Values.init();
   usePathUrlStrategy();
   if (kIsWeb) {
     databaseFactory = databaseFactoryFfiWeb;

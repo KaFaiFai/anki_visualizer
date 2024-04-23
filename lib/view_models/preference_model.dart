@@ -6,10 +6,9 @@ class PreferenceModel extends ChangeNotifier {
 
   PreferenceModel();
 
-
-
   void updatePreference(AnimationPreference? preference) {
     print(preference);
     this.preference = preference;
+    notifyListeners();
   }
 }

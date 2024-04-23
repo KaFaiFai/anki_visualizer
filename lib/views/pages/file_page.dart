@@ -119,6 +119,9 @@ class FilePage extends StatelessWidget {
           }
           final fieldsInDeck = snapshot.requireData[0] as Map<int, List<Field>>;
           final notetypesInDeck = snapshot.requireData[1] as List<Notetype>;
+          if (fieldsInDeck.isEmpty) {
+            return const Text("No field detected");
+          }
           return SingleChildScrollView(
             child: Column(
               children: fieldsInDeck.entries.map(

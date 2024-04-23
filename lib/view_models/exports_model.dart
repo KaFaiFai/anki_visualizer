@@ -1,10 +1,10 @@
 import 'dart:io';
 
+import 'package:anki_progress/core/values.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image/image.dart';
 import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
 class ExportsModel extends ChangeNotifier {
@@ -18,11 +18,11 @@ class ExportsModel extends ChangeNotifier {
     _init();
   }
 
-  Future<void> _init() async {
-    final directory = await getApplicationDocumentsDirectory();
-    captureRootFolder = join(directory.path, "captures");
+  void _init() {
+    final directory = Values.userDirectory;
+    captureRootFolder = join(directory.path, "anki_visualize", "captures");
     _updateCaptureFolder(captureRootFolder);
-    final exportsRootFolder = join(directory.path, "exports");
+    final exportsRootFolder = join(directory.path, "anki_visualize", "exports");
     _updateExportsFolder(exportsRootFolder);
   }
 

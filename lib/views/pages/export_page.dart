@@ -36,7 +36,6 @@ class ExportPage extends StatelessWidget {
                 child: FutureBuilder(
                   future: em.exportGIFState,
                   builder: (context, snapshot) {
-                    print(snapshot.connectionState);
                     if (snapshot.hasError) {
                       return const Text("Error occurred. Please try again");
                     } else {
