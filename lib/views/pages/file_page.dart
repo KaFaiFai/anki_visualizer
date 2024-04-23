@@ -168,7 +168,6 @@ class FilePage extends StatelessWidget {
           // TODO: also reset preference
           return SizedBox(
             width: 300,
-            height: 50,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(textStyle: Theme.of(context).textTheme.displayLarge),
               onPressed: clickable ? dsm.getCardLogs : null,

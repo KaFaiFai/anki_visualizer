@@ -13,39 +13,48 @@ class ExportsDirectoryButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     return PaddedColumn(
       padding: 20,
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Consumer<ExportsModel>(
-          builder: (_, em, __) => PaddedRow(
-            padding: 10,
-            children: [
-              const Text("Saved captures to:"),
-              ElevatedButton(
-                onPressed: () => em.selectCaptureRootFolder(),
-                child: Text(em.captureRootFolder),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text("Saved captures to"),
+            Consumer<ExportsModel>(
+              builder: (_, em, __) => PaddedRow(
+                padding: 10,
+                children: [
+                  IconButton(
+                    onPressed: () => OpenFilex.open(em.captureRootFolder),
+                    icon: const Icon(Icons.folder_copy),
+                  ),
+                  ElevatedButton(
+                    onPressed: () => em.selectCaptureRootFolder(),
+                    child: Text(em.captureRootFolder),
+                  ),
+                ],
               ),
-              IconButton(
-                onPressed: () => OpenFilex.open(em.captureRootFolder),
-                icon: const Icon(Icons.folder_copy),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
-        Consumer<ExportsModel>(
-          builder: (_, em, __) => PaddedRow(
-            padding: 10,
-            children: [
-              const Text("Save videos to:"),
-              ElevatedButton(
-                onPressed: () => em.selectVideosFolder(),
-                child: Text(em.videosFolder),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text("Save videos to"),
+            Consumer<ExportsModel>(
+              builder: (_, em, __) => PaddedRow(
+                padding: 10,
+                children: [
+                  IconButton(
+                    onPressed: () => OpenFilex.open(em.videosFolder),
+                    icon: const Icon(Icons.folder_copy),
+                  ),
+                  ElevatedButton(
+                    onPressed: () => em.selectVideosFolder(),
+                    child: Text(em.videosFolder),
+                  ),
+                ],
               ),
-              IconButton(
-                onPressed: () => OpenFilex.open(em.videosFolder),
-                icon: const Icon(Icons.folder_copy),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ],
     );

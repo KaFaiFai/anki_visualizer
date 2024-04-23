@@ -4,3 +4,9 @@ extension FutureExtension<T> on Future<T> {
     return Future.delayed(duration, () => this);
   }
 }
+
+extension IntExtension on int {
+  int roundTo(int nearest) {
+    return (this / nearest).round() * nearest;
+  }
+}

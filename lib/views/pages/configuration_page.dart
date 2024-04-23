@@ -1,4 +1,6 @@
 import 'package:anki_progress/view_models/preference_model.dart';
+import 'package:anki_progress/views/basic/padded_column.dart';
+import 'package:anki_progress/views/basic/text_divider.dart';
 import 'package:anki_progress/views/components/exports_directory_buttons.dart';
 import 'package:anki_progress/views/components/preference_form.dart';
 import 'package:flutter/material.dart';
@@ -27,13 +29,11 @@ class ConfigurationPage extends StatelessWidget {
           final cardLogs = snapshot.requireData;
           return Padding(
             padding: const EdgeInsets.all(40.0),
-            child: Column(
+            child: PaddedColumn(
+              padding: 20,
               children: [
-                PreferenceForm(
-                  cardLogs: cardLogs,
-                  // initialPreference: pm.preference,
-                  onPressConfirm: pm.updatePreference,
-                ),
+                PreferenceForm(cardLogs: cardLogs, onPressConfirm: pm.updatePreference),
+                TextDivider("Exports folder", height: 100, color: Theme.of(context).colorScheme.onSurface, space: 20),
                 const ExportsDirectoryButtons(),
               ],
             ),
