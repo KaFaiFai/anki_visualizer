@@ -18,19 +18,24 @@ class ExportsDirectoryButtons extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             const Text("Saved captures to"),
-            Consumer<ExportsModel>(
-              builder: (_, em, __) => PaddedRow(
-                padding: 10,
-                children: [
-                  IconButton(
-                    onPressed: () => OpenFilex.open(em.captureRootFolder),
-                    icon: const Icon(Icons.folder_copy),
-                  ),
-                  ElevatedButton(
-                    onPressed: () => em.selectCaptureRootFolder(),
-                    child: Text(em.captureRootFolder),
-                  ),
-                ],
+            const SizedBox(width: 20),
+            Flexible(
+              child: Consumer<ExportsModel>(
+                builder: (_, em, __) => PaddedRow(
+                  padding: 10,
+                  children: [
+                    IconButton(
+                      onPressed: () => OpenFilex.open(em.captureRootFolder),
+                      icon: const Icon(Icons.folder_copy),
+                    ),
+                    Flexible(
+                      child: ElevatedButton(
+                        onPressed: () => em.selectCaptureRootFolder(),
+                        child: Text(em.captureRootFolder),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
@@ -39,19 +44,24 @@ class ExportsDirectoryButtons extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             const Text("Save videos to"),
-            Consumer<ExportsModel>(
-              builder: (_, em, __) => PaddedRow(
-                padding: 10,
-                children: [
-                  IconButton(
-                    onPressed: () => OpenFilex.open(em.videosFolder),
-                    icon: const Icon(Icons.folder_copy),
-                  ),
-                  ElevatedButton(
-                    onPressed: () => em.selectVideosFolder(),
-                    child: Text(em.videosFolder),
-                  ),
-                ],
+            const SizedBox(width: 20),
+            Flexible(
+              child: Consumer<ExportsModel>(
+                builder: (_, em, __) => PaddedRow(
+                  padding: 10,
+                  children: [
+                    IconButton(
+                      onPressed: () => OpenFilex.open(em.videosFolder),
+                      icon: const Icon(Icons.folder_copy),
+                    ),
+                    Flexible(
+                      child: ElevatedButton(
+                        onPressed: () => em.selectVideosFolder(),
+                        child: Text(em.videosFolder),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],

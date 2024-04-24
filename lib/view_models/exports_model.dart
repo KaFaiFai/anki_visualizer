@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:anki_progress/core/extensions.dart';
 import 'package:anki_progress/core/values.dart';
+import 'package:anki_progress/models/export_format.dart';
 import 'package:anki_progress/services/internet/ffmpeg_installer.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
@@ -16,8 +17,8 @@ class ExportsModel extends ChangeNotifier {
   late bool isFFmpegAvailable;
 
   FFmpegInstallerState ffmpegInstallerState = FFmpegInstallerState.none;
-  Future<ProcessResult>? exportVideoResult;
-  Future<ProcessResult>? exportGIFResult;
+  ExportFormat format = ExportFormat.gif;
+  Future<ProcessResult>? exportResult;
 
   ExportsModel() {
     _init();
@@ -84,26 +85,38 @@ class ExportsModel extends ChangeNotifier {
     updateFFmpegAvailable();
   }
 
-  void exportVideo() {
+  void updateExportFormat(ExportFormat? exportFormat) {
+    format = exportFormat ?? format;
+    notifyListeners();
+  }
+
+  void export() {
+    switch (format) {
+      case ExportFormat.gif:
+        exportResult = _exportGIF();
+      case ExportFormat.mp4:
+        exportResult = _exportVideo();
+    }
+    exportResult?.whenComplete(() => print("Exported ${format.name} to $videosFolder"));
+    notifyListeners();
+  }
+
+  Future<ProcessResult>? _exportVideo() {
     // ffmpeg.exe -framerate 24 -i {{captureFolder}}\image-%7d.png {{videosFolder}}\output.mp4
     final ffmpegPath = _getFFmpegPath();
     final imagesPath = join(captureFolder, "image-%7d.png");
     final exportPath = join(videosFolder, "output.mp4");
     File(exportPath).deleteIfExistsAndCreateParents();
-    exportVideoResult = Process.run(ffmpegPath, ["-framerate", "24", "-i", imagesPath, exportPath]);
-    exportVideoResult?.whenComplete(() => print("Exported video to $exportPath"));
-    notifyListeners();
+    return Process.run(ffmpegPath, ["-framerate", "24", "-i", imagesPath, exportPath]);
   }
 
-  Future<void> exportGIF() async {
+  Future<ProcessResult>? _exportGIF() {
     // ffmpeg.exe -i {{captureFolder}}\image-%7d.png {{videosFolder}}\output.gif
     final ffmpegPath = _getFFmpegPath();
     final imagesPath = join(captureFolder, "image-%7d.png");
     final exportPath = join(videosFolder, "output.gif");
     File(exportPath).deleteIfExistsAndCreateParents();
-    exportGIFResult = Process.run(ffmpegPath, ["-i", imagesPath, exportPath]);
-    exportGIFResult?.whenComplete(() => print("Exported gif to $exportPath"));
-    notifyListeners();
+    return Process.run(ffmpegPath, ["-i", imagesPath, exportPath]);
   }
 }
 

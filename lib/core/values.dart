@@ -6,6 +6,6 @@ class Values {
 
   static Future<void> init() async {
     final userDirectory = await getApplicationDocumentsDirectory();
-    appDirectory = join(userDirectory.path, "anki_visualize");
+    appDirectory = join(userDirectory.path, "Anki Visualize");
   }
 }

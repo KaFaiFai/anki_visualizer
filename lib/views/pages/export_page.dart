@@ -1,90 +1,152 @@
+import 'package:anki_progress/models/export_format.dart';
 import 'package:anki_progress/services/internet/ffmpeg_installer.dart';
 import 'package:anki_progress/view_models/exports_model.dart';
 import 'package:anki_progress/views/basic/padded_column.dart';
 import 'package:anki_progress/views/basic/padded_row.dart';
 import 'package:anki_progress/views/basic/text_divider.dart';
 import 'package:flutter/material.dart';
-import 'package:open_filex/open_filex.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ExportPage extends StatelessWidget {
   const ExportPage({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return PaddedColumn(
-      padding: 20,
-      children: [
-        Consumer<ExportsModel>(
-          builder: (_, em, __) {
-            final text = switch (em.ffmpegInstallerState) {
-              FFmpegInstallerState.none => em.isFFmpegAvailable ? "Reinstall FFmpeg" : "Install FFmpeg",
-              FFmpegInstallerState.downloading => "Downloading FFmpeg. This may take a while ...",
-              FFmpegInstallerState.unzipping => "Unzipping FFmpeg",
-              FFmpegInstallerState.completed => "FFmpeg installed",
-              FFmpegInstallerState.error => "Error has occurred. Please retry",
-            };
-            return ElevatedButton(
-              onPressed: em.installFFmpeg,
-              child: Text(text),
-            );
-          },
-        ),
-        const TextDivider("Export options", space: 40),
-        Consumer<ExportsModel>(
-          builder: (_, em, __) => ElevatedButton(
-            onPressed: em.isFFmpegAvailable ? em.exportVideo : null,
-            child: FutureBuilder(
-              future: em.exportVideoResult,
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return const Text("Error occurred. Please try again");
-                } else {
-                  switch (snapshot.connectionState) {
-                    case ConnectionState.waiting:
-                      return const Text("Exporting to .mp4");
-                    case ConnectionState.done:
-                      return Text(".mp4 exported to ${em.videosFolder}");
-                    default:
-                      return const Text(".mp4");
-                  }
-                }
-              },
-            ),
-          ),
-        ),
-        Consumer<ExportsModel>(
-          builder: (_, em, __) => PaddedRow(
-            padding: 10,
-            children: [
-              ElevatedButton(
-                onPressed: em.isFFmpegAvailable ? em.exportGIF : null,
-                child: FutureBuilder(
-                  future: em.exportGIFResult,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) {
-                      return const Text("Error occurred. Please try again");
-                    } else {
-                      switch (snapshot.connectionState) {
-                        case ConnectionState.waiting:
-                          return const Text("Exporting to .gif");
-                        case ConnectionState.done:
-                          return Text(".gif exported to ${em.videosFolder}");
-                        default:
-                          return const Text(".gif");
-                      }
-                    }
-                  },
-                ),
+  Widget buildFFmpegInstallField(BuildContext context) {
+    return Consumer<ExportsModel>(
+      builder: (_, em, __) {
+        final List<Widget> indicator = switch (em.ffmpegInstallerState) {
+          FFmpegInstallerState.none => [],
+          FFmpegInstallerState.downloading => const [
+              SizedBox(width: 300, child: AspectRatio(aspectRatio: 1, child: CircularProgressIndicator())),
+              Text("Downloading FFmpeg. This may take several minutes ..."),
+            ],
+          FFmpegInstallerState.unzipping => const [
+              SizedBox(width: 300, child: AspectRatio(aspectRatio: 1, child: CircularProgressIndicator())),
+              Text("Unzipping FFmpeg"),
+            ],
+          FFmpegInstallerState.completed => [
+              Text("FFmpeg installed successfully!", style: Theme.of(context).textTheme.titleSmall),
+            ],
+          FFmpegInstallerState.error => [
+              Text(
+                "Error has occurred. Please retry",
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Theme.of(context).colorScheme.error),
               ),
-              IconButton(
-                onPressed: () => OpenFilex.open(em.videosFolder),
-                icon: const Icon(Icons.folder_copy),
+            ],
+        };
+        return PaddedColumn(
+          padding: 20,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Flexible(
+                  child: MarkdownBody(
+                    data: "This program uses **FFmpeg** to convert the captured images"
+                        " into animations in the form of video or gif."
+                        " Read more about it here: https://ffmpeg.org/",
+                    onTapLink: (_, url, __) {
+                      if (url != null) launchUrl(Uri.parse(url));
+                    },
+                  ),
+                ),
+                const SizedBox(width: 20),
+                ElevatedButton(
+                  onPressed: em.installFFmpeg,
+                  child: PaddedRow(
+                    padding: 10,
+                    children: [
+                      const Icon(Icons.download),
+                      Text(em.isFFmpegAvailable ? "Reinstall FFmpeg" : "Install FFmpeg"),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            ...indicator,
+          ],
+        );
+      },
+    );
+  }
+
+  Widget buildExportFields(BuildContext context) {
+    return Consumer<ExportsModel>(builder: (_, em, __) {
+      return PaddedColumn(
+        padding: 20,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text("Output format"),
+              DropdownButton<ExportFormat>(
+                value: em.format,
+                onChanged: em.updateExportFormat,
+                items: ExportFormat.values
+                    .map(
+                      (e) => DropdownMenuItem<ExportFormat>(
+                        value: e,
+                        child: Text(
+                          e.name,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      ),
+                    )
+                    .toList(),
               ),
             ],
           ),
+          SizedBox(
+            width: 300,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(textStyle: Theme.of(context).textTheme.displayLarge),
+              onPressed: em.isFFmpegAvailable ? em.export : null,
+              child: const Text("Export"),
+            ),
+          ),
+          FutureBuilder(
+            future: em.exportResult,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Text("Exporting ${em.format.name} to ${em.videosFolder}");
+              } else if (snapshot.hasError) {
+                return Text(
+                  "Error occurred. Please try again",
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.error),
+                );
+              } else if (!snapshot.hasData) {
+                return Container();
+              }
+              final code = snapshot.requireData.exitCode;
+              if (code == 0) {
+                return Text(
+                  "File exported successfully!",
+                  style: Theme.of(context).textTheme.titleSmall,
+                );
+              }
+              return Container();
+            },
+          ),
+        ],
+      );
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(40.0),
+        child: PaddedColumn(
+          padding: 20,
+          children: [
+            buildFFmpegInstallField(context),
+            const TextDivider("Export options", space: 40),
+            buildExportFields(context),
+          ],
         ),
-      ],
+      ),
     );
   }
 }
