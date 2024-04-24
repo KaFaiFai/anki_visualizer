@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:anki_progress/core/values.dart';
+import 'package:anki_progress/services/internet/ffmpeg_installer.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
@@ -57,7 +58,7 @@ class ExportsModel extends ChangeNotifier {
 
   void exportVideo() {
     // ffmpeg.exe -framerate 24 -i {{captureFolder}}\image-%7d.png {{videosFolder}}\output.mp4
-    final ffmpegPath = _getFFMpegPath();
+    final ffmpegPath = _getFFmpegPath();
     final imagesPath = join(captureFolder, "image-%7d.png");
     final exportPath = join(videosFolder, "output.mp4");
     exportVideoResult = Process.run(ffmpegPath, ["-framerate", "24", "-i", imagesPath, exportPath]);
@@ -67,7 +68,7 @@ class ExportsModel extends ChangeNotifier {
 
   Future<void> exportGIF() async {
     // ffmpeg.exe -i {{captureFolder}}\image-%7d.png {{videosFolder}}\output.gif
-    final ffmpegPath = _getFFMpegPath();
+    final ffmpegPath = _getFFmpegPath();
     final imagesPath = join(captureFolder, "image-%7d.png");
     final exportPath = join(videosFolder, "output.gif");
     exportGIFResult = Process.run(ffmpegPath, ["-i", imagesPath, exportPath]);
@@ -76,15 +77,11 @@ class ExportsModel extends ChangeNotifier {
   }
 }
 
-String _getFFMpegPath() {
-  final String ffmpegPath;
-  if (Platform.isWindows) {
-    // get assets folder on windows: https://stackoverflow.com/questions/69312706/how-to-embed-external-exe-files-in-a-flutter-project-for-windows
-    final appPath = Platform.resolvedExecutable;
-    final appFolder = appPath.substring(0, appPath.lastIndexOf("\\"));
-    ffmpegPath = join(appFolder, "data\\flutter_assets\\assets\\tools\\ffmpeg.exe");
+String _getFFmpegPath() {
+  final ffmpegPath = FFmpegInstaller().getFFmpegPath();
+  if (ffmpegPath != null) {
+    return ffmpegPath;
   } else {
     throw UnimplementedError("$defaultTargetPlatform not supported");
   }
-  return ffmpegPath;
 }

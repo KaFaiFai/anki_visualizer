@@ -1,3 +1,4 @@
+import 'package:anki_progress/services/internet/ffmpeg_installer.dart';
 import 'package:anki_progress/view_models/exports_model.dart';
 import 'package:anki_progress/views/basic/padded_column.dart';
 import 'package:anki_progress/views/basic/padded_row.dart';
@@ -16,6 +17,18 @@ class ExportPage extends StatelessWidget {
         Text(
           "Export options:",
           style: Theme.of(context).textTheme.displayLarge,
+        ),
+        ElevatedButton(
+          onPressed: () {
+            FFmpegInstaller().download();
+          },
+          child: Text("Download ffmpeg"),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            FFmpegInstaller().unzip();
+          },
+          child: Text("Unzip ffmpeg"),
         ),
         PaddedRow(
           padding: 10,
