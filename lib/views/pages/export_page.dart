@@ -1,9 +1,9 @@
-import 'package:anki_progress/models/export_format.dart';
 import 'package:anki_progress/services/internet/ffmpeg_installer.dart';
 import 'package:anki_progress/view_models/exports_model.dart';
 import 'package:anki_progress/views/basic/padded_column.dart';
 import 'package:anki_progress/views/basic/padded_row.dart';
 import 'package:anki_progress/views/basic/text_divider.dart';
+import 'package:anki_progress/views/components/export_options_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:provider/provider.dart';
@@ -76,40 +76,18 @@ class ExportPage extends StatelessWidget {
       return PaddedColumn(
         padding: 20,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text("Output format"),
-              DropdownButton<ExportFormat>(
-                value: em.format,
-                onChanged: em.updateExportFormat,
-                items: ExportFormat.values
-                    .map(
-                      (e) => DropdownMenuItem<ExportFormat>(
-                        value: e,
-                        child: Text(
-                          e.name,
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                      ),
-                    )
-                    .toList(),
-              ),
-            ],
-          ),
-          SizedBox(
-            width: 300,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(textStyle: Theme.of(context).textTheme.displayLarge),
-              onPressed: em.isFFmpegAvailable ? em.export : null,
-              child: const Text("Export"),
-            ),
+          ExportOptionsForm(
+            onPressExport: (options) {
+              em.updateExportOptions(options);
+              em.export();
+            },
+            isExportReady: em.isFFmpegAvailable,
           ),
           FutureBuilder(
             future: em.exportResult,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Text("Exporting ${em.format.name} to ${em.videosFolder}");
+                return Text("Exporting ${em.exportOptions.format.name} to ${em.videosFolder}");
               } else if (snapshot.hasError) {
                 return Text(
                   "Error occurred. Please try again",

@@ -3,6 +3,7 @@ import 'package:anki_progress/models/date_range.dart';
 import 'package:anki_progress/views/basic/padded_row.dart';
 import 'package:flutter/material.dart';
 
+import '../../core/functions.dart';
 import '../../models/animation_preference.dart';
 import '../../models/card_log.dart';
 import '../../models/date.dart';
@@ -60,7 +61,7 @@ class _PreferenceFormState extends State<PreferenceForm> {
                     suffixText: "ms",
                     suffixStyle: Theme.of(context).textTheme.displaySmall,
                   ),
-                  validator: _validatePositiveInteger,
+                  validator: validatePositiveInteger,
                 ),
               ),
             ],
@@ -78,7 +79,7 @@ class _PreferenceFormState extends State<PreferenceForm> {
                     helperText: "How many cards per row",
                     helperStyle: Theme.of(context).textTheme.bodySmall,
                   ),
-                  validator: _validatePositiveInteger,
+                  validator: validatePositiveInteger,
                 ),
               ),
             ],
@@ -173,16 +174,4 @@ DateRange _calDateTimeRangeBoundary(List<CardLog> cardLogs) {
     }
   }
   return DateRange(start: start, end: end);
-}
-
-String? _validatePositiveInteger(String? value) {
-  if (value == null) {
-    return "Please enter something";
-  } else {
-    final num = int.tryParse(value);
-    if (num == null || num <= 0) {
-      return "Must be a positive integer";
-    }
-  }
-  return null;
 }
