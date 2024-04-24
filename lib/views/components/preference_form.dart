@@ -159,8 +159,8 @@ class _PreferenceFormState extends State<PreferenceForm> {
 }
 
 DateRange _calDateTimeRangeBoundary(List<CardLog> cardLogs) {
-  Date start = Date.fromTimestamp(milliseconds: cardLogs.first.reviews.first.id);
-  Date end = Date.fromTimestamp(milliseconds: cardLogs.first.reviews.first.id);
+  Date start = Date.fromTimestamp(milliseconds: cardLogs.firstWhere((e) => e.reviews.isNotEmpty).reviews.first.id);
+  Date end = Date.fromTimestamp(milliseconds: cardLogs.firstWhere((e) => e.reviews.isNotEmpty).reviews.first.id);
   for (final cl in cardLogs) {
     for (final r in cl.reviews) {
       final curDate = Date.fromTimestamp(milliseconds: r.id);

@@ -27,6 +27,10 @@ class ConfigurationPage extends StatelessWidget {
             );
           }
           final cardLogs = snapshot.requireData;
+          final numReviews = cardLogs.fold(0, (previousValue, element) => previousValue + element.reviews.length);
+          if (numReviews == 0) {
+            return const Center(child: Text("You have not learnt this deck yet."));
+          }
           return SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(40.0),

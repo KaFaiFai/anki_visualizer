@@ -26,8 +26,8 @@ class DataSourceModel extends ChangeNotifier {
 
   Future<Database>? database;
   Future<List<Deck>>? decks;
-  Future<Map<int, List<Field>>>? fieldsInDeck;
-  Future<List<Notetype>>? notetypesInDeck;
+  Future<Map<int, List<Field>>>? fieldsInDeck; // to store all fields in the notetype
+  Future<List<Notetype>>? notetypesInDeck; // to find the name of the notetype
   Future<List<CardLog>>? cardLogs;
 
   void selectFile() {
@@ -51,9 +51,15 @@ class DataSourceModel extends ChangeNotifier {
   void toggleDeck(Deck deck) {
     selectedDeck = selectedDeck == deck ? null : deck;
     selectedFields = null;
-    _loadFieldsInDeck();
-    // TODO: assign initial value for selectedFields
     notifyListeners();
+    _loadFieldsInDeck().whenComplete(() {
+      // assign initial value for selectedFields
+      fieldsInDeck?.then((value) {
+        value.forEach((key, value) {
+          selectField(key, value.firstOrNull);
+        });
+      });
+    });
   }
 
   Future<void> _loadFieldsInDeck() async {
@@ -77,7 +83,7 @@ class DataSourceModel extends ChangeNotifier {
   }
 
   Future<bool> getCardLogs() async {
-    /// returns where this operation is valid
+    /// returns whether this operation is valid
 
     final db = await database;
     final deck = selectedDeck;
