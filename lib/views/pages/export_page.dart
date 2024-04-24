@@ -18,10 +18,11 @@ class ExportPage extends StatelessWidget {
         Consumer<ExportsModel>(
           builder: (_, em, __) {
             final text = switch (em.ffmpegInstallerState) {
-              FFmpegInstallerState.none => "Install FFmpeg",
+              FFmpegInstallerState.none => em.isFFmpegAvailable ? "Reinstall FFmpeg" : "Install FFmpeg",
               FFmpegInstallerState.downloading => "Downloading FFmpeg. This may take a while ...",
               FFmpegInstallerState.unzipping => "Unzipping FFmpeg",
               FFmpegInstallerState.completed => "FFmpeg installed",
+              FFmpegInstallerState.error => "Error has occurred. Please retry",
             };
             return ElevatedButton(
               onPressed: em.installFFmpeg,

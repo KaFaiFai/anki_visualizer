@@ -6,7 +6,7 @@ import 'package:archive/archive_io.dart';
 import 'package:http/http.dart';
 import 'package:path/path.dart';
 
-enum FFmpegInstallerState { none, downloading, unzipping, completed }
+enum FFmpegInstallerState { none, downloading, unzipping, completed , error}
 
 class FFmpegInstaller {
   static const windowsBuildPath = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip";
@@ -21,7 +21,7 @@ class FFmpegInstaller {
 
   Future<void> download() async {
     var req = await get(Uri.parse(windowsBuildPath));
-    var file = File(downloadTo)..deleteIfExistsAndCreateParents;
+    var file = File(downloadTo)..deleteIfExistsAndCreateParents();
     await file.writeAsBytes(req.bodyBytes);
   }
 

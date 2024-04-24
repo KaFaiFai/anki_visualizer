@@ -13,9 +13,9 @@ class ExportsModel extends ChangeNotifier {
   late String captureFolder; // temp folder to store individual images
   late String videosFolder;
 
-  FFmpegInstallerState ffmpegInstallerState = FFmpegInstallerState.none;
   late bool isFFmpegAvailable;
 
+  FFmpegInstallerState ffmpegInstallerState = FFmpegInstallerState.none;
   Future<ProcessResult>? exportVideoResult;
   Future<ProcessResult>? exportGIFResult;
 
@@ -64,17 +64,23 @@ class ExportsModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void updateFFmpegInstallerState(FFmpegInstallerState state) {
+    ffmpegInstallerState = state;
+    notifyListeners();
+  }
+
   Future<void> installFFmpeg() async {
-    final installer = FFmpegInstaller();
-    ffmpegInstallerState = FFmpegInstallerState.downloading;
-    notifyListeners();
-    await installer.download();
-    ffmpegInstallerState = FFmpegInstallerState.unzipping;
-    notifyListeners();
-    await installer.unzip();
-    await File(FFmpegInstaller.downloadTo).delete();
-    ffmpegInstallerState = FFmpegInstallerState.completed;
-    notifyListeners();
+    try {
+      final installer = FFmpegInstaller();
+      updateFFmpegInstallerState(FFmpegInstallerState.downloading);
+      await installer.download();
+      updateFFmpegInstallerState(FFmpegInstallerState.unzipping);
+      await installer.unzip();
+      await File(FFmpegInstaller.downloadTo).delete();
+      updateFFmpegInstallerState(FFmpegInstallerState.completed);
+    } catch (e) {
+      updateFFmpegInstallerState(FFmpegInstallerState.error);
+    }
     updateFFmpegAvailable();
   }
 
