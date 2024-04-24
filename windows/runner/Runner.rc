@@ -92,7 +92,7 @@ BEGIN
             VALUE "CompanyName", "com.rapid_rabbit" "\0"
             VALUE "FileDescription", "anki_progress" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "anki_progress" "\0"
+            VALUE "InternalName", "anki-visualizer" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2024 com.rapid_rabbit. All rights reserved." "\0"
             VALUE "OriginalFilename", "anki_progress.exe" "\0"
             VALUE "ProductName", "anki_progress" "\0"

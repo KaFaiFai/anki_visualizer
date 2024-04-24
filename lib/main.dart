@@ -17,11 +17,11 @@ import 'package:provider/provider.dart';
 
 Future<void> main() async {
   setup.setup();
-  runWithAppContainer(const AnkiProgress(), includeMaterialApp: false);
+  runWithAppContainer(const AnkiVisualizer(), includeMaterialApp: false);
 }
 
-class AnkiProgress extends StatelessWidget {
-  const AnkiProgress({super.key});
+class AnkiVisualizer extends StatelessWidget {
+  const AnkiVisualizer({super.key});
 
   @override
   Widget build(BuildContext context) {
