@@ -35,16 +35,18 @@ class FilePage extends StatelessWidget {
           padding: 5,
           children: [
             const Icon(Icons.folder),
-            FutureBuilder(
-              future: dsm.database,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator();
-                } else if (snapshot.hasError) {
-                  return const Text("Please pick a collection.anki2 file again");
-                }
-                return Text(dsm.selectedFile ?? "Pick your collection.anki2 file");
-              },
+            Flexible(
+              child: FutureBuilder(
+                future: dsm.database,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return const Text("Please pick a collection.anki2 file again");
+                  }
+                  return Text(dsm.selectedFile ?? "Pick your collection.anki2 file");
+                },
+              ),
             ),
           ],
         ),

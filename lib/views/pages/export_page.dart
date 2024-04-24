@@ -19,22 +19,40 @@ class ExportPage extends StatelessWidget {
         ),
         PaddedRow(
           padding: 10,
-          children: const [
-            ElevatedButton(
-              onPressed: null,
-              child: Text("Video"),
+          children: [
+            Consumer<ExportsModel>(
+              builder: (_, em, __) => ElevatedButton(
+                onPressed: em.exportVideo,
+                child: FutureBuilder(
+                  future: em.exportVideoResult,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return const Text("Error occurred. Please try again");
+                    } else {
+                      switch (snapshot.connectionState) {
+                        case ConnectionState.waiting:
+                          return const Text("Exporting to .mp4");
+                        case ConnectionState.done:
+                          return Text(".mp4 exported to ${em.videosFolder}");
+                        default:
+                          return const Text(".mp4");
+                      }
+                    }
+                  },
+                ),
+              ),
             ),
-            Text("Coming soon"),
+            const Text("Coming soon"),
           ],
         ),
-        Consumer<ExportsModel>(builder: (_, em, __) {
-          return PaddedRow(
+        Consumer<ExportsModel>(
+          builder: (_, em, __) => PaddedRow(
             padding: 10,
             children: [
               ElevatedButton(
-                onPressed: () => em.exportGIFWithFFMpeg(),
+                onPressed: () => em.exportGIF(),
                 child: FutureBuilder(
-                  future: em.exportGIFState,
+                  future: em.exportGIFResult,
                   builder: (context, snapshot) {
                     if (snapshot.hasError) {
                       return const Text("Error occurred. Please try again");
@@ -56,8 +74,8 @@ class ExportPage extends StatelessWidget {
                 icon: const Icon(Icons.folder_copy),
               ),
             ],
-          );
-        }),
+          ),
+        ),
       ],
     );
   }

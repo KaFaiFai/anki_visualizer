@@ -2,8 +2,7 @@ import 'dart:io';
 
 import 'package:anki_progress/core/values.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/material.dart';
-import 'package:image/image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
 import 'package:uuid/uuid.dart';
 
@@ -12,7 +11,8 @@ class ExportsModel extends ChangeNotifier {
   late String captureFolder; // temp folder to store individual images
   late String videosFolder;
 
-  Future<bool>? exportGIFState;
+  Future<ProcessResult>? exportVideoResult;
+  Future<ProcessResult>? exportGIFResult;
 
   ExportsModel() {
     _init();
@@ -56,32 +56,35 @@ class ExportsModel extends ChangeNotifier {
   }
 
   void exportVideo() {
-    // TODO: convert images to video format
-    return;
-    // ffmpeg.exe -i {{captureFolder}}\image-%7d.png {{videosFolder}}\output.mp4
+    // ffmpeg.exe -framerate 24 -i {{captureFolder}}\image-%7d.png {{videosFolder}}\output.mp4
+    final ffmpegPath = _getFFMpegPath();
+    final imagesPath = join(captureFolder, "image-%7d.png");
+    final exportPath = join(videosFolder, "output.mp4");
+    exportVideoResult = Process.run(ffmpegPath, ["-framerate", "24", "-i", imagesPath, exportPath]);
+    exportVideoResult?.then((_) => print("Exported video to $exportPath"));
+    notifyListeners();
   }
 
   Future<void> exportGIF() async {
     // ffmpeg.exe -i {{captureFolder}}\image-%7d.png {{videosFolder}}\output.gif
-
-    final files = Directory(captureFolder).listSync();
-    final decodeImages = files.map((e) => decodePngFile(e.path));
-    final images = await Future.wait(decodeImages).then((images) => images.nonNulls);
-    final animation = images.reduce((image, nextImage) => image..addFrame(nextImage));
-
-    final exportPath = join(videosFolder, "output.gif");
-    if (File(exportPath).existsSync()) File(exportPath).deleteSync();
-    // TODO: faster export
-    exportGIFState = encodeGifFile(exportPath, animation, samplingFactor: 100);
-    notifyListeners();
-    exportGIFState?.then((_) => print("Exported gif to $exportPath"));
-  }
-
-  Future<void> exportGIFWithFFMpeg() async {
-    const ffmpegPath = "C:\\insert\\link\\to\\bin\\ffmpeg.exe";
+    final ffmpegPath = _getFFMpegPath();
     final imagesPath = join(captureFolder, "image-%7d.png");
     final exportPath = join(videosFolder, "output.gif");
-    await Process.run(ffmpegPath, ["-i", imagesPath, exportPath]);
+    exportGIFResult = Process.run(ffmpegPath, ["-i", imagesPath, exportPath]);
+    exportGIFResult?.then((_) => print("Exported gif to $exportPath"));
     notifyListeners();
   }
+}
+
+String _getFFMpegPath() {
+  final String ffmpegPath;
+  if (Platform.isWindows) {
+    // get assets folder on windows: https://stackoverflow.com/questions/69312706/how-to-embed-external-exe-files-in-a-flutter-project-for-windows
+    final appPath = Platform.resolvedExecutable;
+    final appFolder = appPath.substring(0, appPath.lastIndexOf("\\"));
+    ffmpegPath = join(appFolder, "data\\flutter_assets\\assets\\tools\\ffmpeg.exe");
+  } else {
+    throw UnimplementedError("$defaultTargetPlatform not supported");
+  }
+  return ffmpegPath;
 }
