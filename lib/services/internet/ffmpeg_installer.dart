@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:anki_progress/core/extensions.dart';
 import 'package:anki_progress/core/values.dart';
 import 'package:archive/archive_io.dart';
 import 'package:http/http.dart';
@@ -19,9 +20,7 @@ class FFmpegInstaller {
   Future<void> download() async {
     print("Download to $downloadTo}");
     var req = await get(Uri.parse(windowsBuildPath));
-    var file = File(downloadTo);
-    if (file.existsSync()) file.deleteSync();
-    file.parent.createSync(recursive: true);
+    var file = File(downloadTo)..deleteIfExistsAndCreateParents;
     await file.writeAsBytes(req.bodyBytes);
     print("Download completed");
   }
@@ -29,6 +28,7 @@ class FFmpegInstaller {
   // Unarchive and save the file in Documents directory and save the paths in the array
   Future<void> unzip() async {
     print("Unzip to $unzipTo}");
+    File(unzipTo).deleteIfExistsAndCreateParents();
     await extractFileToDisk(downloadTo, unzipTo);
     print("Unzip completed");
   }

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:anki_progress/core/extensions.dart';
 import 'package:anki_progress/core/values.dart';
 import 'package:anki_progress/services/internet/ffmpeg_installer.dart';
 import 'package:file_picker/file_picker.dart';
@@ -37,7 +38,6 @@ class ExportsModel extends ChangeNotifier {
   Future<void> _updateCaptureFolder(String rootFolder) async {
     captureRootFolder = rootFolder;
     captureFolder = join(rootFolder, Uuid().v4());
-    await Directory(captureFolder).create(recursive: true);
     print("Captures are saved to $captureFolder");
     notifyListeners();
   }
@@ -51,7 +51,6 @@ class ExportsModel extends ChangeNotifier {
 
   Future<void> _updateVideosFolder(String folder) async {
     videosFolder = folder;
-    await Directory(videosFolder).create(recursive: true);
     print("Videos are saved to $videosFolder");
     notifyListeners();
   }
@@ -61,8 +60,9 @@ class ExportsModel extends ChangeNotifier {
     final ffmpegPath = _getFFmpegPath();
     final imagesPath = join(captureFolder, "image-%7d.png");
     final exportPath = join(videosFolder, "output.mp4");
+    File(exportPath).deleteIfExistsAndCreateParents();
     exportVideoResult = Process.run(ffmpegPath, ["-framerate", "24", "-i", imagesPath, exportPath]);
-    exportVideoResult?.then((_) => print("Exported video to $exportPath"));
+    exportVideoResult?.whenComplete(() => print("Exported video to $exportPath"));
     notifyListeners();
   }
 
@@ -71,8 +71,9 @@ class ExportsModel extends ChangeNotifier {
     final ffmpegPath = _getFFmpegPath();
     final imagesPath = join(captureFolder, "image-%7d.png");
     final exportPath = join(videosFolder, "output.gif");
+    File(exportPath).deleteIfExistsAndCreateParents();
     exportGIFResult = Process.run(ffmpegPath, ["-i", imagesPath, exportPath]);
-    exportGIFResult?.then((_) => print("Exported gif to $exportPath"));
+    exportGIFResult?.whenComplete(() => print("Exported gif to $exportPath"));
     notifyListeners();
   }
 }

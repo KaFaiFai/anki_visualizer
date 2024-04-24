@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 
+import 'package:anki_progress/core/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -27,7 +28,8 @@ class CapturableState extends State<Capturable> {
   }
 
   Future<void> _saveBytes(Uint8List imageBytes, String path) async {
-    final file = await File(path).create();
+    final file = File(path)..deleteIfExistsAndCreateParents();
+    file.create();
     return file.writeAsBytesSync(imageBytes);
   }
 

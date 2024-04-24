@@ -1,3 +1,5 @@
+import 'dart:io';
+
 extension FutureExtension<T> on Future<T> {
   Future<T> delayed([Duration duration = const Duration(seconds: 1)]) {
     // to simulate when the process is long
@@ -8,5 +10,12 @@ extension FutureExtension<T> on Future<T> {
 extension IntExtension on int {
   int roundTo(int nearest) {
     return (this / nearest).round() * nearest;
+  }
+}
+
+extension FileExtension on File {
+  void deleteIfExistsAndCreateParents() {
+    if (existsSync()) deleteSync();
+    parent.createSync(recursive: true);
   }
 }
