@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:anki_progress/core/values.dart';
 import 'package:anki_progress/models/animation_preference.dart';
 import 'package:anki_progress/models/card_log.dart';
 import 'package:anki_progress/models/date_range.dart';
@@ -133,26 +134,29 @@ class CardProgress extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Review? review = cardLog.reviews.where((e) => Date.fromTimestamp(milliseconds: e.id) == date).firstOrNull;
-    final Color color;
+    final Color cardColor;
+    final Color textColor;
     if (review == null) {
       final prevReviews = cardLog.reviews.where((e) => Date.fromTimestamp(milliseconds: e.id) < date);
       final prevReview = prevReviews.lastOrNull;
       final datePassed = prevReview == null ? 0 : date.difference(Date.fromTimestamp(milliseconds: prevReview.id));
-      final value = datePassed; // * prevReviews.length;
-      color = Colors.amber.withAlpha(min(value, 255));
+      final value = datePassed;
+      cardColor = Colors.amber.withAlpha(min(value, 255));
+      textColor = Theme.of(context).colorScheme.onBackground;
     } else {
-      final easeColorMap = {1: Colors.red, 2: Colors.blue, 3: Colors.green, 4: Colors.blueGrey};
-      color = easeColorMap[review.ease] ?? Colors.brown.withAlpha(50);
+      final easeColorMap = {1: Values.againColor, 2: Values.hardColor, 3: Values.goodColor, 4: Values.easyColor};
+      cardColor = easeColorMap[review.ease] ?? Colors.brown.withAlpha(50);
+      textColor = Theme.of(context).colorScheme.background;
     }
 
     return Container(
       decoration: BoxDecoration(
-        color: color,
+        color: cardColor,
         borderRadius: BorderRadius.circular(5),
         border: Border.all(color: Theme.of(context).colorScheme.outline, width: 2),
       ),
       alignment: Alignment.center,
-      child: Text(cardLog.text, style: Theme.of(context).textTheme.bodySmall),
+      child: Text(cardLog.text, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: textColor)),
     );
   }
 }
