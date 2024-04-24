@@ -13,6 +13,9 @@ class ExportsModel extends ChangeNotifier {
   late String captureFolder; // temp folder to store individual images
   late String videosFolder;
 
+  FFmpegInstallerState ffmpegInstallerState = FFmpegInstallerState.none;
+  late bool isFFmpegAvailable;
+
   Future<ProcessResult>? exportVideoResult;
   Future<ProcessResult>? exportGIFResult;
 
@@ -21,11 +24,12 @@ class ExportsModel extends ChangeNotifier {
   }
 
   void _init() {
-    final directory = Values.userDirectory;
-    captureRootFolder = join(directory.path, "anki_visualize", "captures");
+    final directory = Values.appDirectory;
+    captureRootFolder = join(directory, "captures");
     _updateCaptureFolder(captureRootFolder);
-    final videosRootFolder = join(directory.path, "anki_visualize", "videos");
+    final videosRootFolder = join(directory, "videos");
     _updateVideosFolder(videosRootFolder);
+    updateFFmpegAvailable();
   }
 
   void selectCaptureRootFolder() {
@@ -53,6 +57,25 @@ class ExportsModel extends ChangeNotifier {
     videosFolder = folder;
     print("Videos are saved to $videosFolder");
     notifyListeners();
+  }
+
+  void updateFFmpegAvailable() {
+    isFFmpegAvailable = FFmpegInstaller().getFFmpegPath() != null;
+    notifyListeners();
+  }
+
+  Future<void> installFFmpeg() async {
+    final installer = FFmpegInstaller();
+    ffmpegInstallerState = FFmpegInstallerState.downloading;
+    notifyListeners();
+    await installer.download();
+    ffmpegInstallerState = FFmpegInstallerState.unzipping;
+    notifyListeners();
+    await installer.unzip();
+    await File(FFmpegInstaller.downloadTo).delete();
+    ffmpegInstallerState = FFmpegInstallerState.completed;
+    notifyListeners();
+    updateFFmpegAvailable();
   }
 
   void exportVideo() {

@@ -34,7 +34,7 @@ class ConfigurationPage extends StatelessWidget {
                 padding: 20,
                 children: [
                   PreferenceForm(cardLogs: cardLogs, onPressConfirm: pm.updatePreference),
-                  TextDivider("Exports folder", height: 100, color: Theme.of(context).colorScheme.onSurface, space: 20),
+                  TextDivider("Exports folder", height: 100, color: Theme.of(context).colorScheme.onSurface, space: 40),
                   const ExportsDirectoryButtons(),
                 ],
               ),
