@@ -19,3 +19,9 @@ extension FileExtension on File {
     parent.createSync(recursive: true);
   }
 }
+
+extension DirectoryExtension on Directory {
+  void createIfNotExists() {
+    if (!existsSync()) createSync(recursive: true);
+  }
+}

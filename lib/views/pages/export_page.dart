@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:anki_progress/services/internet/ffmpeg_installer.dart';
 import 'package:anki_progress/view_models/exports_model.dart';
 import 'package:anki_progress/views/basic/padded_column.dart';
@@ -6,6 +8,7 @@ import 'package:anki_progress/views/basic/text_divider.dart';
 import 'package:anki_progress/views/components/export_options_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:open_filex/open_filex.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -79,15 +82,20 @@ class ExportPage extends StatelessWidget {
           ExportOptionsForm(
             onPressExport: (options) {
               em.updateExportOptions(options);
-              em.export();
+              em.selectVideoFile().then((file) {
+                if (file == null) return;
+                em.updateVideoFile(file);
+                em.export();
+              });
             },
             isExportReady: em.isFFmpegAvailable,
+            initialExportOptions: em.exportOptions,
           ),
           FutureBuilder(
             future: em.exportResult,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Text("Exporting ${em.exportOptions.format.name} to ${em.videosFolder}");
+                return Text("Exporting ${em.exportOptions.format.name} to ${em.videoFile}");
               } else if (snapshot.hasError) {
                 return Text(
                   "Error occurred. Please try again",
@@ -98,9 +106,18 @@ class ExportPage extends StatelessWidget {
               }
               final code = snapshot.requireData.exitCode;
               if (code == 0) {
-                return Text(
-                  "File exported successfully!",
-                  style: Theme.of(context).textTheme.titleSmall,
+                return PaddedRow(
+                  padding: 10,
+                  children: [
+                    Text(
+                      "File exported successfully!",
+                      style: Theme.of(context).textTheme.titleSmall,
+                    ),
+                    IconButton(
+                      onPressed: () => OpenFilex.open(em.videoFile == null ? null : File(em.videoFile!).parent.path),
+                      icon: const Icon(Icons.folder_copy),
+                    ),
+                  ],
                 );
               }
               return Container();

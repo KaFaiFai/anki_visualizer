@@ -12,7 +12,7 @@ import 'package:uuid/uuid.dart';
 class ExportsModel extends ChangeNotifier {
   late String captureRootFolder;
   late String captureFolder; // temp folder to store individual images
-  late String videosFolder;
+  String? videoFile;
 
   late bool isFFmpegAvailable;
 
@@ -28,8 +28,6 @@ class ExportsModel extends ChangeNotifier {
     final directory = Values.appDirectory;
     captureRootFolder = join(directory, "captures");
     _updateCaptureFolder(captureRootFolder);
-    final videosRootFolder = join(directory, "videos");
-    _updateVideosFolder(videosRootFolder);
     updateFFmpegAvailable();
   }
 
@@ -47,16 +45,17 @@ class ExportsModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void selectVideosFolder() {
-    FilePicker.platform.getDirectoryPath(initialDirectory: videosFolder).then((value) {
-      if (value == null) return;
-      _updateVideosFolder(value);
-    });
+  Future<String?> selectVideoFile() {
+    final videosRootFolder = join(Values.appDirectory, "videos");
+    Directory(videosRootFolder).createIfNotExists();
+    return FilePicker.platform.saveFile(
+      fileName: "output.${exportOptions.format.name}",
+      initialDirectory: videosRootFolder,
+    );
   }
 
-  Future<void> _updateVideosFolder(String folder) async {
-    videosFolder = folder;
-    print("Videos are saved to $videosFolder");
+  Future<void> updateVideoFile(String file) async {
+    videoFile = file;
     notifyListeners();
   }
 
@@ -91,32 +90,16 @@ class ExportsModel extends ChangeNotifier {
   }
 
   void export() {
-    switch (exportOptions.format) {
-      case ExportFormat.gif:
-        exportResult = _exportGIF();
-      case ExportFormat.mp4:
-        exportResult = _exportVideo();
-    }
-    exportResult?.whenComplete(() => print("Exported ${exportOptions.format.name} to $videosFolder"));
+    final outputFile = videoFile;
+    if (outputFile == null) return;
+
+    // cmd: ffmpeg.exe -framerate 15 -i {{captureFolder}}\image-%7d.png {{videosFolder}}\output.mp4
+    final ffmpegPath = _getFFmpegPath();
+    final imagesPath = join(captureFolder, "image-%7d.png");
+    File(outputFile).deleteIfExistsAndCreateParents();
+    exportResult = Process.run(ffmpegPath, ["-framerate", "${exportOptions.framerate}", "-i", imagesPath, outputFile]);
+    exportResult?.whenComplete(() => print("Exported ${exportOptions.format.name} to $videoFile"));
     notifyListeners();
-  }
-
-  Future<ProcessResult>? _exportVideo() {
-    // ffmpeg.exe -framerate 15 -i {{captureFolder}}\image-%7d.png {{videosFolder}}\output.mp4
-    final ffmpegPath = _getFFmpegPath();
-    final imagesPath = join(captureFolder, "image-%7d.png");
-    final exportPath = join(videosFolder, "output.mp4");
-    File(exportPath).deleteIfExistsAndCreateParents();
-    return Process.run(ffmpegPath, ["-framerate", "${exportOptions.framerate}", "-i", imagesPath, exportPath]);
-  }
-
-  Future<ProcessResult>? _exportGIF() {
-    // ffmpeg.exe -i {{captureFolder}}\image-%7d.png {{videosFolder}}\output.gif
-    final ffmpegPath = _getFFmpegPath();
-    final imagesPath = join(captureFolder, "image-%7d.png");
-    final exportPath = join(videosFolder, "output.gif");
-    File(exportPath).deleteIfExistsAndCreateParents();
-    return Process.run(ffmpegPath, ["-framerate", "${exportOptions.framerate}", "-i", imagesPath, exportPath]);
   }
 }
 

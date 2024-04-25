@@ -17,7 +17,21 @@ class ExportsDirectoryButtons extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text("Saved captures to"),
+            Flexible(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text("Saved captures to"),
+                  Text(
+                    "This folder is used to temporarily store screenshots during animation"
+                    " which can be later exported into gif or video format."
+                    " Please clean up this when you are done.",
+                    style:
+                        Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.outline),
+                  ),
+                ],
+              ),
+            ),
             const SizedBox(width: 20),
             Flexible(
               child: Consumer<ExportsModel>(
@@ -27,37 +41,12 @@ class ExportsDirectoryButtons extends StatelessWidget {
                     IconButton(
                       onPressed: () => OpenFilex.open(em.captureRootFolder),
                       icon: const Icon(Icons.folder_copy),
+                      iconSize: 40,
                     ),
                     Flexible(
                       child: ElevatedButton(
                         onPressed: () => em.selectCaptureRootFolder(),
                         child: Text(em.captureRootFolder),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Text("Save videos to"),
-            const SizedBox(width: 20),
-            Flexible(
-              child: Consumer<ExportsModel>(
-                builder: (_, em, __) => PaddedRow(
-                  padding: 10,
-                  children: [
-                    IconButton(
-                      onPressed: () => OpenFilex.open(em.videosFolder),
-                      icon: const Icon(Icons.folder_copy),
-                    ),
-                    Flexible(
-                      child: ElevatedButton(
-                        onPressed: () => em.selectVideosFolder(),
-                        child: Text(em.videosFolder),
                       ),
                     ),
                   ],
