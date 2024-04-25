@@ -1,3 +1,4 @@
+import 'package:anki_progress/core/values.dart';
 import 'package:flutter/material.dart';
 
 import '../basic/padded_row.dart';
@@ -20,8 +21,8 @@ class AppButton extends StatelessWidget {
       child: PaddedRow(
         padding: 10,
         children: [
-          const Text("Anki Visualize"),
-          Image.asset("assets/images/icon.png"),
+          const Text(Values.appName),
+          Image.asset("assets/images/icon-no_bg.png"),
         ],
       ),
     );

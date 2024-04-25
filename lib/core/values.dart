@@ -13,13 +13,14 @@ class Values {
 
   static Future<void> init() async {
     final userDirectory = await getApplicationDocumentsDirectory();
-    appDirectory = join(userDirectory.path, "Anki Visualizer");
-
+    appDirectory = join(userDirectory.path, appName);
+    
     final info = await PackageInfo.fromPlatform();
     version = info.version;
     buildNumber = info.buildNumber;
   }
 
+  static const String appName = "Anki Visualizer";
   static const easyColor = Color(0xFF006CFF);
   static const goodColor = Color(0xFF04AC04);
   static const hardColor = Color(0xFFCA7700);
