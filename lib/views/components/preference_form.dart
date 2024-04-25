@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:anki_progress/core/extensions.dart';
 import 'package:anki_progress/models/date_range.dart';
 import 'package:anki_progress/views/basic/padded_row.dart';
@@ -24,7 +26,7 @@ class _PreferenceFormState extends State<PreferenceForm> {
 
   late TextEditingController millisecondsController;
   late TextEditingController numColController;
-  late DateRange cardLogsRange;
+  late Future<DateRange> cardLogsRange;
   DateRange? dateRange;
 
   @override
@@ -35,7 +37,7 @@ class _PreferenceFormState extends State<PreferenceForm> {
     millisecondsController = TextEditingController(text: "$milliseconds");
     numColController = TextEditingController(text: "$numCol");
     cardLogsRange = _calDateTimeRangeBoundary(widget.cardLogs);
-    dateRange = cardLogsRange;
+    cardLogsRange.then((value) => dateRange = value);
   }
 
   @override
@@ -88,15 +90,22 @@ class _PreferenceFormState extends State<PreferenceForm> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text("Date range"),
-              OutlinedButton(
-                onPressed: _pickDateRange,
-                child: PaddedRow(
-                  padding: 10,
-                  children: [
-                    const Icon(Icons.calendar_month, size: 40),
-                    Text("$dateRange"),
-                  ],
-                ),
+              FutureBuilder(
+                future: cardLogsRange,
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) return const CircularProgressIndicator();
+                  final range = snapshot.requireData;
+                  return OutlinedButton(
+                    onPressed: () => _pickDateRange(range.start.toDateTime(), range.end.toDateTime()),
+                    child: PaddedRow(
+                      padding: 10,
+                      children: [
+                        const Icon(Icons.calendar_month, size: 40),
+                        Text("$dateRange"),
+                      ],
+                    ),
+                  );
+                },
               ),
             ],
           ),
@@ -120,12 +129,12 @@ class _PreferenceFormState extends State<PreferenceForm> {
     super.dispose();
   }
 
-  void _pickDateRange() {
+  void _pickDateRange(DateTime firstDate, DateTime lastDate) {
     showDateRangePicker(
       context: context,
       initialDateRange: dateRange?.toDateTimeRange(),
-      firstDate: cardLogsRange.start.toDateTime(),
-      lastDate: cardLogsRange.end.toDateTime(),
+      firstDate: firstDate,
+      lastDate: lastDate,
       builder: (context, child) => FractionallySizedBox(
         widthFactor: 0.8,
         heightFactor: 0.8,
@@ -159,19 +168,25 @@ class _PreferenceFormState extends State<PreferenceForm> {
   }
 }
 
-DateRange _calDateTimeRangeBoundary(List<CardLog> cardLogs) {
+Future<DateRange> _calDateTimeRangeBoundary(List<CardLog> cardLogs) {
+  // this function is computationally expensive
+
   Date start = Date.fromTimestamp(milliseconds: cardLogs.firstWhere((e) => e.reviews.isNotEmpty).reviews.first.id);
   Date end = Date.fromTimestamp(milliseconds: cardLogs.firstWhere((e) => e.reviews.isNotEmpty).reviews.first.id);
-  for (final cl in cardLogs) {
-    for (final r in cl.reviews) {
-      final curDate = Date.fromTimestamp(milliseconds: r.id);
-      if (curDate < start) {
-        start = curDate;
-      }
-      if (curDate > end) {
-        end = curDate;
+
+  return Future.microtask(() {
+    for (final cl in cardLogs) {
+      if (cl.reviews.isNotEmpty) {
+        final firstDate = Date.fromTimestamp(milliseconds: cl.reviews.first.id);
+        if (firstDate < start) {
+          start = firstDate;
+        }
+        final lastDate = Date.fromTimestamp(milliseconds: cl.reviews.last.id);
+        if (lastDate > end) {
+          end = lastDate;
+        }
       }
     }
-  }
-  return DateRange(start: start, end: end);
+    return DateRange(start: start, end: end);
+  });
 }
