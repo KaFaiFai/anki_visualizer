@@ -1,3 +1,41 @@
+<div align="center">
+
+  <img src="assets/images/icon-no_bg.png" alt="icon" width="200" height="auto" />
+  <h1>Anki Visualizer</h1>
+
+  <p>
+    Visualize your Anki learning progress overtime!
+  </p>
+
+<!-- Badges -->
+<p>
+  <a href="">
+    <img src="https://img.shields.io/github/last-commit/KaFaiFai/anki_visualizer" alt="last update" />
+  </a>
+  <a href="https://github.com/KaFaiFai/anki_visualizer/stargazers">
+    <img src="https://img.shields.io/github/stars/KaFaiFai/anki_visualizer" alt="stars" />
+  </a>
+  <a href="https://github.com/KaFaiFai/anki_visualizer/issues/">
+    <img src="https://img.shields.io/github/issues/KaFaiFai/anki_visualizer" alt="open issues" />
+  </a>
+  <a href="https://github.com/KaFaiFai/anki_visualizer/blob/master/LICENSE">
+    <img src="https://img.shields.io/github/license/KaFaiFai/anki_visualizer.svg" alt="license" />
+  </a>
+</p>
+
+<h4>
+    <a href="https://github.com/KaFaiFai/anki_visualizer/">View Demo</a>
+  <span> · </span>
+    <a href="https://github.com/KaFaiFai/anki_visualizer">Documentation</a>
+  <span> · </span>
+    <a href="https://github.com/KaFaiFai/anki_visualizer/issues/">Report Bug</a>
+  <span> · </span>
+    <a href="https://github.com/KaFaiFai/anki_visualizer/issues/">Request Feature</a>
+  </h4>
+</div>
+
+<br />
+
 # anki_progress
 
 A program to visualize Anki review progress overtime
@@ -19,9 +57,9 @@ samples, guidance on mobile development, and a full API reference.
 
 ### Assessing Anki database
 
-refer to https://docs.ankiweb.net/files.html
+refer to <https://docs.ankiweb.net/files.html>
 
 ### Anki database structure
 
-doc exists for AnkiDroid: https://github.com/ankidroid/Anki-Android/wiki/Database-Structure  
+doc exists for AnkiDroid: <https://github.com/ankidroid/Anki-Android/wiki/Database-Structure>  
 but not available for Anki

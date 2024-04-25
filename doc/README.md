@@ -1,6 +1,6 @@
 # anki_progress
 
-This README file is intended for developers who want to contribute to this project
+This README is intended for developers who want to contribute to this project
 
 ## FAQ
 

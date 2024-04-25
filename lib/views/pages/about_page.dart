@@ -52,7 +52,7 @@ class AboutPage extends StatelessWidget {
                   InkWell(
                     child: Image.asset("assets/images/buymeacoffee.png", height: 80),
                     onTap: () => launchUrlString("https://www.buymeacoffee.com/rapid_rabbit"),
-                  )
+                  ),
                 ],
               ),
               Row(
