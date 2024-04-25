@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../basic/padded_row.dart';
 
 class AppButton extends StatelessWidget {
-  const AppButton({super.key});
+  final void Function()? onPress;
+
+  const AppButton({super.key, this.onPress});
 
   @override
   Widget build(BuildContext context) {
@@ -12,9 +13,10 @@ class AppButton extends StatelessWidget {
       style: TextButton.styleFrom(
         textStyle: Theme.of(context).textTheme.labelMedium,
         foregroundColor: Theme.of(context).colorScheme.onBackground,
+        disabledForegroundColor: Theme.of(context).colorScheme.onBackground,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
       ),
-      onPressed: () => launchUrl(Uri.parse("https://github.com/KaFaiFai/anki_visualizer")),
+      onPressed: onPress,
       child: PaddedRow(
         padding: 10,
         children: [

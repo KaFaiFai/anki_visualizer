@@ -54,6 +54,7 @@ dependencies:
   archive: ^3.4.10
   flutter_markdown: ^0.6.20
   flutter_launcher_icons: ^0.13.1
+  package_info_plus: ^8.0.0
 
 dev_dependencies:
   flutter_test:

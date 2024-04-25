@@ -7,6 +7,7 @@ import 'package:anki_progress/view_models/data_source_model.dart';
 import 'package:anki_progress/view_models/exports_model.dart';
 import 'package:anki_progress/view_models/preference_model.dart';
 import 'package:anki_progress/views/components/app_button.dart';
+import 'package:anki_progress/views/pages/about_page.dart';
 import 'package:anki_progress/views/pages/cards_page.dart';
 import 'package:anki_progress/views/pages/configuration_page.dart';
 import 'package:anki_progress/views/pages/export_page.dart';
@@ -39,20 +40,23 @@ class AnkiVisualizer extends StatelessWidget {
         showPerformanceOverlay: kProfileMode,
         // debugShowCheckedModeBanner: false,
         initialRoute: Routes.filePage,
-        navigatorObservers: [Routes.buildPageObserver()],
         onGenerateRoute: (settings) {
           final Widget? body = switch (settings.name) {
             Routes.filePage => const FilePage(),
             Routes.configurationPage => const ConfigurationPage(),
             Routes.cardsPage => const CardsPage(),
             Routes.exportPage => const ExportPage(),
+            Routes.aboutPage => const AboutPage(),
             _ => null,
           };
+          final showAppButton = settings.name != Routes.aboutPage;
+
           if (body != null) {
             return PageRouteBuilder(
-              pageBuilder: (_, __, ___) => Scaffold(
-                backgroundColor: themeData.colorScheme.background,
-                appBar: AppBar(actions: const [AppButton()]),
+              pageBuilder: (context, __, ___) => Scaffold(
+                appBar: AppBar(actions: [
+                  if (showAppButton) AppButton(onPress: () => Navigator.of(context).pushNamed(Routes.aboutPage))
+                ]),
                 body: body,
               ),
             );
