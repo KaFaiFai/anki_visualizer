@@ -167,9 +167,8 @@ class FilePage extends StatelessWidget {
         future: dsm.getCardLogs(),
         builder: (context, snapshot) {
           final clickable = snapshot.data ?? false;
-          // TODO: also reset preference
-          return SizedBox(
-            width: 300,
+          return FractionallySizedBox(
+            widthFactor: 0.5,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(textStyle: Theme.of(context).textTheme.displayLarge),
               onPressed: clickable ? dsm.getCardLogs : null,

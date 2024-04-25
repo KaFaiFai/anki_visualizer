@@ -34,13 +34,25 @@ class ConfigurationPage extends StatelessWidget {
           return SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(40.0),
-              child: PaddedColumn(
-                padding: 20,
-                children: [
-                  PreferenceForm(cardLogs: cardLogs, onPressConfirm: pm.updatePreference),
-                  TextDivider("Exports folder", height: 100, color: Theme.of(context).colorScheme.onSurface, space: 40),
-                  const ExportsDirectoryButtons(),
-                ],
+              child: Align(
+                // this align is to make the child SizedBox respect its width
+                alignment: Alignment.topCenter,
+                child: SizedBox(
+                  width: 1000,
+                  child: PaddedColumn(
+                    padding: 20,
+                    children: [
+                      PreferenceForm(cardLogs: cardLogs, onPressConfirm: pm.updatePreference),
+                      TextDivider(
+                        "Exports folder",
+                        height: 100,
+                        color: Theme.of(context).colorScheme.onSurface,
+                        space: 40,
+                      ),
+                      const ExportsDirectoryButtons(),
+                    ],
+                  ),
+                ),
               ),
             ),
           );

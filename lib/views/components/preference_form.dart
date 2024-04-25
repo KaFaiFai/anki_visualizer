@@ -51,19 +51,21 @@ class _PreferenceFormState extends State<PreferenceForm> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text("Duration"),
-              SizedBox(
-                width: 350,
-                child: TextFormField(
-                  controller: millisecondsController,
-                  style: Theme.of(context).textTheme.bodyMedium,
-                  decoration: InputDecoration(
-                    border: const OutlineInputBorder(),
-                    helperText: "How long for the entire animation",
-                    helperStyle: Theme.of(context).textTheme.bodySmall,
-                    suffixText: "ms",
-                    suffixStyle: Theme.of(context).textTheme.displaySmall,
+              const SizedBox(width: 20),
+              Flexible(
+                child: SizedBox(
+                  width: 400,
+                  child: TextFormField(
+                    controller: millisecondsController,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    decoration: InputDecoration(
+                      helperText: "How long for the entire animation",
+                      helperStyle: Theme.of(context).textTheme.bodySmall,
+                      suffixText: "ms",
+                      suffixStyle: Theme.of(context).textTheme.displaySmall,
+                    ),
+                    validator: validatePositiveInteger,
                   ),
-                  validator: validatePositiveInteger,
                 ),
               ),
             ],
@@ -72,16 +74,18 @@ class _PreferenceFormState extends State<PreferenceForm> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text("Number of columns"),
-              SizedBox(
-                width: 350,
-                child: TextFormField(
-                  controller: numColController,
-                  decoration: InputDecoration(
-                    border: const OutlineInputBorder(),
-                    helperText: "How many cards per row",
-                    helperStyle: Theme.of(context).textTheme.bodySmall,
+              const SizedBox(width: 20),
+              Flexible(
+                child: SizedBox(
+                  width: 400,
+                  child: TextFormField(
+                    controller: numColController,
+                    decoration: InputDecoration(
+                      helperText: "How many cards per row",
+                      helperStyle: Theme.of(context).textTheme.bodySmall,
+                    ),
+                    validator: validatePositiveInteger,
                   ),
-                  validator: validatePositiveInteger,
                 ),
               ),
             ],
@@ -90,27 +94,30 @@ class _PreferenceFormState extends State<PreferenceForm> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text("Date range"),
-              FutureBuilder(
-                future: cardLogsRange,
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) return const CircularProgressIndicator();
-                  final range = snapshot.requireData;
-                  return OutlinedButton(
-                    onPressed: () => _pickDateRange(range.start.toDateTime(), range.end.toDateTime()),
-                    child: PaddedRow(
-                      padding: 10,
-                      children: [
-                        const Icon(Icons.calendar_month, size: 40),
-                        Text("$dateRange"),
-                      ],
-                    ),
-                  );
-                },
+              const SizedBox(width: 20),
+              Flexible(
+                child: FutureBuilder(
+                  future: cardLogsRange,
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) return const CircularProgressIndicator();
+                    final range = snapshot.requireData;
+                    return OutlinedButton(
+                      onPressed: () => _pickDateRange(range.start.toDateTime(), range.end.toDateTime()),
+                      child: PaddedRow(
+                        padding: 10,
+                        children: [
+                          const Icon(Icons.calendar_month, size: 40),
+                          Flexible(child: Text("$dateRange", overflow: TextOverflow.ellipsis)),
+                        ],
+                      ),
+                    );
+                  },
+                ),
               ),
             ],
           ),
           FractionallySizedBox(
-            widthFactor: 0.4,
+            widthFactor: 0.5,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(textStyle: Theme.of(context).textTheme.displayLarge),
               onPressed: _submitForm,

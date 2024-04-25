@@ -32,6 +32,7 @@ class ExportsModel extends ChangeNotifier {
   }
 
   void selectCaptureRootFolder() {
+    Directory(captureRootFolder).createIfNotExists();
     FilePicker.platform.getDirectoryPath(initialDirectory: captureRootFolder).then((value) {
       if (value == null) return;
       _updateCaptureFolder(value);

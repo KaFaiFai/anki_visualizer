@@ -133,13 +133,19 @@ class ExportPage extends StatelessWidget {
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(40.0),
-        child: PaddedColumn(
-          padding: 20,
-          children: [
-            buildFFmpegInstallField(context),
-            const TextDivider("Export options", space: 40),
-            buildExportFields(context),
-          ],
+        child: Align(
+          alignment: Alignment.topCenter,
+          child: SizedBox(
+            width: 1000,
+            child: PaddedColumn(
+              padding: 20,
+              children: [
+                buildFFmpegInstallField(context),
+                TextDivider("Export options", height: 100, color: Theme.of(context).colorScheme.onSurface, space: 40),
+                buildExportFields(context),
+              ],
+            ),
+          ),
         ),
       ),
     );

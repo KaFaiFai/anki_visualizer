@@ -1,4 +1,5 @@
 import 'package:anki_progress/models/export_options.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/functions.dart';
@@ -45,12 +46,11 @@ class _ExportOptionsFormState extends State<ExportOptionsForm> {
             children: [
               const Text("Frame rate"),
               SizedBox(
-                width: 350,
+                width: 400,
                 child: TextFormField(
                   controller: framerateController,
                   style: Theme.of(context).textTheme.bodyMedium,
                   decoration: InputDecoration(
-                    border: const OutlineInputBorder(),
                     suffixText: "fps",
                     suffixStyle: Theme.of(context).textTheme.displaySmall,
                   ),
@@ -86,8 +86,8 @@ class _ExportOptionsFormState extends State<ExportOptionsForm> {
               ),
             ],
           ),
-          SizedBox(
-            width: 300,
+          FractionallySizedBox(
+            widthFactor: 0.5,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(textStyle: Theme.of(context).textTheme.displayLarge),
               onPressed: widget.isExportReady ? _submitForm : null,

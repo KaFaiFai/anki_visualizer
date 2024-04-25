@@ -92,6 +92,7 @@ class _CardsGridWithControlState extends State<CardsGridWithControl> {
 
   void onPressPause() {
     animationController?.stop();
+    animationController?.removeListener(_captureScreen);
   }
 
   void _captureScreen() {
