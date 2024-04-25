@@ -5,6 +5,7 @@ import 'package:anki_progress/models/animation_preference.dart';
 import 'package:anki_progress/models/card_log.dart';
 import 'package:anki_progress/models/date_range.dart';
 import 'package:anki_progress/services/database/entities/review.dart';
+import 'package:anki_progress/views/basic/padded_row.dart';
 import 'package:anki_progress/views/run_with_app_container.dart';
 import 'package:flutter/material.dart' hide Card;
 
@@ -53,17 +54,20 @@ class CardsGridState extends State<CardsGrid> with SingleTickerProviderStateMixi
     animationDuration = Duration(milliseconds: widget.preference.milliseconds);
 
     scrollController = ScrollController();
-    animationController = AnimationController(duration: animationDuration, vsync: this);
-    animation = Tween(begin: 0.0, end: 1.0).animate(animationController)
+    animationController = AnimationController(duration: animationDuration, vsync: this)
       ..addListener(() {
+        // sync scroll position with animation value
+        final position = scrollController.position.maxScrollExtent * animation.value;
+        scrollController.jumpTo(position);
         setState(() {});
       });
+    animation = Tween(begin: 0.0, end: 1.0).animate(animationController);
+
     start = widget.preference.dateRange.start;
     end = widget.preference.dateRange.end;
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       resetState();
-      // playProgress(() {});
     });
   }
 
@@ -71,17 +75,30 @@ class CardsGridState extends State<CardsGrid> with SingleTickerProviderStateMixi
   Widget build(BuildContext context) {
     return Container(
       color: Theme.of(context).colorScheme.background,
-      child: GridView.builder(
-        controller: scrollController,
-        scrollDirection: Axis.vertical,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: widget.preference.numCol,
-          mainAxisSpacing: 10,
-          crossAxisSpacing: 10,
-          childAspectRatio: 1.8,
-        ),
-        itemCount: widget.cardLogs.length,
-        itemBuilder: (BuildContext context, int index) => CardProgress(cardLog: widget.cardLogs[index], date: current),
+      child: Column(
+        children: [
+          PaddedRow(
+            padding: 10,
+            children: [
+              Text(currentDate.toString()),
+            ],
+          ),
+          Expanded(
+            child: GridView.builder(
+              controller: scrollController,
+              scrollDirection: Axis.vertical,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: widget.preference.numCol,
+                mainAxisSpacing: 10,
+                crossAxisSpacing: 10,
+                childAspectRatio: 1.8,
+              ),
+              itemCount: widget.cardLogs.length,
+              itemBuilder: (BuildContext context, int index) =>
+                  CardProgress(cardLog: widget.cardLogs[index], date: currentDate),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -93,34 +110,17 @@ class CardsGridState extends State<CardsGrid> with SingleTickerProviderStateMixi
     super.dispose();
   }
 
-  Date get current {
+  Date get currentDate {
     final diff = end.difference(start);
     return start.add((diff * animation.value).floor());
   }
 
   void resetState() {
-    scrollController.jumpTo(0);
     animationController.reset();
   }
 
-  void playProgress(void Function() callback) {
-    resetState();
-    scrollController.animateTo(
-      scrollController.position.maxScrollExtent,
-      duration: animationDuration,
-      curve: Curves.linear,
-    );
-    animationController.addListener(callback);
-    animationController.addStatusListener((status) {
-      switch (status) {
-        case AnimationStatus.forward:
-          print("Animation started");
-        case AnimationStatus.completed:
-          animationController.removeListener(callback);
-          print("Animation ended");
-        default:
-      }
-    });
+  void playProgress() {
+    /// start scrolling downward and move date forward
     animationController.forward();
   }
 }
