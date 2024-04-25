@@ -1,10 +1,12 @@
+<!-- readme template from https://github.com/Louis3797/awesome-readme-template -->
+
 <div align="center">
 
   <img src="assets/images/icon-no_bg.png" alt="icon" width="200" height="auto" />
   <h1>Anki Visualizer</h1>
 
   <p>
-    Visualize your Anki learning progress overtime!
+    Visualize your Anki learning progress over time!
   </p>
 
 <!-- Badges -->
@@ -24,9 +26,7 @@
 </p>
 
 <h4>
-    <a href="https://github.com/KaFaiFai/anki_visualizer/">View Demo</a>
-  <span> · </span>
-    <a href="https://github.com/KaFaiFai/anki_visualizer">Documentation</a>
+    <a href="https://github.com/KaFaiFai/anki_visualizer/blob/master/doc/README.md">Documentation</a>
   <span> · </span>
     <a href="https://github.com/KaFaiFai/anki_visualizer/issues/">Report Bug</a>
   <span> · </span>
