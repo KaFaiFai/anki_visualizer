@@ -2,10 +2,10 @@ import 'package:anki_progress/core/values.dart';
 import 'package:anki_progress/views/basic/padded_column.dart';
 import 'package:anki_progress/views/basic/padded_row.dart';
 import 'package:anki_progress/views/components/app_button.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key});
@@ -38,16 +38,22 @@ class AboutPage extends StatelessWidget {
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(1000),
-                        child: Image.asset("assets/images/dev-icon.png", width: 80),
+                        child: Image.asset("assets/images/dev-icon.png", height: 80),
                       ),
                       const Text("Rapid Rabbit"),
                     ],
                   ),
                 ],
               ),
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [Text("Support us"), Text("Buy me a coffee")],
+                children: [
+                  const Text("Support us"),
+                  InkWell(
+                    child: Image.asset("assets/images/buymeacoffee.png", height: 80),
+                    onTap: () => launchUrlString("https://www.buymeacoffee.com/rapid_rabbit"),
+                  )
+                ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
