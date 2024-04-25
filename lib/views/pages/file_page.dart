@@ -1,3 +1,4 @@
+import 'package:anki_progress/controller/routes.dart';
 import 'package:anki_progress/services/database/entities/field.dart';
 import 'package:anki_progress/view_models/data_source_model.dart';
 import 'package:anki_progress/views/basic/padded_column.dart';
@@ -171,7 +172,12 @@ class FilePage extends StatelessWidget {
             widthFactor: 0.5,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(textStyle: Theme.of(context).textTheme.displayLarge),
-              onPressed: clickable ? dsm.getCardLogs : null,
+              onPressed: clickable
+                  ? () {
+                      dsm.getCardLogs();
+                      Navigator.pushNamed(context, Routes.configurationPage);
+                    }
+                  : null,
               child: const Text("Next"),
             ),
           );

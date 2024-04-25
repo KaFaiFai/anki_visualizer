@@ -1,3 +1,4 @@
+import 'package:anki_progress/controller/routes.dart';
 import 'package:anki_progress/view_models/preference_model.dart';
 import 'package:anki_progress/views/basic/padded_column.dart';
 import 'package:anki_progress/views/basic/text_divider.dart';
@@ -18,11 +19,11 @@ class ConfigurationPage extends StatelessWidget {
         future: dsm.cardLogs,
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return const FractionallySizedBox(
-              widthFactor: 0.5,
-              heightFactor: 0.5,
-              child: Center(
-                child: AspectRatio(aspectRatio: 1.0, child: CircularProgressIndicator()),
+            return const Center(
+              child: FractionallySizedBox(
+                widthFactor: 0.5,
+                heightFactor: 0.5,
+                child: Center(child: AspectRatio(aspectRatio: 1.0, child: CircularProgressIndicator())),
               ),
             );
           }
@@ -42,7 +43,12 @@ class ConfigurationPage extends StatelessWidget {
                   child: PaddedColumn(
                     padding: 20,
                     children: [
-                      PreferenceForm(cardLogs: cardLogs, onPressConfirm: pm.updatePreference),
+                      PreferenceForm(
+                          cardLogs: cardLogs,
+                          onPressConfirm: (pref) {
+                            pm.updatePreference(pref);
+                            Navigator.pushNamed(context, Routes.cardsPage);
+                          }),
                       TextDivider(
                         "Exports folder",
                         height: 100,

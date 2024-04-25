@@ -1,5 +1,8 @@
+import 'package:anki_progress/controller/routes.dart';
 import 'package:anki_progress/views/basic/padded_row.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:path/path.dart';
 
 import '../../models/animation_preference.dart';
@@ -29,37 +32,59 @@ class _CardsGridWithControlState extends State<CardsGridWithControl> {
 
   AnimationController? get animationController => _cardsGridKey.currentState?.animationController;
 
+  Widget buildControlRow(BuildContext context) {
+    return PaddedRow(
+      padding: 10,
+      children: [
+        IconButton(
+          iconSize: 40,
+          onPressed: onPressRestart,
+          icon: const Icon(Icons.replay),
+        ),
+        IconButton(
+          iconSize: 40,
+          onPressed: onPressPlay,
+          icon: const Icon(Icons.play_arrow),
+        ),
+        IconButton(
+          iconSize: 40,
+          onPressed: onPressPause,
+          icon: const Icon(Icons.pause),
+        ),
+        Expanded(
+          child: Slider(
+            value: animationController?.value ?? 0,
+            min: animationController?.lowerBound ?? 0,
+            max: animationController?.upperBound ?? 1,
+            label: lastAnimationValue?.toStringAsPrecision(4),
+            onChanged: (double value) {
+              setState(() {
+                animationController?.value = value;
+              });
+            },
+          ),
+        )
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        PaddedRow(
-          padding: 10,
-          children: [
-            IconButton(
-              onPressed: onPressRestart,
-              icon: const Icon(Icons.replay),
-            ),
-            IconButton(
-              onPressed: onPressPlay,
-              icon: const Icon(Icons.play_arrow),
-            ),
-            IconButton(
-              onPressed: onPressPause,
-              icon: const Icon(Icons.pause),
-            ),
-            Slider(
-              value: animationController?.value ?? 0,
-              min: animationController?.lowerBound ?? 0,
-              max: animationController?.upperBound ?? 1,
-              label: lastAnimationValue?.toStringAsPrecision(4),
-              onChanged: (double value) {
-                setState(() {
-                  animationController?.value = value;
-                });
-              },
-            )
-          ],
+        Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(child: buildControlRow(context)),
+              const SizedBox(width: 20),
+              ElevatedButton(
+                onPressed: _count == 0 ? null : () => Navigator.of(context).pushNamed(Routes.exportPage),
+                child: const Text("Export"),
+              ),
+            ],
+          ),
         ),
         Expanded(
           child: Capturable(
@@ -102,6 +127,7 @@ class _CardsGridWithControlState extends State<CardsGridWithControl> {
       _capturableKey.currentState?.captureAndSave(saveTo);
       _count++;
     }
-    setState(() => lastAnimationValue = animationController?.value);
+    lastAnimationValue = animationController?.value;
+    setState(() {});
   }
 }
