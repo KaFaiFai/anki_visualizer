@@ -36,6 +36,18 @@
 
 <br />
 
+<!-- Usage -->
+## 👀 Usage
+
+### 🏬 Install
+
+1. Download the Release.zip from the [latest release](https://github.com/KaFaiFai/anki_visualizer/releases)
+2. Extract it and run the .exe file
+
+### 📙 User guide
+
+Please refer to the [user guide](doc/user-guide.md)
+
 <!-- About the Project -->
 ## 🌟 About the Project
 
@@ -43,10 +55,9 @@
 ### 📷 Screenshots
 
 <img src="doc/assets/export.gif" alt="screenshot 1"/>
-<img src="doc/assets/screenshot 1.png" alt="screenshot 1" width="40%"/>
-<img src="doc/assets/screenshot 2.png" alt="screenshot 2" width="40%"/>
-<img src="doc/assets/screenshot 3.png" alt="screenshot 3" width="40%"/>
-<img src="doc/assets/screenshot 4.png" alt="screenshot 4" width="40%"/>
+<img src="doc/assets/screenshot 1.png" alt="screenshot 1" width="30%"/>
+<img src="doc/assets/screenshot 2.png" alt="screenshot 2" width="30%"/>
+<img src="doc/assets/screenshot 3.png" alt="screenshot 3" width="30%"/>
 
 <!-- TechStack -->
 ### 👾 Tech Stack
@@ -58,9 +69,9 @@
 <!-- Features -->
 ### 🎯 Features
 
-* Read the anki database
-* Customize the animation preferences
-* Display learning progress each day
+* Read Anki database
+* Customize your visualization preferences
+* Display learning progress overtime
 * Exports in multiple formats
 
 <!-- Color Reference -->
@@ -79,29 +90,29 @@
 <!-- Run Locally -->
 ### 🏃 Run Locally
 
-Clone the project
+1. Clone the project  
 
-```bash
-git clone https://github.com/KaFaiFai/anki_visualizer.git
-```
+  ```bash
+  git clone https://github.com/KaFaiFai/anki_visualizer.git
+  ```
 
-Go to the project directory
+2. Go to the project directory
 
-```bash
-cd anki_visualizer
-```
+  ```bash
+  cd anki_visualizer
+  ```
 
-Install dependencies
+3. Install dependencies
 
-```bash
-flutter pub get
-```
+  ```bash
+  flutter pub get
+  ```
 
-Run the project
+4. Run the project
 
-```bash
-flutter run -d windows
-```
+  ```bash
+  flutter run -d windows
+  ```
 
 <!-- Deployment -->
 ### 🚩 Deployment
@@ -112,36 +123,13 @@ To deploy this project run
 flutter build windows
 ```
 
-<!-- Usage -->
-## 👀 Usage
-
-1. Select your collection.anki2 file. Please refer to <https://docs.ankiweb.net/files.html>
-1. Select your deck
-1. Select fields to show for each note type in the deck
-1. Click next
-
-1. Change you animation preferences
-1. Select captures folder.  
-  This folder is used to temporarily store screenshots during animation which can be later exported into gif or video format.  
-  Please clean up this when you are done.
-1. Click confirm
-
-1. Play!
-1. Click export
-
-1. Install FFmpeg  
-  This program uses **FFmpeg** to convert the captured images into animations in the form of video or gif.  
-  Read more about it here: <https://ffmpeg.org/>  
-  *Note: This process may take serveral minutes*
-1. Choose your desired output format
-1. Click export
-
 <!-- Roadmap -->
 ## 🧭 Roadmap
 
 * [ ] Optimize performance
 * [ ] More output formats
-* [ ] Support for AnkiDroid
+* [ ] Multi-platform support
+  * [ ] Android for AnkiDroid
 
 <!-- Contributing -->
 ## 👋 Contributing
@@ -161,6 +149,19 @@ Contributions are always welcome!
 * Where do I find my Anki database?
 
   * For Windows, usually it is in `%APPDATA%\Anki2\User 1`. For more information, please refer to <https://docs.ankiweb.net/files.html>
+
+* The performance is abysmal!
+
+  * In the animation preference, increase your duration. Then, you will have more captures for the entire animation and can increase the framerate during export.
+
+<!-- Support us -->
+## Support us
+
+<a href="https://www.buymeacoffee.com/rapid_rabbit">
+  <img src="assets/images/buymeacoffee.png" height="50"/>
+</a>
+
+Your support will help us improve the project greatly!
 
 <!-- License -->
 ## ⚠️ License
