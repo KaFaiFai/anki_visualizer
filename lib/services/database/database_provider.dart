@@ -37,6 +37,7 @@ class DatabaseProvider {
   }
 
   Future<void> _copyDb(File from) async {
+    // copy the selected file into the app's database path
     final path = await _getDbPath();
 
     final exists = await databaseExists(path);
