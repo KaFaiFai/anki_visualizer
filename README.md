@@ -36,247 +36,145 @@
 
 <br />
 
+<!-- About the Project -->
 ## 🌟 About the Project
 
 <!-- Screenshots -->
-### :camera: Screenshots
+### 📷 Screenshots
 
-<div align="center">
-  <img src="https://placehold.co/600x400?text=Your+Screenshot+here" alt="screenshot" />
-</div>
+<img src="doc/assets/export.gif" alt="screenshot 1"/>
+<img src="doc/assets/screenshot 1.png" alt="screenshot 1" width="40%"/>
+<img src="doc/assets/screenshot 2.png" alt="screenshot 2" width="40%"/>
+<img src="doc/assets/screenshot 3.png" alt="screenshot 3" width="40%"/>
+<img src="doc/assets/screenshot 4.png" alt="screenshot 4" width="40%"/>
 
 <!-- TechStack -->
-### :space_invader: Tech Stack
+### 👾 Tech Stack
 
-<details>
-  <summary>Client</summary>
-  <ul>
-    <li><a href="https://www.typescriptlang.org/">Typescript</a></li>
-    <li><a href="https://nextjs.org/">Next.js</a></li>
-    <li><a href="https://reactjs.org/">React.js</a></li>
-    <li><a href="https://tailwindcss.com/">TailwindCSS</a></li>
-  </ul>
-</details>
-
-<details>
-  <summary>Server</summary>
-  <ul>
-    <li><a href="https://www.typescriptlang.org/">Typescript</a></li>
-    <li><a href="https://expressjs.com/">Express.js</a></li>
-    <li><a href="https://go.dev/">Golang</a></li>
-    <li><a href="https://nestjs.com/">Nest.js</a></li>
-    <li><a href="https://socket.io/">SocketIO</a></li>
-    <li><a href="https://www.prisma.io/">Prisma</a></li>
-    <li><a href="https://www.apollographql.com/">Apollo</a></li>
-    <li><a href="https://graphql.org/">GraphQL</a></li>
-  </ul>
-</details>
-
-<details>
-<summary>Database</summary>
-  <ul>
-    <li><a href="https://www.mysql.com/">MySQL</a></li>
-    <li><a href="https://www.postgresql.org/">PostgreSQL</a></li>
-    <li><a href="https://redis.io/">Redis</a></li>
-    <li><a href="https://neo4j.com/">Neo4j</a></li>
-    <li><a href="https://www.mongodb.com/">MongoDB</a></li>
-  </ul>
-</details>
-
-<details>
-<summary>DevOps</summary>
-  <ul>
-    <li><a href="https://www.docker.com/">Docker</a></li>
-    <li><a href="https://www.jenkins.io/">Jenkins</a></li>
-    <li><a href="https://circleci.com/">CircleCLI</a></li>
-  </ul>
-</details>
+* [![Flutter](https://img.shields.io/badge/flutter-e1e4e4?style=for-the-badge&logo=flutter&logoColor=44d1fd)](https://flutter.dev/)
+* [![SQLite](https://img.shields.io/badge/sqlite-f4f9f9?style=for-the-badge&logo=sqlite&logoColor=0c3958
+)](https://www.sqlite.org/)
 
 <!-- Features -->
-### :dart: Features
+### 🎯 Features
 
-- Feature 1
-- Feature 2
-- Feature 3
+* Read the anki database
+* Customize the animation preferences
+* Display learning progress each day
+* Exports in multiple formats
 
 <!-- Color Reference -->
-### :art: Color Reference
+### 🎨 Color Reference
 
 | Color             | Hex                                                                |
 | ----------------- | ------------------------------------------------------------------ |
-| Primary Color | ![#222831](https://via.placeholder.com/10/222831?text=+) #222831 |
-| Secondary Color | ![#393E46](https://via.placeholder.com/10/393E46?text=+) #393E46 |
-| Accent Color | ![#00ADB5](https://via.placeholder.com/10/00ADB5?text=+) #00ADB5 |
-| Text Color | ![#EEEEEE](https://via.placeholder.com/10/EEEEEE?text=+) #EEEEEE |
-
-<!-- Env Variables -->
-### :key: Environment Variables
-
-To run this project, you will need to add the following environment variables to your .env file
-
-`API_KEY`
-
-`ANOTHER_API_KEY`
+| Easy | ![#006CFF](https://via.placeholder.com/10/006CFF?text=+) #006CFF |
+| Good | ![#04AC04](https://via.placeholder.com/10/04AC04?text=+) #04AC04 |
+| Hard | ![#CA7700](https://via.placeholder.com/10/CA7700?text=+) #CA7700 |
+| Again | ![#AC3134](https://via.placeholder.com/10/AC3134?text=+) #AC3134 |
 
 <!-- Getting Started -->
-## :toolbox: Getting Started
-
-<!-- Prerequisites -->
-### :bangbang: Prerequisites
-
-This project uses Yarn as package manager
-
-```bash
- npm install --global yarn
-```
-
-<!-- Installation -->
-### :gear: Installation
-
-Install my-project with npm
-
-```bash
-  yarn install my-project
-  cd my-project
-```
-
-<!-- Running Tests -->
-### :test_tube: Running Tests
-
-To run tests, run the following command
-
-```bash
-  yarn test test
-```
+## 🧰 Getting Started
 
 <!-- Run Locally -->
-### :running: Run Locally
+### 🏃 Run Locally
 
 Clone the project
 
 ```bash
-  git clone https://github.com/Louis3797/awesome-readme-template.git
+git clone https://github.com/KaFaiFai/anki_visualizer.git
 ```
 
 Go to the project directory
 
 ```bash
-  cd my-project
+cd anki_visualizer
 ```
 
 Install dependencies
 
 ```bash
-  yarn install
+flutter pub get
 ```
 
-Start the server
+Run the project
 
 ```bash
-  yarn start
+flutter run -d windows
 ```
 
 <!-- Deployment -->
-### :triangular_flag_on_post: Deployment
+### 🚩 Deployment
 
 To deploy this project run
 
 ```bash
-  yarn deploy
+flutter build windows
 ```
 
 <!-- Usage -->
-## :eyes: Usage
+## 👀 Usage
 
-Use this space to tell a little more about your project and how it can be used. Show additional screenshots, code samples, demos or link to other resources.
+1. Select your collection.anki2 file. Please refer to <https://docs.ankiweb.net/files.html>
+1. Select your deck
+1. Select fields to show for each note type in the deck
+1. Click next
 
-```javascript
-import Component from 'my-project'
+1. Change you animation preferences
+1. Select captures folder.  
+  This folder is used to temporarily store screenshots during animation which can be later exported into gif or video format.  
+  Please clean up this when you are done.
+1. Click confirm
 
-function App() {
-  return <Component />
-}
-```
+1. Play!
+1. Click export
+
+1. Install FFmpeg  
+  This program uses **FFmpeg** to convert the captured images into animations in the form of video or gif.  
+  Read more about it here: <https://ffmpeg.org/>  
+  *Note: This process may take serveral minutes*
+1. Choose your desired output format
+1. Click export
 
 <!-- Roadmap -->
-## :compass: Roadmap
+## 🧭 Roadmap
 
-- [x] Todo 1
-- [ ] Todo 2
+* [ ] Optimize performance
+* [ ] More output formats
+* [ ] Support for AnkiDroid
 
 <!-- Contributing -->
-## :wave: Contributing
+## 👋 Contributing
 
-<a href="https://github.com/Louis3797/awesome-readme-template/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=Louis3797/awesome-readme-template" />
+<a href="https://github.com/KaFaiFai">
+  <img src="https://github.com/KaFaiFai.png" width="50"/>
+</a>
+<a href="https://github.com/Rapid-Rabbit-Tech">
+  <img src="https://github.com/Rapid-Rabbit-Tech.png" width="50"/>
 </a>
 
 Contributions are always welcome!
 
-See `contributing.md` for ways to get started.
-
-<!-- Code of Conduct -->
-### :scroll: Code of Conduct
-
-Please read the [Code of Conduct](https://github.com/Louis3797/awesome-readme-template/blob/master/CODE_OF_CONDUCT.md)
-
 <!-- FAQ -->
-## :grey_question: FAQ
+## ❔ FAQ
 
-- Question 1
+* Where do I find my Anki database?
 
-  - Answer 1
-
-- Question 2
-
-  - Answer 2
+  * For Windows, usually it is in `%APPDATA%\Anki2\User 1`. For more information, please refer to <https://docs.ankiweb.net/files.html>
 
 <!-- License -->
-## :warning: License
+## ⚠️ License
 
-Distributed under the no License. See LICENSE.txt for more information.
+See `LICENSE` for more information.
 
 <!-- Contact -->
-## :handshake: Contact
+## 🤝 Contact
 
-Your Name - [@twitter_handle](https://twitter.com/twitter_handle) - <email@email_client.com>
+Rapid Rabbit - [@rapid.rabbit.tech](https://www.threads.net/@rapid.rabbit.tech) - <rapid.rabbit.tech@gmail.com>
 
-Project Link: [https://github.com/Louis3797/awesome-readme-template](https://github.com/Louis3797/awesome-readme-template)
+Project Link: [https://github.com/KaFaiFai/anki_visualizer](https://github.com/KaFaiFai/anki_visualizer)
 
 <!-- Acknowledgments -->
-## :gem: Acknowledgements
+## 💎 Acknowledgements
 
-Use this section to mention useful resources and libraries that you have used in your projects.
-
-- [Shields.io](https://shields.io/)
-- [Awesome README](https://github.com/matiassingers/awesome-readme)
-- [Emoji Cheat Sheet](https://github.com/ikatyang/emoji-cheat-sheet/blob/master/README.md#travel--places)
-- [Readme Template](https://github.com/othneildrew/Best-README-Template)
-
-# anki_progress
-
-A program to visualize Anki review progress overtime
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-
-## FAQ
-
-### Assessing Anki database
-
-refer to <https://docs.ankiweb.net/files.html>
-
-### Anki database structure
-
-doc exists for AnkiDroid: <https://github.com/ankidroid/Anki-Android/wiki/Database-Structure>  
-but not available for Anki
+* [Anki](https://apps.ankiweb.net/)
