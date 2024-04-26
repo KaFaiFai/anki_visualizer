@@ -1,9 +1,9 @@
 import 'dart:io';
 
-import 'package:anki_progress/core/extensions.dart';
-import 'package:anki_progress/core/values.dart';
-import 'package:anki_progress/models/export_options.dart';
-import 'package:anki_progress/services/internet/ffmpeg_installer.dart';
+import 'package:anki_visualizer/core/extensions.dart';
+import 'package:anki_visualizer/core/values.dart';
+import 'package:anki_visualizer/models/export_options.dart';
+import 'package:anki_visualizer/services/internet/ffmpeg_installer.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';

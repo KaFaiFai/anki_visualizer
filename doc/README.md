@@ -1,4 +1,4 @@
-# anki_progress
+# anki_visualizer
 
 This README is intended for developers who want to contribute to this project
 

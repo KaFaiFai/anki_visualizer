@@ -1,5 +1,5 @@
-import 'package:anki_progress/views/basic/padded_column.dart';
-import 'package:anki_progress/views/basic/padded_row.dart';
+import 'package:anki_visualizer/views/basic/padded_column.dart';
+import 'package:anki_visualizer/views/basic/padded_row.dart';
 import 'package:flutter/material.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:provider/provider.dart';

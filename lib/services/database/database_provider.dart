@@ -6,7 +6,7 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 class DatabaseProvider {
   static Future<String> _getDbPath() async {
     String folderPath = await getDatabasesPath();
-    final path = join(folderPath, 'anki_progress.db');
+    final path = join(folderPath, 'anki_visualizer.db');
     return path;
   }
 

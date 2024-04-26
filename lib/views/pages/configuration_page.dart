@@ -1,9 +1,9 @@
-import 'package:anki_progress/controller/routes.dart';
-import 'package:anki_progress/view_models/preference_model.dart';
-import 'package:anki_progress/views/basic/padded_column.dart';
-import 'package:anki_progress/views/basic/text_divider.dart';
-import 'package:anki_progress/views/components/exports_directory_buttons.dart';
-import 'package:anki_progress/views/components/preference_form.dart';
+import 'package:anki_visualizer/controller/routes.dart';
+import 'package:anki_visualizer/view_models/preference_model.dart';
+import 'package:anki_visualizer/views/basic/padded_column.dart';
+import 'package:anki_visualizer/views/basic/text_divider.dart';
+import 'package:anki_visualizer/views/components/exports_directory_buttons.dart';
+import 'package:anki_visualizer/views/components/preference_form.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

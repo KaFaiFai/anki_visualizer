@@ -1,12 +1,12 @@
 import 'dart:math';
 
-import 'package:anki_progress/core/values.dart';
-import 'package:anki_progress/models/animation_preference.dart';
-import 'package:anki_progress/models/card_log.dart';
-import 'package:anki_progress/models/date_range.dart';
-import 'package:anki_progress/services/database/entities/review.dart';
-import 'package:anki_progress/views/basic/padded_row.dart';
-import 'package:anki_progress/views/run_with_app_container.dart';
+import 'package:anki_visualizer/core/values.dart';
+import 'package:anki_visualizer/models/animation_preference.dart';
+import 'package:anki_visualizer/models/card_log.dart';
+import 'package:anki_visualizer/models/date_range.dart';
+import 'package:anki_visualizer/services/database/entities/review.dart';
+import 'package:anki_visualizer/views/basic/padded_row.dart';
+import 'package:anki_visualizer/views/run_with_app_container.dart';
 import 'package:flutter/material.dart' hide Card;
 
 import '../../models/date.dart';

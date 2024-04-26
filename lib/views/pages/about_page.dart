@@ -1,7 +1,7 @@
-import 'package:anki_progress/core/values.dart';
-import 'package:anki_progress/views/basic/padded_column.dart';
-import 'package:anki_progress/views/basic/padded_row.dart';
-import 'package:anki_progress/views/components/app_button.dart';
+import 'package:anki_visualizer/core/values.dart';
+import 'package:anki_visualizer/views/basic/padded_column.dart';
+import 'package:anki_visualizer/views/basic/padded_row.dart';
+import 'package:anki_visualizer/views/components/app_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:url_launcher/url_launcher.dart';

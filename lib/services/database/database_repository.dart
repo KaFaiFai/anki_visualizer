@@ -1,6 +1,6 @@
-import 'package:anki_progress/services/database/entities/card.dart';
-import 'package:anki_progress/services/database/entities/field.dart';
-import 'package:anki_progress/services/database/entities/review.dart';
+import 'package:anki_visualizer/services/database/entities/card.dart';
+import 'package:anki_visualizer/services/database/entities/field.dart';
+import 'package:anki_visualizer/services/database/entities/review.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import 'entities/deck.dart';

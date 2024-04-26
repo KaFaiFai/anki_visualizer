@@ -1,4 +1,4 @@
-import 'package:anki_progress/views/theme/text_theme.dart';
+import 'package:anki_visualizer/views/theme/text_theme.dart';
 import 'package:flutter/material.dart';
 
 import 'color_schemes.g.dart';

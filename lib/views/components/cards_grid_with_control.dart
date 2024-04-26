@@ -1,5 +1,5 @@
-import 'package:anki_progress/controller/routes.dart';
-import 'package:anki_progress/views/basic/padded_row.dart';
+import 'package:anki_visualizer/controller/routes.dart';
+import 'package:anki_visualizer/views/basic/padded_row.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
