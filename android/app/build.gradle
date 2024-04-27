@@ -23,7 +23,7 @@ if (flutterVersionName == null) {
 }
 
 android {
-    namespace "com.rapid_rabbit.anki_progress"
+    namespace "com.rapid_rabbit.anki_visualizer"
     compileSdkVersion 34
     ndkVersion flutter.ndkVersion
 

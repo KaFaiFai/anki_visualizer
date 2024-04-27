@@ -1,6 +1,6 @@
 {
-    "name": "anki_progress",
-    "short_name": "anki_progress",
+    "name": "anki_visualizer",
+    "short_name": "anki_visualizer",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#FFFFFF",

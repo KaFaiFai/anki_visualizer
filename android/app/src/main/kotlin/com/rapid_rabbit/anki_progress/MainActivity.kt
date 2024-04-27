@@ -1,4 +1,4 @@
-package com.rapid_rabbit.anki_progress
+package com.rapid_rabbit.anki_visualizer
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:anki_progress/core/extensions.dart';
-import 'package:anki_progress/models/date_range.dart';
-import 'package:anki_progress/views/basic/padded_row.dart';
+import 'package:anki_visualizer/core/extensions.dart';
+import 'package:anki_visualizer/models/date_range.dart';
+import 'package:anki_visualizer/views/basic/padded_row.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/functions.dart';

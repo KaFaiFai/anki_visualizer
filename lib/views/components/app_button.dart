@@ -1,4 +1,4 @@
-import 'package:anki_progress/core/values.dart';
+import 'package:anki_visualizer/core/values.dart';
 import 'package:flutter/material.dart';
 
 import '../basic/padded_row.dart';

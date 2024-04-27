@@ -1,4 +1,4 @@
-import 'package:anki_progress/services/database/entities/review.dart';
+import 'package:anki_visualizer/services/database/entities/review.dart';
 
 class CardLog {
   final String text;

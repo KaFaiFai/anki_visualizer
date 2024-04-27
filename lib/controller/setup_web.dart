@@ -6,6 +6,7 @@ import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
 
 import '../core/values.dart';
 
+// setup for web application
 Future<void> setup() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Values.init();

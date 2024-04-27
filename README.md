@@ -1,4 +1,4 @@
-<!-- readme template from https://github.com/Louis3797/awesome-readme-template -->
+<!-- adopted from https://github.com/Louis3797/awesome-readme-template & https://github.com/othneildrew/Best-README-Template -->
 
 <div align="center">
 
@@ -36,30 +36,146 @@
 
 <br />
 
-# anki_progress
+<!-- Usage -->
+## 👀 Usage
 
-A program to visualize Anki review progress overtime
+### 🏬 Install
 
-## Getting Started
+1. Download the Release.zip from the [latest release](https://github.com/KaFaiFai/anki_visualizer/releases)
+2. Extract it and run the .exe file
 
-This project is a starting point for a Flutter application.
+### 📙 User guide
 
-A few resources to get you started if this is your first Flutter project:
+Please refer to the [user guide](doc/user-guide.md)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+<!-- About the Project -->
+## 🌟 About the Project
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+<!-- Screenshots -->
+### 📷 Screenshots
 
-## FAQ
+<img src="doc/assets/export.gif" alt="screenshot 1"/>
+<img src="doc/assets/screenshot 1.png" alt="screenshot 1" width="30%"/>
+<img src="doc/assets/screenshot 2.png" alt="screenshot 2" width="30%"/>
+<img src="doc/assets/screenshot 3.png" alt="screenshot 3" width="30%"/>
 
-### Assessing Anki database
+<!-- TechStack -->
+### 👾 Tech Stack
 
-refer to <https://docs.ankiweb.net/files.html>
+* [![Flutter](https://img.shields.io/badge/flutter-e1e4e4?style=for-the-badge&logo=flutter&logoColor=44d1fd)](https://flutter.dev/)
+* [![SQLite](https://img.shields.io/badge/sqlite-f4f9f9?style=for-the-badge&logo=sqlite&logoColor=0c3958
+)](https://www.sqlite.org/)
 
-### Anki database structure
+<!-- Features -->
+### 🎯 Features
 
-doc exists for AnkiDroid: <https://github.com/ankidroid/Anki-Android/wiki/Database-Structure>  
-but not available for Anki
+* Read Anki database
+* Customize your visualization preferences
+* Display learning progress overtime
+* Exports in multiple formats
+
+<!-- Color Reference -->
+### 🎨 Color Reference
+
+| Color             | Hex                                                                |
+| ----------------- | ------------------------------------------------------------------ |
+| Easy | ![#006CFF](https://via.placeholder.com/10/006CFF?text=+) #006CFF |
+| Good | ![#04AC04](https://via.placeholder.com/10/04AC04?text=+) #04AC04 |
+| Hard | ![#CA7700](https://via.placeholder.com/10/CA7700?text=+) #CA7700 |
+| Again | ![#AC3134](https://via.placeholder.com/10/AC3134?text=+) #AC3134 |
+
+<!-- Getting Started -->
+## 🧰 Getting Started
+
+<!-- Run Locally -->
+### 🏃 Run Locally
+
+1. Clone the project  
+
+  ```bash
+  git clone https://github.com/KaFaiFai/anki_visualizer.git
+  ```
+
+2. Go to the project directory
+
+  ```bash
+  cd anki_visualizer
+  ```
+
+3. Install dependencies
+
+  ```bash
+  flutter pub get
+  ```
+
+4. Run the project
+
+  ```bash
+  flutter run -d windows
+  ```
+
+<!-- Deployment -->
+### 🚩 Deployment
+
+To deploy this project run
+
+```bash
+flutter build windows
+```
+
+<!-- Roadmap -->
+## 🧭 Roadmap
+
+* [ ] Optimize performance
+* [ ] More output formats
+* [ ] Multi-platform support
+  * [ ] Android for AnkiDroid
+
+<!-- Contributing -->
+## 👋 Contributing
+
+<a href="https://github.com/KaFaiFai">
+  <img src="https://github.com/KaFaiFai.png" width="50"/>
+</a>
+<a href="https://github.com/Rapid-Rabbit-Tech">
+  <img src="https://github.com/Rapid-Rabbit-Tech.png" width="50"/>
+</a>
+
+Contributions are always welcome!
+
+<!-- FAQ -->
+## ❔ FAQ
+
+* Where do I find my Anki database?
+
+  * For Windows, usually it is in `%APPDATA%\Anki2\User 1`. For more information, please refer to <https://docs.ankiweb.net/files.html>
+
+* The performance is abysmal!
+
+  * In the animation preference, increase your duration. Then, you will have more captures for the entire animation and can increase the framerate during export.
+
+<!-- Support us -->
+## Support us
+
+<a href="https://www.buymeacoffee.com/rapid_rabbit">
+  <img src="assets/images/buymeacoffee.png" height="50"/>
+</a>
+
+Your support will help us improve the project greatly!
+
+<!-- License -->
+## ⚠️ License
+
+See `LICENSE` for more information.
+
+<!-- Contact -->
+## 🤝 Contact
+
+Rapid Rabbit - [@rapid.rabbit.tech](https://www.threads.net/@rapid.rabbit.tech) - <rapid.rabbit.tech@gmail.com>
+
+Project Link: [https://github.com/KaFaiFai/anki_visualizer](https://github.com/KaFaiFai/anki_visualizer)
+
+<!-- Acknowledgments -->
+## 💎 Acknowledgements
+
+* [Anki](https://apps.ankiweb.net/)

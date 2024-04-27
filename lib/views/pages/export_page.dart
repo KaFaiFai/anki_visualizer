@@ -1,11 +1,11 @@
 import 'dart:io';
 
-import 'package:anki_progress/services/internet/ffmpeg_installer.dart';
-import 'package:anki_progress/view_models/exports_model.dart';
-import 'package:anki_progress/views/basic/padded_column.dart';
-import 'package:anki_progress/views/basic/padded_row.dart';
-import 'package:anki_progress/views/basic/text_divider.dart';
-import 'package:anki_progress/views/components/export_options_form.dart';
+import 'package:anki_visualizer/services/internet/ffmpeg_installer.dart';
+import 'package:anki_visualizer/view_models/exports_model.dart';
+import 'package:anki_visualizer/views/basic/padded_column.dart';
+import 'package:anki_visualizer/views/basic/padded_row.dart';
+import 'package:anki_visualizer/views/basic/text_divider.dart';
+import 'package:anki_visualizer/views/components/export_options_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:open_filex/open_filex.dart';

@@ -1,9 +1,9 @@
-import 'package:anki_progress/controller/routes.dart';
-import 'package:anki_progress/services/database/entities/field.dart';
-import 'package:anki_progress/view_models/data_source_model.dart';
-import 'package:anki_progress/views/basic/padded_column.dart';
-import 'package:anki_progress/views/basic/padded_row.dart';
-import 'package:anki_progress/views/run_with_app_container.dart';
+import 'package:anki_visualizer/controller/routes.dart';
+import 'package:anki_visualizer/services/database/entities/field.dart';
+import 'package:anki_visualizer/view_models/data_source_model.dart';
+import 'package:anki_visualizer/views/basic/padded_column.dart';
+import 'package:anki_visualizer/views/basic/padded_row.dart';
+import 'package:anki_visualizer/views/run_with_app_container.dart';
 import 'package:flutter/material.dart' hide Card;
 import 'package:provider/provider.dart';
 

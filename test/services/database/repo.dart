@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:anki_progress/services/database/database_provider.dart';
-import 'package:anki_progress/services/database/database_repository.dart';
+import 'package:anki_visualizer/services/database/database_provider.dart';
+import 'package:anki_visualizer/services/database/database_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';

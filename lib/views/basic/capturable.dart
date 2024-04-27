@@ -2,7 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 
-import 'package:anki_progress/core/extensions.dart';
+import 'package:anki_visualizer/core/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 

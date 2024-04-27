@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:anki_progress/core/extensions.dart';
-import 'package:anki_progress/core/values.dart';
+import 'package:anki_visualizer/core/extensions.dart';
+import 'package:anki_visualizer/core/values.dart';
 import 'package:archive/archive_io.dart';
 import 'package:http/http.dart';
 import 'package:path/path.dart';

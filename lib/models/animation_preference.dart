@@ -1,4 +1,4 @@
-import 'package:anki_progress/models/date_range.dart';
+import 'package:anki_visualizer/models/date_range.dart';
 
 class AnimationPreference {
   int milliseconds;
