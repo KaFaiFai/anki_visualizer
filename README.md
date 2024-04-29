@@ -54,7 +54,7 @@ Please refer to the [user guide](doc/user-guide.md)
 <!-- Screenshots -->
 ### 📷 Screenshots
 
-<img src="doc/assets/export.gif" alt="screenshot 1"/>
+<img src="doc/assets/export.gif" alt="export gif"/>
 <img src="doc/assets/screenshot 1.png" alt="screenshot 1" width="30%"/>
 <img src="doc/assets/screenshot 2.png" alt="screenshot 2" width="30%"/>
 <img src="doc/assets/screenshot 3.png" alt="screenshot 3" width="30%"/>
