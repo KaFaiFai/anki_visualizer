@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import '../../core/functions.dart';
 import '../../models/animation_preference.dart';
 import '../../models/card_log.dart';
-import '../../models/date.dart';
 import '../basic/padded_column.dart';
 
 class PreferenceForm extends StatefulWidget {
@@ -177,23 +176,10 @@ class _PreferenceFormState extends State<PreferenceForm> {
 
 Future<DateRange> _calDateTimeRangeBoundary(List<CardLog> cardLogs) {
   // this function is computationally expensive
-
-  Date start = Date.fromTimestamp(milliseconds: cardLogs.firstWhere((e) => e.reviews.isNotEmpty).reviews.first.id);
-  Date end = Date.fromTimestamp(milliseconds: cardLogs.firstWhere((e) => e.reviews.isNotEmpty).reviews.first.id);
-
   return Future.microtask(() {
-    for (final cl in cardLogs) {
-      if (cl.reviews.isNotEmpty) {
-        final firstDate = Date.fromTimestamp(milliseconds: cl.reviews.first.id);
-        if (firstDate < start) {
-          start = firstDate;
-        }
-        final lastDate = Date.fromTimestamp(milliseconds: cl.reviews.last.id);
-        if (lastDate > end) {
-          end = lastDate;
-        }
-      }
-    }
+    final sortedDates = cardLogs.map((e) => e.reviewsByDate.keys).expand((e) => e).toList();
+    final start = sortedDates.first;
+    final end = sortedDates.last;
     return DateRange(start: start, end: end);
   });
 }

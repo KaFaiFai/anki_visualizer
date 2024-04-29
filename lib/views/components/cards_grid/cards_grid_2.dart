@@ -13,7 +13,7 @@ import '../../run_with_app_container.dart';
 void main() {
   final cardLogs = List.generate(
     500,
-    (index) => CardLog(
+    (index) => CardLog.fromReviewsList(
       "card $index",
       List.generate(
         20,
@@ -130,22 +130,35 @@ class _CardProgress extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Review? review = cardLog.reviews
-        .where((e) => Date.fromTimestamp(milliseconds: e.id) == date)
-        .firstOrNull; // the first review each day
+    Review? lastReview; // latest review on or before the date
+    if (cardLog.reviewsByDate.keys.contains(date)) {
+      lastReview = cardLog.reviewsByDate[date]!.first;
+    } else {
+      for (final entry in cardLog.reviewsByDate.entries) {
+        final reviewDate = entry.key;
+        final reviews = entry.value;
+        if (reviewDate <= date) lastReview = reviews.first;
+        if (reviewDate >= date) break;
+      }
+    }
+
     final Color cardColor;
     final Color textColor;
-    if (review == null) {
-      final prevReviews = cardLog.reviews.where((e) => Date.fromTimestamp(milliseconds: e.id) < date);
-      final prevReview = prevReviews.lastOrNull;
-      final datePassed = prevReview == null ? 0 : date.difference(Date.fromTimestamp(milliseconds: prevReview.id));
-      final value = datePassed;
-      cardColor = Colors.amber.withAlpha(min(value, 255));
+    if (lastReview == null) {
+      cardColor = Values.progressColor.withAlpha(0);
       textColor = Theme.of(context).colorScheme.onBackground;
     } else {
-      final easeColorMap = {1: Values.againColor, 2: Values.hardColor, 3: Values.goodColor, 4: Values.easyColor};
-      cardColor = easeColorMap[review.ease] ?? Colors.brown.withAlpha(50);
-      textColor = Theme.of(context).colorScheme.background;
+      final lastReviewDate = Date.fromTimestamp(milliseconds: lastReview.id);
+      if (lastReviewDate < date) {
+        final datePassed = date.difference(lastReviewDate);
+        final value = datePassed * cardLog.reviewsByDate.length; // more reviews -> deeper color
+        cardColor = Values.progressColor.withAlpha(min(value, 255));
+        textColor = Theme.of(context).colorScheme.onBackground;
+      } else {
+        final easeColorMap = {1: Values.againColor, 2: Values.hardColor, 3: Values.goodColor, 4: Values.easyColor};
+        cardColor = easeColorMap[lastReview.ease] ?? Colors.brown.withAlpha(50);
+        textColor = Theme.of(context).colorScheme.background;
+      }
     }
 
     return Container(

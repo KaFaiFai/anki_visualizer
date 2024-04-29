@@ -98,8 +98,14 @@ class DataSourceModel extends ChangeNotifier {
       final (mid, notes) = await DatabaseRepository().getCardNotes(db, card.id);
       final fieldOrd = fields[mid]!.ord;
       final text = notes[fieldOrd];
-      return CardLog(text, reviews);
-    }));
+      return CardLog.fromReviewsList(text, reviews);
+    })).then((value) {
+      final numReviews = value
+          .map((e) => e.reviewsByDate.values.fold(0, (previousValue, element) => previousValue + element.length))
+          .fold(0, (previousValue, element) => previousValue + element);
+      print(numReviews);
+      return value;
+    });
 
     return true;
   }

@@ -28,7 +28,7 @@ class ConfigurationPage extends StatelessWidget {
             );
           }
           final cardLogs = snapshot.requireData;
-          final numReviews = cardLogs.fold(0, (previousValue, element) => previousValue + element.reviews.length);
+          final numReviews = cardLogs.fold(0, (previousValue, element) => previousValue + element.reviewsByDate.length);
           if (numReviews == 0) {
             return const Center(child: Text("You have not learnt this deck yet."));
           }

@@ -1,5 +1,4 @@
-import 'dart:ui';
-
+import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -14,7 +13,7 @@ class Values {
   static Future<void> init() async {
     final userDirectory = await getApplicationDocumentsDirectory();
     appDirectory = join(userDirectory.path, appName);
-    
+
     final info = await PackageInfo.fromPlatform();
     version = info.version;
     buildNumber = info.buildNumber;
@@ -25,4 +24,5 @@ class Values {
   static const goodColor = Color(0xFF04AC04);
   static const hardColor = Color(0xFFCA7700);
   static const againColor = Color(0xFFAC3134);
+  static const progressColor = Colors.amber;
 }
