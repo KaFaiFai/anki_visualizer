@@ -1,14 +1,14 @@
 import 'dart:math';
 
+import 'package:anki_visualizer/core/values.dart';
+import 'package:anki_visualizer/models/animation_preference.dart';
+import 'package:anki_visualizer/models/card_log.dart';
+import 'package:anki_visualizer/models/date_range.dart';
+import 'package:anki_visualizer/services/database/entities/review.dart';
+import 'package:anki_visualizer/views/run_with_app_container.dart';
 import 'package:flutter/material.dart' hide Card;
 
-import '../../core/values.dart';
-import '../../models/animation_preference.dart';
-import '../../models/card_log.dart';
-import '../../models/date.dart';
-import '../../models/date_range.dart';
-import '../../services/database/entities/review.dart';
-import '../run_with_app_container.dart';
+import '../../../models/date.dart';
 
 void main() {
   final cardLogs = List.generate(
@@ -26,21 +26,22 @@ void main() {
     dateRange: DateRange(start: Date.today(), end: Date.today()),
     numCol: 10,
   );
-  runWithAppContainer(CardsGrid2(cardLogs: cardLogs, preference: preference));
+  runWithAppContainer(CardsGrid1(cardLogs: cardLogs, preference: preference));
 }
 
-/// Zoomed out view that displays all cards at once
-class CardsGrid2 extends StatefulWidget {
+/// Scrolling view for a subset of cards
+class CardsGrid1 extends StatefulWidget {
   final List<CardLog> cardLogs;
   final AnimationPreference preference;
 
-  const CardsGrid2({super.key, required this.cardLogs, required this.preference});
+  const CardsGrid1({super.key, required this.cardLogs, required this.preference});
 
   @override
-  State<CardsGrid2> createState() => CardsGrid2State();
+  State<CardsGrid1> createState() => CardsGrid1State();
 }
 
-class CardsGrid2State extends State<CardsGrid2> with SingleTickerProviderStateMixin {
+class CardsGrid1State extends State<CardsGrid1> with SingleTickerProviderStateMixin {
+  late final ScrollController scrollController;
   late final AnimationController animationController;
   late final Animation<double> animation;
   late final Duration animationDuration;
@@ -51,8 +52,13 @@ class CardsGrid2State extends State<CardsGrid2> with SingleTickerProviderStateMi
   void initState() {
     super.initState();
     animationDuration = Duration(milliseconds: widget.preference.milliseconds);
+
+    scrollController = ScrollController();
     animationController = AnimationController(duration: animationDuration, vsync: this)
       ..addListener(() {
+        // sync scroll position with animation value
+        final position = scrollController.position.maxScrollExtent * animation.value;
+        scrollController.jumpTo(position);
         setState(() {});
       });
     animation = Tween(begin: 0.0, end: 1.0).animate(animationController);
@@ -67,33 +73,24 @@ class CardsGrid2State extends State<CardsGrid2> with SingleTickerProviderStateMi
 
   @override
   Widget build(BuildContext context) {
-    final List<List<Widget>> cards = [];
-    final numRows = 60;
-    final numCols = 100;
-    for (var i = 0; i < numRows; i++) {
-      cards.add([]);
-      for (var j = 0; j < numCols; j++) {
-        final index = i * numRows + j;
-        if (index < widget.cardLogs.length) {
-          cards.last.add(_CardProgress(cardLog: widget.cardLogs[index], date: currentDate));
-        } else {
-          cards.last.add(Container());
-        }
-      }
-    }
-
     return Container(
       color: Theme.of(context).colorScheme.background,
       child: Column(
         children: [
           Text(currentDate.toString()),
           Expanded(
-            child: Column(
-              children: cards
-                  .map(
-                    (e) => Expanded(child: Row(children: e.map((card) => Expanded(child: card)).toList())),
-                  )
-                  .toList(),
+            child: GridView.builder(
+              controller: scrollController,
+              scrollDirection: Axis.vertical,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: widget.preference.numCol,
+                mainAxisSpacing: 10,
+                crossAxisSpacing: 10,
+                childAspectRatio: 1.8,
+              ),
+              itemCount: widget.cardLogs.length,
+              itemBuilder: (BuildContext context, int index) =>
+                  CardProgress(cardLog: widget.cardLogs[index], date: currentDate),
             ),
           ),
         ],
@@ -103,6 +100,7 @@ class CardsGrid2State extends State<CardsGrid2> with SingleTickerProviderStateMi
 
   @override
   void dispose() {
+    scrollController.dispose();
     animationController.dispose();
     super.dispose();
   }
@@ -117,15 +115,16 @@ class CardsGrid2State extends State<CardsGrid2> with SingleTickerProviderStateMi
   }
 
   void playProgress() {
+    /// start scrolling downward and move date forward
     animationController.forward();
   }
 }
 
-class _CardProgress extends StatelessWidget {
+class CardProgress extends StatelessWidget {
   final CardLog cardLog;
   final Date date;
 
-  const _CardProgress({required this.cardLog, required this.date});
+  const CardProgress({super.key, required this.cardLog, required this.date});
 
   @override
   Widget build(BuildContext context) {
@@ -146,9 +145,13 @@ class _CardProgress extends StatelessWidget {
     }
 
     return Container(
-      color: cardColor,
+      decoration: BoxDecoration(
+        color: cardColor,
+        borderRadius: BorderRadius.circular(5),
+        border: Border.all(color: Theme.of(context).colorScheme.outline, width: 2),
+      ),
       alignment: Alignment.center,
-      child: Text(cardLog.text, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: textColor, fontSize: 8)),
+      child: Text(cardLog.text, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: textColor)),
     );
   }
 }

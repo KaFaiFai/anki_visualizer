@@ -1,15 +1,14 @@
 import 'dart:math';
 
-import 'package:anki_visualizer/core/values.dart';
-import 'package:anki_visualizer/models/animation_preference.dart';
-import 'package:anki_visualizer/models/card_log.dart';
-import 'package:anki_visualizer/models/date_range.dart';
-import 'package:anki_visualizer/services/database/entities/review.dart';
-import 'package:anki_visualizer/views/basic/padded_row.dart';
-import 'package:anki_visualizer/views/run_with_app_container.dart';
 import 'package:flutter/material.dart' hide Card;
 
-import '../../models/date.dart';
+import '../../../core/values.dart';
+import '../../../models/animation_preference.dart';
+import '../../../models/card_log.dart';
+import '../../../models/date.dart';
+import '../../../models/date_range.dart';
+import '../../../services/database/entities/review.dart';
+import '../../run_with_app_container.dart';
 
 void main() {
   final cardLogs = List.generate(
@@ -27,22 +26,21 @@ void main() {
     dateRange: DateRange(start: Date.today(), end: Date.today()),
     numCol: 10,
   );
-  runWithAppContainer(CardsGrid(cardLogs: cardLogs, preference: preference));
+  runWithAppContainer(CardsGrid2(cardLogs: cardLogs, preference: preference));
 }
 
-/// Scrolling view for a subset of cards
-class CardsGrid extends StatefulWidget {
+/// Zoomed out view that displays all cards at once
+class CardsGrid2 extends StatefulWidget {
   final List<CardLog> cardLogs;
   final AnimationPreference preference;
 
-  const CardsGrid({super.key, required this.cardLogs, required this.preference});
+  const CardsGrid2({super.key, required this.cardLogs, required this.preference});
 
   @override
-  State<CardsGrid> createState() => CardsGridState();
+  State<CardsGrid2> createState() => CardsGrid2State();
 }
 
-class CardsGridState extends State<CardsGrid> with SingleTickerProviderStateMixin {
-  late final ScrollController scrollController;
+class CardsGrid2State extends State<CardsGrid2> with SingleTickerProviderStateMixin {
   late final AnimationController animationController;
   late final Animation<double> animation;
   late final Duration animationDuration;
@@ -53,13 +51,8 @@ class CardsGridState extends State<CardsGrid> with SingleTickerProviderStateMixi
   void initState() {
     super.initState();
     animationDuration = Duration(milliseconds: widget.preference.milliseconds);
-
-    scrollController = ScrollController();
     animationController = AnimationController(duration: animationDuration, vsync: this)
       ..addListener(() {
-        // sync scroll position with animation value
-        final position = scrollController.position.maxScrollExtent * animation.value;
-        scrollController.jumpTo(position);
         setState(() {});
       });
     animation = Tween(begin: 0.0, end: 1.0).animate(animationController);
@@ -74,24 +67,34 @@ class CardsGridState extends State<CardsGrid> with SingleTickerProviderStateMixi
 
   @override
   Widget build(BuildContext context) {
+    final List<List<Widget>> cards = [];
+    const ratio = 16 / 8; // approximate ratio for each card
+
+    final numRows = (sqrt(widget.cardLogs.length / ratio)).round();
+    final numCols = (widget.cardLogs.length / numRows).ceil();
+
+    for (var i = 0; i < numRows; i++) {
+      cards.add([]);
+      for (var j = 0; j < numCols; j++) {
+        final index = i * numCols + j;
+        if (index < widget.cardLogs.length) {
+          cards.last.add(_CardProgress(cardLog: widget.cardLogs[index], date: currentDate));
+        } else {
+          cards.last.add(Container());
+        }
+      }
+    }
+
     return Container(
       color: Theme.of(context).colorScheme.background,
       child: Column(
         children: [
           Text(currentDate.toString()),
           Expanded(
-            child: GridView.builder(
-              controller: scrollController,
-              scrollDirection: Axis.vertical,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: widget.preference.numCol,
-                mainAxisSpacing: 10,
-                crossAxisSpacing: 10,
-                childAspectRatio: 1.8,
-              ),
-              itemCount: widget.cardLogs.length,
-              itemBuilder: (BuildContext context, int index) =>
-                  CardProgress(cardLog: widget.cardLogs[index], date: currentDate),
+            child: Column(
+              children: cards
+                  .map((e) => Expanded(child: Row(children: e.map((card) => Expanded(child: card)).toList())))
+                  .toList(),
             ),
           ),
         ],
@@ -101,7 +104,6 @@ class CardsGridState extends State<CardsGrid> with SingleTickerProviderStateMixi
 
   @override
   void dispose() {
-    scrollController.dispose();
     animationController.dispose();
     super.dispose();
   }
@@ -116,20 +118,21 @@ class CardsGridState extends State<CardsGrid> with SingleTickerProviderStateMixi
   }
 
   void playProgress() {
-    /// start scrolling downward and move date forward
     animationController.forward();
   }
 }
 
-class CardProgress extends StatelessWidget {
+class _CardProgress extends StatelessWidget {
   final CardLog cardLog;
   final Date date;
 
-  const CardProgress({super.key, required this.cardLog, required this.date});
+  const _CardProgress({required this.cardLog, required this.date});
 
   @override
   Widget build(BuildContext context) {
-    final Review? review = cardLog.reviews.where((e) => Date.fromTimestamp(milliseconds: e.id) == date).firstOrNull;
+    final Review? review = cardLog.reviews
+        .where((e) => Date.fromTimestamp(milliseconds: e.id) == date)
+        .firstOrNull; // the first review each day
     final Color cardColor;
     final Color textColor;
     if (review == null) {
@@ -146,13 +149,16 @@ class CardProgress extends StatelessWidget {
     }
 
     return Container(
-      decoration: BoxDecoration(
-        color: cardColor,
-        borderRadius: BorderRadius.circular(5),
-        border: Border.all(color: Theme.of(context).colorScheme.outline, width: 2),
-      ),
+      color: cardColor,
       alignment: Alignment.center,
-      child: Text(cardLog.text, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: textColor)),
+      child: LayoutBuilder(builder: (context, constraints) {
+        final fontSize = min(constraints.maxWidth / 2, 30.0);
+        return Text(
+          cardLog.text,
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(color: textColor, fontSize: fontSize),
+          overflow: TextOverflow.clip,
+        );
+      }),
     );
   }
 }

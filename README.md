@@ -63,8 +63,8 @@ Please refer to the [user guide](doc/user-guide.md)
 ### 👾 Tech Stack
 
 * [![Flutter](https://img.shields.io/badge/flutter-e1e4e4?style=for-the-badge&logo=flutter&logoColor=44d1fd)](https://flutter.dev/)
-* [![SQLite](https://img.shields.io/badge/sqlite-f4f9f9?style=for-the-badge&logo=sqlite&logoColor=0c3958
-)](https://www.sqlite.org/)
+* [![SQLite](https://img.shields.io/badge/sqlite-f4f9f9?style=for-the-badge&logo=sqlite&logoColor=0c3958)](https://www.sqlite.org/)
+* [![FFmpeg](https://img.shields.io/badge/FFMPEG-f1f5f1?style=for-the-badge&logo=ffmpeg&logoColor=008800)](https://ffmpeg.org/)
 
 <!-- Features -->
 ### 🎯 Features
@@ -155,7 +155,7 @@ Contributions are always welcome!
   * In the animation preference, increase your duration. Then, you will have more captures for the entire animation and can increase the framerate during export.
 
 <!-- Support us -->
-## Support us
+## ✨ Support us
 
 <a href="https://www.buymeacoffee.com/rapid_rabbit">
   <img src="assets/images/buymeacoffee.png" height="50"/>
@@ -168,14 +168,19 @@ Your support will help us improve the project greatly!
 
 See `LICENSE` for more information.
 
-<!-- Contact -->
-## 🤝 Contact
+<!-- About me -->
+## 🤝 About me
 
 Rapid Rabbit - [@rapid.rabbit.tech](https://www.threads.net/@rapid.rabbit.tech) - <rapid.rabbit.tech@gmail.com>
 
 Project Link: [https://github.com/KaFaiFai/anki_visualizer](https://github.com/KaFaiFai/anki_visualizer)
 
+### Other projects
+
+[Lingua Ladder](https://lingua-ladder.com/) - A daily word game to test your vocabulary skill
+
 <!-- Acknowledgments -->
 ## 💎 Acknowledgements
 
 * [Anki](https://apps.ankiweb.net/)
+* [FFmpeg](https://ffmpeg.org/)

@@ -70,26 +70,26 @@ class _PreferenceFormState extends State<PreferenceForm> {
               ),
             ],
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text("Number of columns"),
-              const SizedBox(width: 20),
-              Flexible(
-                child: SizedBox(
-                  width: 400,
-                  child: TextFormField(
-                    controller: numColController,
-                    decoration: InputDecoration(
-                      helperText: "How many cards per row",
-                      helperStyle: Theme.of(context).textTheme.bodySmall,
-                    ),
-                    validator: validatePositiveInteger,
-                  ),
-                ),
-              ),
-            ],
-          ),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //   children: [
+          //     const Text("Number of columns"),
+          //     const SizedBox(width: 20),
+          //     Flexible(
+          //       child: SizedBox(
+          //         width: 400,
+          //         child: TextFormField(
+          //           controller: numColController,
+          //           decoration: InputDecoration(
+          //             helperText: "How many cards per row",
+          //             helperStyle: Theme.of(context).textTheme.bodySmall,
+          //           ),
+          //           validator: validatePositiveInteger,
+          //         ),
+          //       ),
+          //     ),
+          //   ],
+          // ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

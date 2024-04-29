@@ -4,7 +4,7 @@ import 'package:anki_visualizer/view_models/preference_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../components/cards_grid_with_control.dart';
+import '../components/cards_grid/cards_grid_with_control.dart';
 
 class CardsPage extends StatelessWidget {
   const CardsPage({super.key});

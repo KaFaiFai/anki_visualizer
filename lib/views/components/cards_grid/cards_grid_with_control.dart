@@ -3,10 +3,9 @@ import 'package:anki_visualizer/views/basic/padded_row.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 
-import '../../models/animation_preference.dart';
-import '../../models/card_log.dart';
-import '../basic/capturable.dart';
-import 'cards_grid.dart';
+import '../../../models/animation_preference.dart';
+import '../../../models/card_log.dart';
+import '../../basic/capturable.dart';
 import 'cards_grid_2.dart';
 
 class CardsGridWithControl extends StatefulWidget {
