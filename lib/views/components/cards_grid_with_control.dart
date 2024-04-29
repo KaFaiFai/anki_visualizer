@@ -1,14 +1,13 @@
 import 'package:anki_visualizer/controller/routes.dart';
 import 'package:anki_visualizer/views/basic/padded_row.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:path/path.dart';
 
 import '../../models/animation_preference.dart';
 import '../../models/card_log.dart';
 import '../basic/capturable.dart';
 import 'cards_grid.dart';
+import 'cards_grid_2.dart';
 
 class CardsGridWithControl extends StatefulWidget {
   final List<CardLog> cardLogs;
@@ -24,13 +23,11 @@ class CardsGridWithControl extends StatefulWidget {
 
 class _CardsGridWithControlState extends State<CardsGridWithControl> {
   final GlobalKey<CapturableState> _capturableKey = GlobalKey<CapturableState>();
-  final GlobalKey<CardsGridState> _cardsGridKey = GlobalKey<CardsGridState>();
+  final GlobalKey<CardsGrid2State> _cardsGrid2Key = GlobalKey<CardsGrid2State>();
   int _count = 0;
   double? lastAnimationValue;
 
-  ScrollController? get scrollController => _cardsGridKey.currentState?.scrollController;
-
-  AnimationController? get animationController => _cardsGridKey.currentState?.animationController;
+  AnimationController? get animationController => _cardsGrid2Key.currentState?.animationController;
 
   Widget buildControlRow(BuildContext context) {
     return PaddedRow(
@@ -89,7 +86,7 @@ class _CardsGridWithControlState extends State<CardsGridWithControl> {
         Expanded(
           child: Capturable(
             key: _capturableKey,
-            child: CardsGrid(key: _cardsGridKey, cardLogs: widget.cardLogs, preference: widget.preference),
+            child: CardsGrid2(key: _cardsGrid2Key, cardLogs: widget.cardLogs, preference: widget.preference),
           ),
         ),
       ],
@@ -97,7 +94,7 @@ class _CardsGridWithControlState extends State<CardsGridWithControl> {
   }
 
   void onPressRestart() {
-    _cardsGridKey.currentState?.resetState();
+    _cardsGrid2Key.currentState?.resetState();
   }
 
   void onPressPlay() {
@@ -112,7 +109,7 @@ class _CardsGridWithControlState extends State<CardsGridWithControl> {
         default:
       }
     });
-    _cardsGridKey.currentState?.playProgress();
+    _cardsGrid2Key.currentState?.playProgress();
   }
 
   void onPressPause() {

@@ -1,15 +1,14 @@
 import 'dart:math';
 
-import 'package:anki_progress/core/values.dart';
-import 'package:anki_progress/models/animation_preference.dart';
-import 'package:anki_progress/models/card_log.dart';
-import 'package:anki_progress/models/date_range.dart';
-import 'package:anki_progress/services/database/entities/review.dart';
-import 'package:anki_progress/views/basic/padded_row.dart';
-import 'package:anki_progress/views/run_with_app_container.dart';
 import 'package:flutter/material.dart' hide Card;
 
+import '../../core/values.dart';
+import '../../models/animation_preference.dart';
+import '../../models/card_log.dart';
 import '../../models/date.dart';
+import '../../models/date_range.dart';
+import '../../services/database/entities/review.dart';
+import '../run_with_app_container.dart';
 
 void main() {
   final cardLogs = List.generate(
@@ -30,6 +29,7 @@ void main() {
   runWithAppContainer(CardsGrid2(cardLogs: cardLogs, preference: preference));
 }
 
+/// Zoomed out view that displays all cards at once
 class CardsGrid2 extends StatefulWidget {
   final List<CardLog> cardLogs;
   final AnimationPreference preference;
@@ -67,22 +67,33 @@ class CardsGrid2State extends State<CardsGrid2> with SingleTickerProviderStateMi
 
   @override
   Widget build(BuildContext context) {
+    final List<List<Widget>> cards = [];
+    final numRows = 60;
+    final numCols = 100;
+    for (var i = 0; i < numRows; i++) {
+      cards.add([]);
+      for (var j = 0; j < numCols; j++) {
+        final index = i * numRows + j;
+        if (index < widget.cardLogs.length) {
+          cards.last.add(_CardProgress(cardLog: widget.cardLogs[index], date: currentDate));
+        } else {
+          cards.last.add(Container());
+        }
+      }
+    }
+
     return Container(
       color: Theme.of(context).colorScheme.background,
       child: Column(
         children: [
-          PaddedRow(
-            padding: 10,
-            children: [
-              Text(currentDate.toString()),
-            ],
-          ),
+          Text(currentDate.toString()),
           Expanded(
-            child: GridView.count(
-              crossAxisCount: 50,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              children: widget.cardLogs.map((e) => _CardProgress(cardLog: e, date: currentDate)).toList(),
+            child: Column(
+              children: cards
+                  .map(
+                    (e) => Expanded(child: Row(children: e.map((card) => Expanded(child: card)).toList())),
+                  )
+                  .toList(),
             ),
           ),
         ],
@@ -106,7 +117,6 @@ class CardsGrid2State extends State<CardsGrid2> with SingleTickerProviderStateMi
   }
 
   void playProgress() {
-    /// start scrolling downward and move date forward
     animationController.forward();
   }
 }
@@ -115,7 +125,7 @@ class _CardProgress extends StatelessWidget {
   final CardLog cardLog;
   final Date date;
 
-  const _CardProgress({super.key, required this.cardLog, required this.date});
+  const _CardProgress({required this.cardLog, required this.date});
 
   @override
   Widget build(BuildContext context) {
@@ -136,13 +146,9 @@ class _CardProgress extends StatelessWidget {
     }
 
     return Container(
-      decoration: BoxDecoration(
-        color: cardColor,
-        borderRadius: BorderRadius.circular(5),
-        border: Border.all(color: Theme.of(context).colorScheme.outline, width: 2),
-      ),
+      color: cardColor,
       alignment: Alignment.center,
-      child: Text(cardLog.text, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: textColor)),
+      child: Text(cardLog.text, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: textColor, fontSize: 8)),
     );
   }
 }

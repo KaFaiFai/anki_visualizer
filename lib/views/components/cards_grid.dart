@@ -30,6 +30,7 @@ void main() {
   runWithAppContainer(CardsGrid(cardLogs: cardLogs, preference: preference));
 }
 
+/// Scrolling view for a subset of cards
 class CardsGrid extends StatefulWidget {
   final List<CardLog> cardLogs;
   final AnimationPreference preference;
@@ -77,12 +78,7 @@ class CardsGridState extends State<CardsGrid> with SingleTickerProviderStateMixi
       color: Theme.of(context).colorScheme.background,
       child: Column(
         children: [
-          PaddedRow(
-            padding: 10,
-            children: [
-              Text(currentDate.toString()),
-            ],
-          ),
+          Text(currentDate.toString()),
           Expanded(
             child: GridView.builder(
               controller: scrollController,
