@@ -7,6 +7,7 @@ import 'package:flutter/material.dart' hide Card;
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
+import '../models/log.dart';
 import '../services/database/database_provider.dart';
 import '../services/database/database_repository.dart';
 import '../services/database/entities/deck.dart';
@@ -103,7 +104,7 @@ class DataSourceModel extends ChangeNotifier {
       final numReviews = value
           .map((e) => e.reviewsByDate.values.fold(0, (previousValue, element) => previousValue + element.length))
           .fold(0, (previousValue, element) => previousValue + element);
-      print(numReviews);
+      Log.logger.t("Number of reviews in this deck: $numReviews");
       return value;
     });
 

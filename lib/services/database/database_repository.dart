@@ -1,3 +1,4 @@
+import 'package:anki_visualizer/models/log.dart';
 import 'package:anki_visualizer/services/database/entities/card.dart';
 import 'package:anki_visualizer/services/database/entities/field.dart';
 import 'package:anki_visualizer/services/database/entities/review.dart';
@@ -8,7 +9,9 @@ import 'entities/notetype.dart';
 
 class DatabaseRepository {
   Future<List<Deck>> getAllDecks(Database db) async {
+    Log.logger.i("Getting table \"decks\" ...");
     final List<Map<String, dynamic>> maps = await db.query('decks');
+    Log.logger.i("Retrieved ${maps.length} decks");
     return maps.map((e) => Deck.fromMap(e)).toList();
   }
 
@@ -58,7 +61,6 @@ class DatabaseRepository {
         GROUP BY notes.mid
         """;
     final List<Map<String, dynamic>> maps = await db.rawQuery(sqlGetNoteTypes);
-    final idToNotetype = <int, Notetype>{};
     return maps.map((e) => Notetype.fromMap(e)).toList();
   }
 

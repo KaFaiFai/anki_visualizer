@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:anki_visualizer/models/log.dart';
 import 'package:path/path.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
@@ -33,23 +34,22 @@ class DatabaseProvider {
 
   Future<Database> _openDb() async {
     final path = await _getDbPath();
-    return await openDatabase(path, version: 1, readOnly: true);
+    return await openDatabase(path, version: 1);
   }
 
   Future<void> _copyDb(File from) async {
     // copy the selected file into the app's database path
     final path = await _getDbPath();
+    Log.logger.i("Saving database to $path");
 
     final exists = await databaseExists(path);
     if (exists) {
-      print("Deleting existing database");
+      Log.logger.t("Deleting existing database");
       deleteDatabase(path);
     }
 
-    print("Creating database copy");
-    try {
-      await Directory(dirname(path)).create(recursive: true);
-    } catch (_) {}
+    Log.logger.t("Creating database copy");
+    Directory(dirname(path)).createSync(recursive: true);
 
     final data = await from.readAsBytes();
     List<int> bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);

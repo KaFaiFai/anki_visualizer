@@ -5,6 +5,7 @@ import 'package:path/path.dart';
 
 import '../../../models/animation_preference.dart';
 import '../../../models/card_log.dart';
+import '../../../models/log.dart';
 import '../../basic/capturable.dart';
 import 'cards_grid_2.dart';
 
@@ -101,10 +102,10 @@ class _CardsGridWithControlState extends State<CardsGridWithControl> {
     animationController?.addStatusListener((status) {
       switch (status) {
         case AnimationStatus.forward:
-          print("Animation started");
+          Log.logger.i("Animation started");
         case AnimationStatus.completed:
           animationController?.removeListener(_captureScreen);
-          print("Animation ended");
+          Log.logger.i("Animation ended");
         default:
       }
     });

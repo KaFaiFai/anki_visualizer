@@ -9,6 +9,8 @@ import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
 import 'package:uuid/uuid.dart';
 
+import '../models/log.dart';
+
 class ExportsModel extends ChangeNotifier {
   late String captureRootFolder;
   late String captureFolder; // temp folder to store individual images
@@ -42,7 +44,7 @@ class ExportsModel extends ChangeNotifier {
   Future<void> _updateCaptureFolder(String rootFolder) async {
     captureRootFolder = rootFolder;
     captureFolder = join(rootFolder, const Uuid().v4());
-    print("Captures are saved to $captureFolder");
+    Log.logger.i("Captures are saved to $captureFolder");
     notifyListeners();
   }
 
@@ -99,7 +101,7 @@ class ExportsModel extends ChangeNotifier {
     final imagesPath = join(captureFolder, "image-%7d.png");
     File(outputFile).deleteIfExistsAndCreateParents();
     exportResult = Process.run(ffmpegPath, ["-framerate", "${exportOptions.framerate}", "-i", imagesPath, outputFile]);
-    exportResult?.whenComplete(() => print("Exported ${exportOptions.format.name} to $videoFile"));
+    exportResult?.whenComplete(() => Log.logger.i("Exported ${exportOptions.format.name} to $videoFile"));
     notifyListeners();
   }
 }
