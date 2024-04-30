@@ -8,6 +8,7 @@ import 'package:path/path.dart';
 
 class Log {
   static final logger = Logger(
+    filter: ProductionFilter(),
     printer: _PrinterWithTime(),
     output: _FileConsoleOutput(),
   );
