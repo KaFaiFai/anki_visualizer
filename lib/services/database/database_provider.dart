@@ -17,6 +17,9 @@ class DatabaseProvider {
     await database?.close();
     await _copyDb(from);
     database = await _openDb();
+    final tables = await database?.rawQuery('SELECT * FROM sqlite_master ORDER BY name;');
+    final tableNames = tables?.map((e) => e["tbl_name"]).toSet().join(", ");
+    Log.logger.d("All tables: $tableNames");
     return database!;
   }
 
