@@ -41,7 +41,7 @@
 
 ### 🏬 Install
 
-1. Download the Release.zip from the [latest release](https://github.com/KaFaiFai/anki_visualizer/releases)
+1. Download from the [latest release](https://github.com/KaFaiFai/anki_visualizer/releases)
 2. Extract it and run the .exe file
 
 ### 📙 User guide
@@ -69,7 +69,7 @@ Please refer to the [user guide](doc/user-guide.md)
 <!-- Features -->
 ### 🎯 Features
 
-* Read Anki database
+* Read Anki file
 * Customize your visualization preferences
 * Display learning progress overtime
 * Exports in multiple formats
@@ -146,7 +146,7 @@ Contributions are always welcome!
 <!-- FAQ -->
 ## ❔ FAQ
 
-* Where do I find my Anki database?
+* Where do I find my Anki file?
 
   * For Windows, usually it is in `%APPDATA%\Anki2\User 1`. For more information, please refer to <https://docs.ankiweb.net/files.html>
 
