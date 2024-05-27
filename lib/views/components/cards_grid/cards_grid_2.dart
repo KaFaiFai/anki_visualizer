@@ -166,11 +166,13 @@ class _CardProgress extends StatelessWidget {
       alignment: Alignment.center,
       child: LayoutBuilder(builder: (context, constraints) {
         final fontSize = min(constraints.maxWidth / 2, 30.0);
-        return Text(
-          cardLog.text,
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(color: textColor, fontSize: fontSize),
-          overflow: TextOverflow.clip,
-        );
+        return Tooltip(
+          message: cardLog.text,
+          child: Text(
+            cardLog.text,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: textColor, fontSize: fontSize),
+            overflow: TextOverflow.clip,
+          ));
       }),
     );
   }
