@@ -67,23 +67,7 @@ class CardsGrid2State extends State<CardsGrid2> with SingleTickerProviderStateMi
 
   @override
   Widget build(BuildContext context) {
-    final List<List<Widget>> cards = [];
-    const ratio = 16 / 8; // approximate ratio for each card
-
-    final numRows = (sqrt(widget.cardLogs.length / ratio)).round();
-    final numCols = (widget.cardLogs.length / numRows).ceil();
-
-    for (var i = 0; i < numRows; i++) {
-      cards.add([]);
-      for (var j = 0; j < numCols; j++) {
-        final index = i * numCols + j;
-        if (index < widget.cardLogs.length) {
-          cards.last.add(_CardProgress(cardLog: widget.cardLogs[index], date: currentDate));
-        } else {
-          cards.last.add(Container());
-        }
-      }
-    }
+    final double maxWidth = MediaQuery.of(context).size.width * 0.03; // 最大宽度为屏幕宽度的25%
 
     return Container(
       color: Theme.of(context).colorScheme.background,
@@ -91,10 +75,16 @@ class CardsGrid2State extends State<CardsGrid2> with SingleTickerProviderStateMi
         children: [
           Text(currentDate.toString()),
           Expanded(
-            child: Column(
-              children: cards
-                  .map((e) => Expanded(child: Row(children: e.map((card) => Expanded(child: card)).toList())))
-                  .toList(),
+            child: Wrap(
+              spacing: 2.0, // 卡片之间的水平间距
+              runSpacing: 3.0, // 卡片之间的垂直间距
+              alignment: WrapAlignment.spaceEvenly,
+              children: widget.cardLogs.map((cardLog) {
+                return ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: maxWidth),
+                  child: _CardProgress(cardLog: cardLog, date: currentDate),
+                );
+              }).toList(),
             ),
           ),
         ],
@@ -163,17 +153,17 @@ class _CardProgress extends StatelessWidget {
 
     return Container(
       color: cardColor,
-      alignment: Alignment.center,
-      child: LayoutBuilder(builder: (context, constraints) {
-        final fontSize = min(constraints.maxWidth / 2, 30.0);
-        return Tooltip(
-          message: cardLog.text,
-          child: Text(
-            cardLog.text,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: textColor, fontSize: fontSize),
-            overflow: TextOverflow.clip,
-          ));
-      }),
+      // alignment: Alignment,
+      padding: const EdgeInsets.only(left: 3.0, right: 3.0),
+      child: Tooltip(
+        message: cardLog.text,
+        child: Text(
+          cardLog.text,
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(color: textColor, fontSize: 12.0),
+          overflow: TextOverflow.clip,
+          textAlign: TextAlign.center,
+          maxLines: 1,
+        )),
     );
   }
 }
