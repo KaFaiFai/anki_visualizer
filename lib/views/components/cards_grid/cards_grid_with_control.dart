@@ -26,10 +26,51 @@ class _CardsGridWithControlState extends State<CardsGridWithControl> {
   final GlobalKey<CardsGrid2State> _cardsGrid2Key = GlobalKey<CardsGrid2State>();
   int _count = 0;
   double? lastAnimationValue;
-  double fontSize = 12.0;
-  double maxWidth = 50.0;
+  static const defaultFontSize = 12.0;
+  static const defaultMaxWidth = 50.0;
+  double fontSize = defaultFontSize;
+  double maxWidth = defaultMaxWidth;
+
+  late TextEditingController fontSizeController;
+  late TextEditingController maxWidthController;
+  late FocusNode fontSizeFocusNode;
+  late FocusNode maxWidthFocusNode;
 
   AnimationController? get animationController => _cardsGrid2Key.currentState?.animationController;
+
+  @override
+  void initState() {
+    super.initState();
+    fontSizeController = TextEditingController(text: fontSize.toString());
+    maxWidthController = TextEditingController(text: maxWidth.toString());
+    fontSizeFocusNode = FocusNode();
+    maxWidthFocusNode = FocusNode();
+
+    fontSizeFocusNode.addListener(() {
+      if (!fontSizeFocusNode.hasFocus) {
+        setState(() {
+          fontSize = double.tryParse(fontSizeController.text) ?? defaultFontSize;
+        });
+      }
+    });
+
+    maxWidthFocusNode.addListener(() {
+      if (!maxWidthFocusNode.hasFocus) {
+        setState(() {
+          maxWidth = double.tryParse(maxWidthController.text) ?? defaultMaxWidth;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    fontSizeController.dispose();
+    maxWidthController.dispose();
+    fontSizeFocusNode.dispose();
+    maxWidthFocusNode.dispose();
+    super.dispose();
+  }
 
   Widget buildControlRow(BuildContext context) {
     const textStyle =  TextStyle(fontSize: 16.0);
@@ -46,12 +87,8 @@ class _CardsGridWithControlState extends State<CardsGridWithControl> {
                   height: 35,
                   child: TextFormField(
                     keyboardType: TextInputType.numberWithOptions(signed: false, decimal: true),
-                    onChanged: (value) {
-                      setState(() {
-                        fontSize = double.tryParse(value) ?? 12.0;
-                      });
-                    },
-                    initialValue: fontSize.toString(),
+                    controller: fontSizeController,
+                    focusNode: fontSizeFocusNode,
                     style: textStyle
                   ),
                 ),
@@ -65,12 +102,8 @@ class _CardsGridWithControlState extends State<CardsGridWithControl> {
                   height: 35,
                   child: TextFormField(
                     keyboardType: TextInputType.numberWithOptions(signed: false, decimal: true),
-                    onChanged: (value) {
-                      setState(() {
-                        maxWidth = double.tryParse(value) ?? 50.0;
-                      });
-                    },
-                    initialValue: maxWidth.toString(),
+                    controller: maxWidthController,
+                    focusNode: maxWidthFocusNode,
                     style: textStyle
                   ),
                 ),
