@@ -14,7 +14,7 @@ class CardsGridWithControl extends StatefulWidget {
   final AnimationPreference preference;
   final String captureFolder;
 
-  const CardsGridWithControl(
+  CardsGridWithControl(
       {super.key, required this.cardLogs, required this.preference, required this.captureFolder});
 
   @override
@@ -26,13 +26,91 @@ class _CardsGridWithControlState extends State<CardsGridWithControl> {
   final GlobalKey<CardsGrid2State> _cardsGrid2Key = GlobalKey<CardsGrid2State>();
   int _count = 0;
   double? lastAnimationValue;
+  static const defaultFontSize = 12.0;
+  static const defaultMaxWidth = 50.0;
+  double fontSize = defaultFontSize;
+  double maxWidth = defaultMaxWidth;
+
+  late TextEditingController fontSizeController;
+  late TextEditingController maxWidthController;
+  late FocusNode fontSizeFocusNode;
+  late FocusNode maxWidthFocusNode;
 
   AnimationController? get animationController => _cardsGrid2Key.currentState?.animationController;
 
+  @override
+  void initState() {
+    super.initState();
+    fontSizeController = TextEditingController(text: fontSize.toString());
+    maxWidthController = TextEditingController(text: maxWidth.toString());
+    fontSizeFocusNode = FocusNode();
+    maxWidthFocusNode = FocusNode();
+
+    fontSizeFocusNode.addListener(() {
+      if (!fontSizeFocusNode.hasFocus) {
+        setState(() {
+          fontSize = double.tryParse(fontSizeController.text) ?? defaultFontSize;
+        });
+      }
+    });
+
+    maxWidthFocusNode.addListener(() {
+      if (!maxWidthFocusNode.hasFocus) {
+        setState(() {
+          maxWidth = double.tryParse(maxWidthController.text) ?? defaultMaxWidth;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    fontSizeController.dispose();
+    maxWidthController.dispose();
+    fontSizeFocusNode.dispose();
+    maxWidthFocusNode.dispose();
+    super.dispose();
+  }
+
   Widget buildControlRow(BuildContext context) {
+    const textStyle =  TextStyle(fontSize: 16.0);
     return PaddedRow(
       padding: 10,
       children: [
+        Column(
+          children: [
+            Row(
+              children: [
+                const Text("fontSize", style: textStyle),
+                SizedBox(
+                  width: 75, // 添加宽度约束
+                  height: 35,
+                  child: TextFormField(
+                    keyboardType: TextInputType.numberWithOptions(signed: false, decimal: true),
+                    controller: fontSizeController,
+                    focusNode: fontSizeFocusNode,
+                    style: textStyle
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                const Text("maxLen", style: textStyle),
+                SizedBox(
+                  width: 75, // 添加宽度约束
+                  height: 35,
+                  child: TextFormField(
+                    keyboardType: TextInputType.numberWithOptions(signed: false, decimal: true),
+                    controller: maxWidthController,
+                    focusNode: maxWidthFocusNode,
+                    style: textStyle
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
         IconButton(
           iconSize: 40,
           onPressed: onPressRestart,
@@ -86,7 +164,8 @@ class _CardsGridWithControlState extends State<CardsGridWithControl> {
         Expanded(
           child: Capturable(
             key: _capturableKey,
-            child: CardsGrid2(key: _cardsGrid2Key, cardLogs: widget.cardLogs, preference: widget.preference),
+            child: CardsGrid2(key: _cardsGrid2Key, cardLogs: widget.cardLogs, preference: widget.preference,fontSize: fontSize,
+                    maxWidth: maxWidth),
           ),
         ),
       ],
@@ -96,7 +175,6 @@ class _CardsGridWithControlState extends State<CardsGridWithControl> {
   void onPressRestart() {
     _cardsGrid2Key.currentState?.resetState();
   }
-
   void onPressPlay() {
     animationController?.addListener(_captureScreen);
     animationController?.addStatusListener((status) {

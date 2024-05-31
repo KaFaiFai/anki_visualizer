@@ -26,15 +26,17 @@ void main() {
     dateRange: DateRange(start: Date.today(), end: Date.today()),
     numCol: 10,
   );
-  runWithAppContainer(CardsGrid2(cardLogs: cardLogs, preference: preference));
+  runWithAppContainer(CardsGrid2(cardLogs: cardLogs, preference: preference, fontSize: 12.0, maxWidth: 50.0));
 }
 
 /// Zoomed out view that displays all cards at once
 class CardsGrid2 extends StatefulWidget {
   final List<CardLog> cardLogs;
   final AnimationPreference preference;
+  final double fontSize;
+  final double maxWidth;
 
-  const CardsGrid2({super.key, required this.cardLogs, required this.preference});
+  const CardsGrid2({super.key, required this.cardLogs, required this.preference, required this.fontSize, required this.maxWidth});
 
   @override
   State<CardsGrid2> createState() => CardsGrid2State();
@@ -67,34 +69,22 @@ class CardsGrid2State extends State<CardsGrid2> with SingleTickerProviderStateMi
 
   @override
   Widget build(BuildContext context) {
-    final List<List<Widget>> cards = [];
-    const ratio = 16 / 8; // approximate ratio for each card
-
-    final numRows = (sqrt(widget.cardLogs.length / ratio)).round();
-    final numCols = (widget.cardLogs.length / numRows).ceil();
-
-    for (var i = 0; i < numRows; i++) {
-      cards.add([]);
-      for (var j = 0; j < numCols; j++) {
-        final index = i * numCols + j;
-        if (index < widget.cardLogs.length) {
-          cards.last.add(_CardProgress(cardLog: widget.cardLogs[index], date: currentDate));
-        } else {
-          cards.last.add(Container());
-        }
-      }
-    }
-
     return Container(
       color: Theme.of(context).colorScheme.background,
       child: Column(
         children: [
           Text(currentDate.toString()),
           Expanded(
-            child: Column(
-              children: cards
-                  .map((e) => Expanded(child: Row(children: e.map((card) => Expanded(child: card)).toList())))
-                  .toList(),
+            child: Wrap(
+              spacing: 2.0, // 卡片之间的水平间距
+              runSpacing: 3.0, // 卡片之间的垂直间距
+              alignment: WrapAlignment.spaceEvenly,
+              children: widget.cardLogs.map((cardLog) {
+                return ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: widget.maxWidth),
+                  child: _CardProgress(cardLog: cardLog, date: currentDate, fontSize: widget.fontSize),
+                );
+              }).toList(),
             ),
           ),
         ],
@@ -125,8 +115,9 @@ class CardsGrid2State extends State<CardsGrid2> with SingleTickerProviderStateMi
 class _CardProgress extends StatelessWidget {
   final CardLog cardLog;
   final Date date;
+  final double fontSize;
 
-  const _CardProgress({required this.cardLog, required this.date});
+  const _CardProgress({required this.cardLog, required this.date, required this.fontSize});
 
   @override
   Widget build(BuildContext context) {
@@ -163,15 +154,17 @@ class _CardProgress extends StatelessWidget {
 
     return Container(
       color: cardColor,
-      alignment: Alignment.center,
-      child: LayoutBuilder(builder: (context, constraints) {
-        final fontSize = min(constraints.maxWidth / 2, 30.0);
-        return Text(
+      // alignment: Alignment,
+      padding: const EdgeInsets.only(left: 3.0, right: 3.0),
+      child: Tooltip(
+        message: cardLog.text,
+        child: Text(
           cardLog.text,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(color: textColor, fontSize: fontSize),
           overflow: TextOverflow.clip,
-        );
-      }),
+          textAlign: TextAlign.center,
+          maxLines: 1,
+        )),
     );
   }
 }
