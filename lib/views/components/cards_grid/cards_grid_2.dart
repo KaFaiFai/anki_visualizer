@@ -26,15 +26,17 @@ void main() {
     dateRange: DateRange(start: Date.today(), end: Date.today()),
     numCol: 10,
   );
-  runWithAppContainer(CardsGrid2(cardLogs: cardLogs, preference: preference));
+  runWithAppContainer(CardsGrid2(cardLogs: cardLogs, preference: preference, fontSize: 12.0, maxWidth: 50.0));
 }
 
 /// Zoomed out view that displays all cards at once
 class CardsGrid2 extends StatefulWidget {
   final List<CardLog> cardLogs;
   final AnimationPreference preference;
+  final double fontSize;
+  final double maxWidth;
 
-  const CardsGrid2({super.key, required this.cardLogs, required this.preference});
+  const CardsGrid2({super.key, required this.cardLogs, required this.preference, required this.fontSize, required this.maxWidth});
 
   @override
   State<CardsGrid2> createState() => CardsGrid2State();
@@ -67,8 +69,6 @@ class CardsGrid2State extends State<CardsGrid2> with SingleTickerProviderStateMi
 
   @override
   Widget build(BuildContext context) {
-    final double maxWidth = MediaQuery.of(context).size.width * 0.03; // 最大宽度为屏幕宽度的25%
-
     return Container(
       color: Theme.of(context).colorScheme.background,
       child: Column(
@@ -81,8 +81,8 @@ class CardsGrid2State extends State<CardsGrid2> with SingleTickerProviderStateMi
               alignment: WrapAlignment.spaceEvenly,
               children: widget.cardLogs.map((cardLog) {
                 return ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: maxWidth),
-                  child: _CardProgress(cardLog: cardLog, date: currentDate),
+                  constraints: BoxConstraints(maxWidth: widget.maxWidth),
+                  child: _CardProgress(cardLog: cardLog, date: currentDate, fontSize: widget.fontSize),
                 );
               }).toList(),
             ),
@@ -115,8 +115,9 @@ class CardsGrid2State extends State<CardsGrid2> with SingleTickerProviderStateMi
 class _CardProgress extends StatelessWidget {
   final CardLog cardLog;
   final Date date;
+  final double fontSize;
 
-  const _CardProgress({required this.cardLog, required this.date});
+  const _CardProgress({required this.cardLog, required this.date, required this.fontSize});
 
   @override
   Widget build(BuildContext context) {
@@ -159,7 +160,7 @@ class _CardProgress extends StatelessWidget {
         message: cardLog.text,
         child: Text(
           cardLog.text,
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(color: textColor, fontSize: 12.0),
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(color: textColor, fontSize: fontSize),
           overflow: TextOverflow.clip,
           textAlign: TextAlign.center,
           maxLines: 1,

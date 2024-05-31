@@ -14,7 +14,7 @@ class CardsGridWithControl extends StatefulWidget {
   final AnimationPreference preference;
   final String captureFolder;
 
-  const CardsGridWithControl(
+  CardsGridWithControl(
       {super.key, required this.cardLogs, required this.preference, required this.captureFolder});
 
   @override
@@ -26,6 +26,8 @@ class _CardsGridWithControlState extends State<CardsGridWithControl> {
   final GlobalKey<CardsGrid2State> _cardsGrid2Key = GlobalKey<CardsGrid2State>();
   int _count = 0;
   double? lastAnimationValue;
+  double fontSize = 12.0;
+  double maxWidth = 50.0;
 
   AnimationController? get animationController => _cardsGrid2Key.currentState?.animationController;
 
@@ -33,6 +35,44 @@ class _CardsGridWithControlState extends State<CardsGridWithControl> {
     return PaddedRow(
       padding: 10,
       children: [
+        Column(
+          children: [
+            Row(
+              children: [
+                Text("fontSize"),
+                SizedBox(
+                  width: 100, // 添加宽度约束
+                  child: TextFormField(
+                    keyboardType: TextInputType.numberWithOptions(signed: false, decimal: true),
+                    onChanged: (value) {
+                      setState(() {
+                        fontSize = double.tryParse(value) ?? 12.0;
+                      });
+                    },
+                    initialValue: fontSize.toString(),
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                Text("maxLen"),
+                SizedBox(
+                  width: 100, // 添加宽度约束
+                  child: TextFormField(
+                    keyboardType: TextInputType.numberWithOptions(signed: false, decimal: true),
+                    onChanged: (value) {
+                      setState(() {
+                        maxWidth = double.tryParse(value) ?? 50.0;
+                      });
+                    },
+                    initialValue: maxWidth.toString(),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
         IconButton(
           iconSize: 40,
           onPressed: onPressRestart,
@@ -86,7 +126,8 @@ class _CardsGridWithControlState extends State<CardsGridWithControl> {
         Expanded(
           child: Capturable(
             key: _capturableKey,
-            child: CardsGrid2(key: _cardsGrid2Key, cardLogs: widget.cardLogs, preference: widget.preference),
+            child: CardsGrid2(key: _cardsGrid2Key, cardLogs: widget.cardLogs, preference: widget.preference,fontSize: fontSize,
+                    maxWidth: maxWidth),
           ),
         ),
       ],
@@ -96,7 +137,6 @@ class _CardsGridWithControlState extends State<CardsGridWithControl> {
   void onPressRestart() {
     _cardsGrid2Key.currentState?.resetState();
   }
-
   void onPressPlay() {
     animationController?.addListener(_captureScreen);
     animationController?.addStatusListener((status) {
