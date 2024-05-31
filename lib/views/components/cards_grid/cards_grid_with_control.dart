@@ -32,6 +32,7 @@ class _CardsGridWithControlState extends State<CardsGridWithControl> {
   AnimationController? get animationController => _cardsGrid2Key.currentState?.animationController;
 
   Widget buildControlRow(BuildContext context) {
+    const textStyle =  TextStyle(fontSize: 16.0);
     return PaddedRow(
       padding: 10,
       children: [
@@ -39,9 +40,10 @@ class _CardsGridWithControlState extends State<CardsGridWithControl> {
           children: [
             Row(
               children: [
-                Text("fontSize"),
+                const Text("fontSize", style: textStyle),
                 SizedBox(
-                  width: 100, // 添加宽度约束
+                  width: 75, // 添加宽度约束
+                  height: 35,
                   child: TextFormField(
                     keyboardType: TextInputType.numberWithOptions(signed: false, decimal: true),
                     onChanged: (value) {
@@ -50,15 +52,17 @@ class _CardsGridWithControlState extends State<CardsGridWithControl> {
                       });
                     },
                     initialValue: fontSize.toString(),
+                    style: textStyle
                   ),
                 ),
               ],
             ),
             Row(
               children: [
-                Text("maxLen"),
+                const Text("maxLen", style: textStyle),
                 SizedBox(
-                  width: 100, // 添加宽度约束
+                  width: 75, // 添加宽度约束
+                  height: 35,
                   child: TextFormField(
                     keyboardType: TextInputType.numberWithOptions(signed: false, decimal: true),
                     onChanged: (value) {
@@ -67,6 +71,7 @@ class _CardsGridWithControlState extends State<CardsGridWithControl> {
                       });
                     },
                     initialValue: maxWidth.toString(),
+                    style: textStyle
                   ),
                 ),
               ],
